@@ -1,13 +1,10 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
-// import Login from './Login.jsx';
-// import Register from './Register.jsx';
 import Login from './Login';
 import Register from './Register';
 import ForgotPassword from './ForgotPassword';
 import Home from './Index';
 
 
-// Checking authentication
 // Checking authentication
 const PrivateRoute = ({ children }) => {
     const token = localStorage.getItem('token');

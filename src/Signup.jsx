@@ -21,7 +21,7 @@ export const Signup = ({ onBackToLogin }) => {
     'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
     'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
   ];
-  
+
   const days = Array.from({ length: 31 }, (_, i) => (i + 1).toString());
   const years = Array.from({ length: 100 }, (_, i) => (2025 - i).toString());
 
@@ -32,10 +32,10 @@ export const Signup = ({ onBackToLogin }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     setError('');
     setSuccess('');
-    
+
     try {
       await axios.post('http://localhost:5500/api/users', {
         firstName: form.firstName,
@@ -45,10 +45,10 @@ export const Signup = ({ onBackToLogin }) => {
         contact: form.contact,
         password: form.password,
       });
-      
+
       setSuccess('Account created successfully! You can now log in.');
       setTimeout(onBackToLogin, 1500);
-      
+
     } catch (err) {
       setError(err.response?.data?.message || 'Signup failed. Please try again.');
     }
@@ -57,16 +57,16 @@ export const Signup = ({ onBackToLogin }) => {
   return (
     <div className="signup-root">
       <h1 className="signup-title">Sociable</h1>
-      
+
       <div className="signup-main">
         <h2 className="signup-heading">Create a new account</h2>
         <p className="signup-subheading">It's quick and easy.</p>
         <hr className="signup-divider" />
-        
+
         <form onSubmit={handleSubmit}>
           {error && <div className="signup-error">{error}</div>}
           {success && <div className="signup-success">{success}</div>}
-          
+
           <div className="signup-row">
             <input
               type="text"
@@ -87,7 +87,7 @@ export const Signup = ({ onBackToLogin }) => {
               required
             />
           </div>
-          
+
           <label className="signup-label">
             Birthday
           </label>
@@ -102,7 +102,7 @@ export const Signup = ({ onBackToLogin }) => {
                 <option key={m} value={m}>{m}</option>
               ))}
             </select>
-            
+
             <select
               name="birthDay"
               value={form.birthDay}
@@ -113,7 +113,7 @@ export const Signup = ({ onBackToLogin }) => {
                 <option key={d} value={d}>{d}</option>
               ))}
             </select>
-            
+
             <select
               name="birthYear"
               value={form.birthYear}
@@ -125,7 +125,7 @@ export const Signup = ({ onBackToLogin }) => {
               ))}
             </select>
           </div>
-          
+
           <label className="signup-label">
             Gender
           </label>
@@ -142,7 +142,7 @@ export const Signup = ({ onBackToLogin }) => {
               />
               Female
             </label>
-            
+
             <label className="signup-radio-label">
               <input
                 type="radio"
@@ -154,7 +154,7 @@ export const Signup = ({ onBackToLogin }) => {
               />
               Male
             </label>
-            
+
             <label className="signup-radio-label">
               <input
                 type="radio"
@@ -167,7 +167,7 @@ export const Signup = ({ onBackToLogin }) => {
               Custom
             </label>
           </div>
-          
+
           <input
             type="text"
             name="contact"
@@ -177,7 +177,7 @@ export const Signup = ({ onBackToLogin }) => {
             className="signup-input signup-input-full"
             required
           />
-          
+
           <input
             type="password"
             name="password"
@@ -187,14 +187,14 @@ export const Signup = ({ onBackToLogin }) => {
             className="signup-input signup-input-full"
             required
           />
-          
+
           <p className="signup-info">
             People who use our service may have uploaded your contact information to Facebook. <a href="#" className="signup-link">Learn more.</a>
           </p>
           <p className="signup-info">
             By clicking Sign Up, you agree to our <a href="#" className="signup-link">Terms</a>, <a href="#" className="signup-link">Privacy Policy</a> and <a href="#" className="signup-link">Cookies Policy</a>. You may receive SMS Notifications from us and can opt out any time.
           </p>
-          
+
           <button
             type="submit"
             className="signup-btn"
@@ -202,7 +202,7 @@ export const Signup = ({ onBackToLogin }) => {
             Sign Up
           </button>
         </form>
-        
+
         <div className="signup-login-link">
           <button
             type="button"
