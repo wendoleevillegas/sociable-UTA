@@ -1,0 +1,195 @@
+/* 
+ * STUDENTINFORMATION.CSS - Styles for the Personal Information Component
+ * This file contains all styling for the user profile management page where
+ * users can view and edit their personal information. It creates a clean,
+ * form-focused layout similar to other authentication pages.
+ */
+
+/* 
+ * ROOT CONTAINER - Main wrapper for the entire personal information page
+ * Creates a full-height, centered layout with light background
+ */
+.personal-root {
+  min-height: 100vh; /* Take up at least the full viewport height */
+  background: #f0f2f5; /* Light gray background matching other auth pages */
+  display: flex; /* Use flexbox for layout */
+  flex-direction: column; /* Stack elements vertically */
+  align-items: center; /* Center content horizontally */
+  padding-top: 2.5rem; /* Add some space at the top */
+}
+
+/* 
+ * MAIN FORM CONTAINER - White card containing the personal information form
+ * Creates an elevated, centered container with proper spacing
+ */
+.personal-main {
+  background: #fff; /* White background */
+  border-radius: 1rem; /* Rounded corners */
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08); /* Subtle shadow for elevation */
+  width: 100%; /* Full width on mobile */
+  max-width: 28rem; /* Maximum width for larger screens */
+  padding: 2rem; /* Internal spacing */
+}
+
+/* 
+ * FORM TITLE - Main heading for the personal information page
+ * Large, bold text explaining the purpose of the form
+ */
+.personal-title {
+  font-size: 2rem; /* Large font size */
+  font-weight: bold; /* Bold text weight */
+  text-align: center; /* Center the title */
+  margin-bottom: 1rem; /* Space below the title */
+}
+
+/* 
+ * FEEDBACK MESSAGES - General styling for success and error messages
+ * Base styles for all user feedback messages
+ */
+.personal-message {
+  margin-bottom: 1rem; /* Space below message */
+  text-align: center; /* Center the message text */
+  font-size: 1rem; /* Standard font size */
+}
+
+/* 
+ * SUCCESS MESSAGE - Green text for positive feedback
+ * Used when information is successfully updated
+ */
+.personal-success {
+  color: #16a34a; /* Green color for success */
+}
+
+/* 
+ * ERROR MESSAGE - Red text for error feedback
+ * Used when information update fails or validation errors occur
+ */
+.personal-error {
+  color: #dc2626; /* Red color for errors */
+}
+
+/* 
+ * FORM FIELD CONTAINER - Wrapper for each form field group
+ * Contains label and input(s) with proper spacing
+ */
+.personal-field {
+  margin-bottom: 1rem; /* Space below each field group */
+}
+
+/* 
+ * FIELD LABELS - Styling for form field labels
+ * Clear, readable labels for each input field
+ */
+.personal-label {
+  display: block; /* Make label a block element */
+  color: #374151; /* Dark gray text color */
+  margin-bottom: 0.25rem; /* Small space below label */
+  font-weight: 500; /* Medium font weight for emphasis */
+}
+
+/* 
+ * FORM ROWS - Horizontal layout for related form elements
+ * Used for fields like first name and last name that go side by side
+ */
+.personal-row {
+  display: flex; /* Use flexbox for horizontal layout */
+  gap: 0.5rem; /* Space between elements in the row */
+}
+
+/* 
+ * INPUT FIELDS - Styling for all form input elements
+ * Creates clean, modern input fields with proper spacing and borders
+ */
+.personal-input {
+  width: 100%; /* Take full width of container */
+  padding: 0.5rem; /* Internal spacing for comfort */
+  border: 1px solid #d1d5db; /* Light gray border */
+  border-radius: 0.375rem; /* Rounded corners */
+  font-size: 1rem; /* Standard font size */
+  background: #f9fafb; /* Very light gray background */
+  transition: border 0.2s; /* Smooth border color transition on focus */
+}
+
+/* 
+ * DISABLED INPUT FIELDS - Styling for read-only/disabled inputs
+ * Applied when the form is in view mode (not edit mode)
+ */
+.personal-input:disabled {
+  background: #f3f4f6; /* Slightly darker gray background */
+  color: #9ca3af; /* Gray text color to indicate disabled state */
+}
+
+/* 
+ * ACTION BUTTONS CONTAINER - Layout for form action buttons
+ * Contains Back, Edit, and Save buttons with proper spacing
+ */
+.personal-actions {
+  display: flex; /* Use flexbox for button layout */
+  justify-content: space-between; /* Space buttons at opposite ends */
+  margin-top: 1.5rem; /* Space above the action buttons */
+}
+
+/* 
+ * BUTTON BASE STYLES - Common styling for all form buttons
+ * Shared styles applied to all action buttons
+ */
+.personal-btn {
+  padding: 0.5rem 1.25rem; /* Horizontal and vertical padding */
+  border-radius: 0.375rem; /* Rounded corners */
+  font-size: 1rem; /* Standard font size */
+  font-weight: 500; /* Medium font weight */
+  border: none; /* Remove default border */
+  cursor: pointer; /* Show pointer cursor */
+  transition: background 0.2s; /* Smooth background color transition */
+}
+
+/* 
+ * BACK BUTTON - Gray button for navigation back to previous page
+ * Neutral styling for secondary navigation action
+ */
+.personal-btn-back {
+  background: #e5e7eb; /* Light gray background */
+  color: #374151; /* Dark gray text */
+}
+
+/* 
+ * BACK BUTTON HOVER - Darker gray when hovering over back button
+ * Provides visual feedback for better user experience
+ */
+.personal-btn-back:hover {
+  background: #d1d5db; /* Darker gray on hover */
+}
+
+/* 
+ * SAVE BUTTON - Blue button for saving form changes
+ * Primary action button when in edit mode
+ */
+.personal-btn-save {
+  background: #2563eb; /* Blue background */
+  color: #fff; /* White text */
+}
+
+/* 
+ * SAVE BUTTON HOVER - Darker blue when hovering over save button
+ * Provides visual feedback for the primary action
+ */
+.personal-btn-save:hover {
+  background: #1d4ed8; /* Darker blue on hover */
+}
+
+/* 
+ * EDIT BUTTON - Green button for entering edit mode
+ * Positive action button when in view mode
+ */
+.personal-btn-edit {
+  background: #16a34a; /* Green background */
+  color: #fff; /* White text */
+}
+
+/* 
+ * EDIT BUTTON HOVER - Darker green when hovering over edit button
+ * Provides visual feedback for the edit action
+ */
+.personal-btn-edit:hover {
+  background: #15803d; /* Darker green on hover */
+}

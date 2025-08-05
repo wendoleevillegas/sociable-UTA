@@ -1,0 +1,161 @@
+/*
+ * ANALYTICS.CSS - Styles for the Analytics Component
+ */
+
+/*
+ * MAIN ANALYTICS CONTAINER
+ */
+.analytics-container {
+  background: #f8f9fa;
+  min-height: 100vh;
+  padding: 20px;
+  box-sizing: border-box;
+  margin-top: 0;
+}
+
+/* Main analytics content section */
+.analytics-content {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/*
+ * VIEW TOGGLE BUTTONS
+ */
+.analytics-view-toggle {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  justify-content: flex-end;
+}
+
+.analytics-view-toggle button {
+  padding: 8px 16px;
+  border: 1px solid #ddd;
+  background: white;
+  color: #666;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.analytics-view-toggle button.active,
+.analytics-view-toggle button:hover {
+  background: #1976d2;
+  color: white;
+  border-color: #1976d2;
+}
+
+/*
+ * ANALYTICS DASHBOARD LAYOUT
+ */
+.analytics-dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.analytics-row {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+/*
+ * ANALYTICS CARDS
+ */
+.analytics-card {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e0e0e0;
+}
+
+.analytics-card.large {
+  flex: 1;
+  min-width: 500px;
+}
+
+.analytics-card.medium {
+  flex: 0 0 400px;
+  min-width: 400px;
+}
+
+.analytics-card h3 {
+  margin: 0 0 20px 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+  text-align: left;
+}
+
+/*
+ * TABLE VIEW
+ */
+.analytics-table-view {
+  width: 100%;
+}
+
+/*
+ * RESPONSIVE DESIGN
+ */
+@media (max-width: 1200px) {
+  .analytics-row {
+    flex-direction: column;
+  }
+  
+  .analytics-card.large,
+  .analytics-card.medium {
+    flex: none;
+    min-width: auto;
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .analytics-container {
+    padding: 10px;
+  }
+  
+  .analytics-card {
+    padding: 15px;
+  }
+  
+  .analytics-view-toggle {
+    justify-content: center;
+  }
+}
+
+/*
+ * ANALYTICS DASHBOARD
+ */
+.analytics-dashboard {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.analytics-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e1e5e9;
+}
+
+.analytics-card h3 {
+  margin: 0 0 12px 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.analytics-card p {
+  margin: 0;
+  color: #65676b;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}

@@ -1,0 +1,593 @@
+/*
+ * INBOX.CSS - Styles for the Social Media Inbox Component
+ * This file contains all styling for the inbox interface including
+ * message lists, detail views, platform indicators, and responsive layouts.
+ */
+
+/*
+ * MAIN INBOX CONTAINER - Root container for the entire inbox interface
+ */
+.inbox-container {
+  background: #f8f9fa; /* Light gray background */
+  min-height: 100vh; /* Full viewport height */
+  padding: 32px 20px; /* Padding around content */
+  box-sizing: border-box; /* Include padding in calculations */
+  margin-top: 0; /* Reset any top margin */
+}
+
+/* Main container for inbox - single column layout */
+.inbox-main-container {
+  display: block;
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+/*
+ * INBOX LAYOUT - Two-column layout for message list and detail view
+ */
+.inbox-layout {
+  display: flex; /* Flexbox layout */
+  width: 100%; /* Take up full width */
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  background: #ffffff; /* White background */
+  border-radius: 12px; /* Rounded corners */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  overflow: hidden; /* Hide content that overflows */
+  min-height: 600px; /* Minimum height */
+}
+
+/*
+ * MESSAGE LIST - Left sidebar containing all messages
+ */
+.inbox-message-list {
+  flex: 0 0 400px; /* Fixed width of 400px */
+  border-right: 1px solid #e1e5e9; /* Gray border on right */
+  display: flex; /* Flexbox layout */
+  flex-direction: column; /* Stack children vertically */
+}
+
+.inbox-header {
+  padding: 20px; /* Padding around header */
+  border-bottom: 1px solid #e1e5e9; /* Gray border below */
+  background: #f8f9fa; /* Light gray background */
+  display: flex; /* Flexbox layout */
+  justify-content: space-between; /* Space between title and loading */
+  align-items: center; /* Center items vertically */
+}
+
+.inbox-header h3 {
+  margin: 0; /* Remove default margin */
+  font-size: 1.25rem; /* Larger font size */
+  font-weight: 600; /* Semi-bold weight */
+  color: #1c1e21; /* Dark text color */
+}
+
+.inbox-loading {
+  font-size: 0.9rem; /* Smaller font size */
+  color: #65676b; /* Medium gray color */
+  font-style: italic; /* Italic text */
+}
+
+/*
+ * MESSAGES CONTAINER - Scrollable container for message items
+ */
+.inbox-messages {
+  flex: 1; /* Take remaining space */
+  overflow-y: auto; /* Enable vertical scrolling */
+}
+
+/*
+ * INDIVIDUAL MESSAGE ITEMS - Styling for each message in the list
+ */
+.inbox-message-item {
+  display: flex; /* Flexbox layout */
+  padding: 16px 20px; /* Comfortable padding */
+  border-bottom: 1px solid #f0f2f5; /* Light gray border */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: background-color 0.2s ease; /* Smooth background transition */
+  position: relative; /* For positioning unread indicator */
+}
+
+.inbox-message-item:hover {
+  background-color: #f8f9fa; /* Light gray background on hover */
+}
+
+.inbox-message-item.selected {
+  background-color: #e3f2fd; /* Blue background for selected message */
+  border-left: 3px solid #1976d2; /* Blue left border for selected */
+}
+
+.inbox-message-item.unread {
+  background-color: #fff; /* White background for unread */
+  font-weight: 600; /* Bold font for unread messages */
+}
+
+/*
+ * MESSAGE AVATAR - Profile picture in message list
+ */
+.message-avatar {
+  position: relative; /* For positioning unread indicator */
+  margin-right: 12px; /* Space to the right */
+  flex-shrink: 0; /* Don't shrink */
+}
+
+.message-avatar img {
+  width: 48px; /* Fixed width */
+  height: 48px; /* Fixed height */
+  border-radius: 50%; /* Circular shape */
+  object-fit: cover; /* Crop to fit circle */
+}
+
+.unread-indicator {
+  position: absolute; /* Absolute positioning */
+  top: -2px; /* Position at top */
+  right: -2px; /* Position at right */
+  width: 12px; /* Small circle */
+  height: 12px; /* Small circle */
+  background-color: #ff4444; /* Red color */
+  border: 2px solid #ffffff; /* White border */
+  border-radius: 50%; /* Circular shape */
+}
+
+/*
+ * MESSAGE CONTENT - Text content of message preview
+ */
+.message-content {
+  flex: 1; /* Take remaining space */
+  min-width: 0; /* Allow shrinking */
+}
+
+.message-header {
+  display: flex; /* Flexbox layout */
+  justify-content: space-between; /* Space between name and time */
+  align-items: center; /* Center items vertically */
+  margin-bottom: 4px; /* Small space below */
+}
+
+.message-sender {
+  font-weight: 600; /* Semi-bold font */
+  color: #1c1e21; /* Dark text color */
+  font-size: 0.95rem; /* Slightly smaller font */
+}
+
+.message-time {
+  font-size: 0.8rem; /* Small font size */
+  color: #65676b; /* Medium gray color */
+}
+
+.message-preview {
+  color: #65676b; /* Medium gray color */
+  font-size: 0.9rem; /* Small font size */
+  line-height: 1.3; /* Comfortable line height */
+  margin-bottom: 6px; /* Small space below */
+  display: -webkit-box; /* Webkit box for text truncation */
+  -webkit-line-clamp: 2; /* Limit to 2 lines */
+  line-clamp: 2; /* Standard property for compatibility */
+  -webkit-box-orient: vertical; /* Vertical orientation */
+  overflow: hidden; /* Hide overflow */
+}
+
+.message-type-badge {
+  font-size: 0.75rem; /* Very small font */
+  color: #8a8d91; /* Light gray color */
+  text-transform: capitalize; /* Capitalize first letter */
+  background: #f0f2f5; /* Light gray background */
+  padding: 2px 6px; /* Small padding */
+  border-radius: 4px; /* Rounded corners */
+  display: inline-block; /* Inline block element */
+}
+
+/*
+ * MESSAGE DETAIL VIEW - Right side detailed view
+ */
+.inbox-message-detail {
+  flex: 1; /* Take remaining space */
+  display: flex; /* Flexbox layout */
+  flex-direction: column; /* Stack children vertically */
+}
+
+.inbox-no-selection {
+  display: flex; /* Flexbox layout */
+  flex-direction: column; /* Stack children vertically */
+  justify-content: center; /* Center vertically */
+  align-items: center; /* Center horizontally */
+  height: 100%; /* Full height */
+  color: #65676b; /* Medium gray color */
+  text-align: center; /* Center text */
+  padding: 40px 20px; /* Comfortable padding */
+}
+
+.no-selection-icon {
+  font-size: 3rem; /* Large emoji */
+  margin-bottom: 16px; /* Space below icon */
+  opacity: 0.6; /* Slightly transparent */
+}
+
+.inbox-no-selection h3 {
+  margin: 0 0 8px 0; /* Small bottom margin */
+  font-size: 1.25rem; /* Larger font size */
+  color: #1c1e21; /* Darker color for heading */
+}
+
+.inbox-no-selection p {
+  margin: 0; /* Remove default margin */
+  font-size: 0.95rem; /* Slightly smaller font */
+}
+
+/*
+ * MESSAGE DETAIL CONTENT - Content area for selected message
+ */
+.message-detail-content {
+  padding: 0; /* Remove padding to use individual sections */
+  height: 100%; /* Full height */
+  display: flex; /* Flexbox layout */
+  flex-direction: column; /* Stack children vertically */
+}
+
+.message-detail-header {
+  display: flex; /* Flexbox layout */
+  align-items: center; /* Center items vertically */
+  padding: 20px 24px; /* Comfortable padding */
+  border-bottom: 1px solid #e1e5e9; /* Gray border below */
+  background: #f8f9fa; /* Light gray background */
+}
+
+.message-detail-header img {
+  width: 48px; /* Avatar size */
+  height: 48px; /* Avatar size */
+  border-radius: 50%; /* Circular shape */
+  object-fit: cover; /* Crop to fit circle */
+  margin-right: 16px; /* Space to the right */
+}
+
+.message-header-info {
+  flex: 1; /* Take remaining space */
+}
+
+.message-detail-header h3 {
+  margin: 0 0 4px 0; /* Small bottom margin */
+  font-size: 1.1rem; /* Larger font size */
+  color: #1c1e21; /* Dark text color */
+}
+
+.message-detail-time {
+  margin: 0 0 8px 0; /* Small bottom margin */
+  font-size: 0.85rem; /* Small font size */
+  color: #65676b; /* Medium gray color */
+}
+
+.message-detail-type {
+  font-size: 0.75rem; /* Small font size */
+  color: #ffffff; /* White text */
+  padding: 4px 8px; /* Small padding */
+  border-radius: 12px; /* Rounded corners */
+  text-transform: capitalize; /* Capitalize first letter */
+  display: inline-block; /* Inline block element */
+}
+
+/*
+ * MESSAGE DETAIL BODY - Chat-like message display
+ */
+.message-detail-body {
+  flex: 1; /* Take remaining space */
+  padding: 24px; /* Comfortable padding */
+  background: linear-gradient(to bottom, #f8f9fa 0%, #f0f2f5 100%); /* Gradient background */
+  overflow-y: auto; /* Enable scrolling */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end; /* Align messages to bottom like chat */
+}
+
+.message-conversation {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.message-bubble {
+  border-radius: 18px; /* Rounded corners like chat bubble */
+  padding: 14px 18px; /* Comfortable padding */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Enhanced shadow */
+  max-width: 70%; /* Limit width */
+  position: relative;
+  word-wrap: break-word;
+}
+
+.message-bubble.incoming {
+  background: #ffffff; /* White background for incoming */
+  border: 1px solid #e1e5e9; /* Light border */
+  align-self: flex-start; /* Align to left */
+  border-bottom-left-radius: 4px; /* Sharp corner for chat effect */
+}
+
+.message-bubble.outgoing {
+  background: #1976d2; /* Blue background for outgoing */
+  color: #ffffff; /* White text */
+  align-self: flex-end; /* Align to right */
+  border-bottom-right-radius: 4px; /* Sharp corner for chat effect */
+}
+
+.message-bubble p {
+  margin: 0 0 8px 0; /* Small bottom margin */
+  font-size: 1rem; /* Normal font size */
+  line-height: 1.4; /* Comfortable line height */
+  color: inherit; /* Inherit color from parent */
+}
+
+.message-timestamp {
+  font-size: 0.75rem; /* Small font */
+  opacity: 0.7; /* Slightly transparent */
+  display: block; /* Block element */
+  text-align: right; /* Right aligned */
+  margin-top: 4px;
+}
+
+/*
+ * REPLY AREA - Input and actions for responding
+ */
+.message-reply-area {
+  padding: 20px 24px; /* Comfortable padding */
+  background: #ffffff; /* White background */
+  border-top: 1px solid #e1e5e9; /* Gray border above */
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05); /* Subtle upward shadow */
+}
+
+.chat-input-section {
+  margin-bottom: 16px;
+}
+
+.chat-input-header {
+  margin-bottom: 8px;
+}
+
+.typing-indicator {
+  font-size: 0.85rem;
+  color: #65676b;
+  font-style: italic;
+}
+
+.reply-input-container {
+  display: flex; /* Flexbox layout */
+  align-items: center; /* Center items vertically */
+  gap: 8px; /* Space between elements */
+  padding: 8px; /* Padding around container */
+  background: #f8f9fa; /* Light background */
+  border: 2px solid #e1e5e9; /* Border around entire container */
+  border-radius: 28px; /* Rounded container */
+  transition: all 0.2s ease; /* Smooth transitions */
+}
+
+.reply-input-container:focus-within {
+  border-color: #1976d2; /* Blue border when focused */
+  background: #ffffff; /* White background when focused */
+  box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.1); /* Blue focus ring */
+}
+
+.reply-input {
+  flex: 1; /* Take most space */
+  padding: 12px 16px; /* Comfortable padding */
+  border: none; /* Remove border (container has border) */
+  border-radius: 20px; /* Rounded input */
+  font-size: 1rem; /* Normal font size */
+  background: transparent; /* Transparent background */
+  outline: none; /* Remove default outline */
+  color: #1c1e21; /* Dark text */
+  font-family: inherit; /* Inherit font family */
+}
+
+.reply-input::placeholder {
+  color: #8a8d91; /* Light gray placeholder */
+  font-style: italic; /* Italic placeholder */
+}
+
+.input-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.attachment-btn,
+.emoji-btn {
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: transparent;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  transition: all 0.2s ease;
+}
+
+.attachment-btn:hover,
+.emoji-btn:hover {
+  background: #f0f2f5;
+  transform: scale(1.1);
+}
+
+.reply-send-btn {
+  padding: 10px 18px; /* Comfortable padding */
+  border: none; /* Remove default border */
+  border-radius: 20px; /* Rounded corners */
+  background: #1976d2; /* Blue background */
+  color: #ffffff; /* White text */
+  font-size: 0.9rem; /* Slightly smaller font */
+  font-weight: 600; /* Semi-bold weight */
+  cursor: pointer; /* Pointer cursor */
+  transition: all 0.2s ease; /* Smooth transitions */
+  white-space: nowrap; /* Don't wrap text */
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 80px; /* Minimum width */
+}
+
+.reply-send-btn:hover {
+  background: #1565c0; /* Darker blue on hover */
+  transform: translateY(-1px); /* Slight lift effect */
+  box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3); /* Enhanced shadow */
+}
+
+.send-icon {
+  font-size: 1rem;
+  transform: rotate(0deg);
+  transition: transform 0.2s ease;
+}
+
+.reply-send-btn:hover .send-icon {
+  transform: rotate(45deg); /* Rotate icon on hover */
+}
+
+.message-actions {
+  display: flex; /* Flexbox layout */
+  gap: 12px; /* Space between buttons */
+  justify-content: center; /* Center buttons */
+  flex-wrap: wrap; /* Allow wrapping on small screens */
+}
+
+.action-btn {
+  padding: 10px 18px; /* Comfortable padding */
+  border: 1px solid #e1e5e9; /* Light gray border */
+  border-radius: 8px; /* Rounded corners */
+  background: #ffffff; /* White background */
+  color: #65676b; /* Medium gray text */
+  font-size: 0.85rem; /* Small font size */
+  font-weight: 500; /* Medium weight */
+  cursor: pointer; /* Pointer cursor */
+  transition: all 0.2s ease; /* Smooth transitions */
+  min-width: 100px; /* Minimum width */
+}
+
+.action-btn:hover {
+  background: #f8f9fa; /* Light gray background on hover */
+  border-color: #1976d2; /* Blue border on hover */
+  color: #1976d2; /* Blue text on hover */
+  transform: translateY(-1px); /* Slight lift */
+}
+
+.action-btn.primary {
+  background: #1976d2; /* Blue background for primary action */
+  border-color: #1976d2; /* Blue border */
+  color: #ffffff; /* White text */
+}
+
+.action-btn.primary:hover {
+  background: #1565c0; /* Darker blue on hover */
+  border-color: #1565c0; /* Darker blue border */
+  color: #ffffff; /* Keep white text */
+}
+
+/*
+ * EMPTY STATE - When no messages are available
+ */
+.inbox-empty {
+  padding: 40px 20px; /* Large padding */
+  text-align: center; /* Center text */
+  color: #65676b; /* Medium gray color */
+}
+
+.inbox-empty p {
+  margin: 0; /* Remove default margin */
+  font-size: 0.95rem; /* Slightly smaller font */
+}
+
+/*
+ * RESPONSIVE DESIGN - Mobile and tablet adjustments
+ */
+@media (max-width: 768px) {
+  .inbox-container {
+    padding: 16px 12px; /* Reduced padding on mobile */
+  }
+  
+  .inbox-layout {
+    flex-direction: column; /* Stack vertically on mobile */
+    height: calc(100vh - 120px); /* Full height minus padding */
+  }
+  
+  .inbox-message-list {
+    flex: 0 0 50%; /* Take half the height on mobile */
+    border-right: none; /* Remove right border */
+    border-bottom: 1px solid #e1e5e9; /* Add bottom border */
+  }
+  
+  .inbox-message-detail {
+    flex: 1; /* Take remaining space */
+  }
+  
+  .message-detail-content {
+    padding: 0; /* Remove padding on mobile */
+  }
+  
+  .message-detail-body {
+    padding: 16px; /* Reduced padding on mobile */
+  }
+  
+  .message-reply-area {
+    padding: 16px; /* Reduced padding on mobile */
+  }
+  
+  .reply-input-container {
+    padding: 6px; /* Reduced padding on mobile */
+  }
+  
+  .reply-input {
+    padding: 10px 14px; /* Reduced padding on mobile */
+    font-size: 0.9rem; /* Smaller font on mobile */
+  }
+  
+  .message-actions {
+    gap: 8px; /* Reduced gap on mobile */
+  }
+  
+  .action-btn {
+    padding: 8px 14px; /* Reduced padding on mobile */
+    font-size: 0.8rem; /* Smaller font on mobile */
+    min-width: 80px; /* Reduced minimum width */
+  }
+  
+  .reply-send-btn {
+    padding: 8px 14px; /* Reduced padding on mobile */
+    min-width: 70px; /* Reduced minimum width */
+  }
+  
+  .attachment-btn,
+  .emoji-btn {
+    width: 32px; /* Smaller buttons on mobile */
+    height: 32px; /* Smaller buttons on mobile */
+    font-size: 1rem; /* Smaller font on mobile */
+  }
+}
+
+@media (max-width: 480px) {
+  .inbox-platform-indicator {
+    padding: 12px 16px; /* Reduced padding on small mobile */
+  }
+  
+  .inbox-platform-indicator h2 {
+    font-size: 1.25rem; /* Smaller heading on small mobile */
+  }
+  
+  .message-actions {
+    flex-direction: column; /* Stack buttons vertically on small mobile */
+    gap: 8px;
+  }
+  
+  .action-btn {
+    width: 100%; /* Full width buttons on small mobile */
+  }
+  
+  .reply-input-container {
+    flex-wrap: wrap; /* Allow wrapping on very small screens */
+  }
+  
+  .input-actions {
+    gap: 4px; /* Reduced gap on small mobile */
+  }
+}
