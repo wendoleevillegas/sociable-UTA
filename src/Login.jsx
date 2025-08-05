@@ -22,7 +22,7 @@ export default function Login() {
       const data = await response.json();
       if (response.ok) {
         localStorage.setItem('token', data.token);
-        navigate('/');
+        navigate('/'); // home page, assuming it is already authenticated
       } else {
         setError(data.message || 'Invalid credentials');
       }
@@ -65,7 +65,7 @@ export default function Login() {
           <a
             href="#"
             className="login-forgot"
-            onClick={e => { e.preventDefault(); onShowForgot(); }}
+            onClick={e => { e.preventDefault(); navigate('/forgot-password'); }}
           >
             Forgot password?
           </a>

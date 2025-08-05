@@ -7,7 +7,7 @@ import './ForgotPassword.css'; // Import custom styles for this component
 // Props:
 // - onBack: function to navigate back to login page
 // - onEmailVerified: function called when email is successfully verified
-export const ForgotPassword = ({ onBack, onEmailVerified }) => {
+const ForgotPassword = ({ onBack, onEmailVerified }) => {
   // State variables to manage component data
   const [email, setEmail] = useState(''); // User's email input
   const [error, setError] = useState(''); // Error message to display
@@ -18,7 +18,7 @@ export const ForgotPassword = ({ onBack, onEmailVerified }) => {
     e.preventDefault(); // Prevent default form submission behavior
     setError(''); // Clear any previous error messages
     setLoading(true); // Show loading state
-    
+
     try {
       // Send POST request to backend to verify email exists
       await axios.post('http://localhost:5500/api/users/forgot-password', { email });
@@ -28,7 +28,7 @@ export const ForgotPassword = ({ onBack, onEmailVerified }) => {
       // If email not found or other error, show error message
       setError('Email address not found.');
     }
-    
+
     setLoading(false); // Hide loading state
   };
 
@@ -39,7 +39,7 @@ export const ForgotPassword = ({ onBack, onEmailVerified }) => {
       <div className="forgot-main">
         {/* Page title */}
         <h2 className="forgot-title">Forgot Password</h2>
-        
+
         {/* Password reset form */}
         <form onSubmit={handleSubmit}>
           {/* Email input field */}
@@ -51,10 +51,10 @@ export const ForgotPassword = ({ onBack, onEmailVerified }) => {
             className="forgot-input"
             required // Make field required
           />
-          
+
           {/* Display error message if there's an error */}
           {error && <div className="forgot-error">{error}</div>}
-          
+
           {/* Submit button */}
           <button
             type="submit"
@@ -65,7 +65,7 @@ export const ForgotPassword = ({ onBack, onEmailVerified }) => {
             {loading ? 'Checking...' : 'Continue'}
           </button>
         </form>
-        
+
         {/* Back to login section */}
         <div className="forgot-back">
           <button
@@ -80,3 +80,5 @@ export const ForgotPassword = ({ onBack, onEmailVerified }) => {
     </div>
   );
 };
+
+export default ForgotPassword;
