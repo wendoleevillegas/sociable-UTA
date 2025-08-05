@@ -13,7 +13,7 @@ export default function Login() {
     setError('');
 
     try {
-      const response = await fetch('http://localhost:8000/api/auth/login', {
+      const response = await fetch('http://localhost:5000/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
@@ -24,7 +24,7 @@ export default function Login() {
         localStorage.setItem('token', data.token);
         navigate('/'); // home page, assuming it is already authenticated
       } else {
-        setError(data.message || 'Invalid credentials');
+        setError(data.message || 'Incorrect email or password, please try again.');
       }
     } catch (err) {
       setError('Server error');

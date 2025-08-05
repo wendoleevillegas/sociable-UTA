@@ -8,14 +8,15 @@ import Home from './Index';
 
 
 // Checking authentication
+// Checking authentication
 const PrivateRoute = ({ children }) => {
     const token = localStorage.getItem('token');
-    return token ? children : <Navigate to="/login" />;
+    return token ? children : <Navigate to="/login" replace />;
 };
 
 const RedirectIfLoggedIn = ({ children }) => {
     const token = localStorage.getItem('token');
-    return token ? <Navigate to="/" /> : children;
+    return token ? <Navigate to="/home" replace /> : children;
 };
 
 function App() {
@@ -37,15 +38,24 @@ function App() {
                     </RedirectIfLoggedIn>
                 }
             />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route
-                path="/"
+                path="/forgot-password"
+                element={
+                    <RedirectIfLoggedIn>
+                        <ForgotPassword />
+                    </RedirectIfLoggedIn>
+                }
+            />
+            <Route
+                path="/home"
                 element={
                     <PrivateRoute>
                         <Home />
                     </PrivateRoute>
                 }
             />
+            {/* Optional: redirect root URL to login or home */}
+            <Route path="/" element={<Navigate to="/login" replace />} />
         </Routes>
     );
 }

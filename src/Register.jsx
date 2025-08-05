@@ -17,15 +17,15 @@ export default function Register() {
             return;
         }
         if (password.length < 6 || !/[A-Z]/.test(password) || !/[0-9]/.test(password)) {
-            setError("Password must be 6+ chars, include a capital letter and number.");
+            setError("Password must be at least 6 characters, include a capital letter and number.");
             return;
         }
 
         try {
-            const res = await fetch('http://localhost:8000/api/auth/register', {
+            const res = await fetch('http://localhost:5000/api/auth/register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password })
+                body: JSON.stringify({ email, password }),
             });
 
             const data = await res.json();

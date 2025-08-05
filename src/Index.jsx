@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './Index.css';
 
-import Login from './Login';
 import { Calendar } from './Calendar';
 import { Menu } from './Menu';
 import { ApiSubmenu } from './ApiSubmenu';
