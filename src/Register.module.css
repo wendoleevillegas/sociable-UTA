@@ -2,6 +2,10 @@
 
 /* Base styles */
 .registerPage {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
     font-family: 'Nunito', sans-serif;
     font-size: 20px;
     color: #fff;
@@ -9,7 +13,7 @@
 
 body {
     min-height: 100vh;
-    background-color: dodgerblue;
+    background-color: #0064B1;
 }
 
 /* Container for success and form section */
