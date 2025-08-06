@@ -52,7 +52,7 @@ function App() {
                 }
             />
             {/* Optional: redirect root URL to login or home */}
-            <Route path="/" element={<Navigate to="/login" replace />} />
+            <Route path="/" element={<Navigate to="/home" replace />} />
         </Routes>
     );
 }

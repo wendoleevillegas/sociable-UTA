@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './Index.css';
+import { useNavigate } from 'react-router-dom';
 
 import { Calendar } from './Calendar';
 import { Menu } from './Menu';
@@ -129,9 +130,17 @@ export default function Home() {
     }
   }, []);
 
+  // const logout = () => {
+  //   localStorage.removeItem('token');
+  //   setCurrentUser(null);
+  // };
+
+  const navigate = useNavigate();
+
   const logout = () => {
     localStorage.removeItem('token');
     setCurrentUser(null);
+    navigate('/login');  // redirect to login after logout
   };
 
   // Handle page navigation and reset API source to Instagram

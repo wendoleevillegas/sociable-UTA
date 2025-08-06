@@ -7,7 +7,7 @@ import axios from './api/axios';
 
 const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
-const REGISTER_URL = '/register';
+const REGISTER_URL = 'api/auth/register';
 
 const Register = () => {
     const userRef = useRef();
@@ -54,13 +54,21 @@ const Register = () => {
             return;
         }
         try {
+            // const response = await axios.post(REGISTER_URL,
+            //     JSON.stringify({ user, pwd }),
+            //     {
+            //         headers: { 'Content-Type': 'application/json' },
+            //         withCredentials: true
+            //     }
+            // );
             const response = await axios.post(REGISTER_URL,
-                JSON.stringify({ user, pwd }),
+                JSON.stringify({ email: user, password: pwd }),  // <-- fix keys here
                 {
                     headers: { 'Content-Type': 'application/json' },
                     withCredentials: true
                 }
             );
+
             console.log(response?.data);
             console.log(response?.accessToken);
             console.log(JSON.stringify(response));

@@ -6,7 +6,7 @@ import logging
 logging.basicConfig(level=logging.DEBUG)
 
 app = Flask(__name__)
-CORS(app)  # Allow frontend to access backend
+CORS(app, supports_credentials=True, origins=["http://127.0.0.1:5173"])
 
 def init_db():
     conn = sqlite3.connect('users.db')
