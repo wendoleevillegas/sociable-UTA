@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+rom flask import Flask, request, jsonify
 from flask_cors import CORS
 import sqlite3
 from werkzeug.security import generate_password_hash, check_password_hash
