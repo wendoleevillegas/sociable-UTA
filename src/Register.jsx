@@ -31,7 +31,7 @@ export default function Register() {
             const data = await res.json();
 
             if (res.ok) {
-                navigate('/login');  // Redirect to login after successful registration
+                navigate('/login');
             } else {
                 setError(data.message || "Registration failed");
             }
