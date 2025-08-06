@@ -3,13 +3,15 @@ import { useRef, useState, useEffect } from "react";
 import { faCheck, faTimes, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from './api/axios';
-
+import { useNavigate } from 'react-router-dom';
 
 const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 const REGISTER_URL = 'api/auth/register';
 
 const Register = () => {
+    const navigate = useNavigate();
+
     const userRef = useRef();
     const errRef = useRef();
 
@@ -95,8 +97,16 @@ const Register = () => {
                     success ? (
                         <section className={styles.section} >
                             <h1>Success!</h1>
-                            <p>
+                            {/* <p>
                                 <a href="#">Sign In</a>
+                            </p> */}
+                            <p>
+                                <button
+                                    onClick={() => navigate('/login')}
+                                    style={{ background: 'none', border: 'none', color: 'white', textDecoration: 'underline', cursor: 'pointer' }}
+                                >
+                                    Sign In
+                                </button>
                             </p>
                         </section>
                     ) : (
