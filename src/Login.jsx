@@ -41,11 +41,11 @@ export default function Login() {
             Welcome!<br />
           </p>
         </div>
-        <form onSubmit={handleLogin} className="login-form">
+        <form onSubmit={handleLogin} className="login-form"> {/* CHANGE TO USERNAME BASED */}
           {error && <p className="login-error">{error}</p>}
           <input
             type="text"
-            placeholder="Email"
+            placeholder="Username"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="login-input"
