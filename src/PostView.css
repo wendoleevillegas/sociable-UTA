@@ -23,10 +23,14 @@
 }
 
 .postview-root {
-  background: #fcfbf8; /* Light cream background matching the navbar */
-  min-height: 100vh; /* Take up at least the full viewport height */
-  padding: 32px 20px; /* Vertical padding for content spacing */
-  margin-top: 0; /* Reset any top margin */
+  background: #fcfbf8;
+  /* Light cream background matching the navbar */
+  min-height: 100vh;
+  /* Take up at least the full viewport height */
+  padding: 32px 20px;
+  /* Vertical padding for content spacing */
+  margin-top: 0;
+  /* Reset any top margin */
 }
 
 /* Single column layout - no notifications panel */
@@ -113,12 +117,18 @@
  * This is the top section where users can write and submit new posts
  */
 .postview-create-box {
-  background: #fcfbf8; /* Same as root background for seamless appearance */
-  border-radius: 24px; /* Large rounded corners for modern look */
-  box-shadow: 0 2px 8px #0001; /* Very subtle shadow (0001 = rgba(0,0,0,0.0625)) */
-  padding: 12px 16px 16px 16px; /* Asymmetric padding - less on top */
-  max-width: 600px; /* Maximum width for better readability */
-  margin: 0 auto 32px auto; /* Center horizontally with bottom margin */
+  background: #fcfbf8;
+  /* Same as root background for seamless appearance */
+  border-radius: 24px;
+  /* Large rounded corners for modern look */
+  box-shadow: 0 2px 8px #0001;
+  /* Very subtle shadow (0001 = rgba(0,0,0,0.0625)) */
+  padding: 12px 16px 16px 16px;
+  /* Asymmetric padding - less on top */
+  max-width: 600px;
+  /* Maximum width for better readability */
+  margin: 0 auto 32px auto;
+  /* Center horizontally with bottom margin */
 }
 
 /* 
@@ -126,10 +136,14 @@
  * Contains user avatar and buttons for adding videos/photos
  */
 .postview-create-header {
-  display: flex; /* Use flexbox for horizontal layout */
-  align-items: center; /* Center items vertically */
-  gap: 12px; /* Space between avatar and action buttons */
-  margin-bottom: 8px; /* Space below the header */
+  display: flex;
+  /* Use flexbox for horizontal layout */
+  align-items: center;
+  /* Center items vertically */
+  gap: 12px;
+  /* Space between avatar and action buttons */
+  margin-bottom: 8px;
+  /* Space below the header */
 }
 
 /* 
@@ -137,13 +151,20 @@
  * Circular image representing the current user
  */
 .postview-avatar {
-  width: 48px; /* Fixed width */
-  height: 48px; /* Fixed height (square ratio) */
-  border-radius: 50%; /* Make circular */
-  object-fit: cover; /* Crop image to fit circle without distortion */
-  border: 2px solid #ccc; /* Light gray border */
-  background: #fff; /* White background fallback */
-  font-size: 16px; /* Font size for any text fallback */
+  width: 48px;
+  /* Fixed width */
+  height: 48px;
+  /* Fixed height (square ratio) */
+  border-radius: 50%;
+  /* Make circular */
+  object-fit: cover;
+  /* Crop image to fit circle without distortion */
+  border: 2px solid #ccc;
+  /* Light gray border */
+  background: #fff;
+  /* White background fallback */
+  font-size: 16px;
+  /* Font size for any text fallback */
 }
 
 /* 
@@ -151,10 +172,14 @@
  * Flexbox container for the action buttons in the create post section
  */
 .postview-actions {
-  display: flex; /* Use flexbox for horizontal layout */
-  gap: 40px; /* Large space between action buttons */
-  width: 100%; /* Take full width of container */
-  justify-content: flex-start; /* Align items to the left */
+  display: flex;
+  /* Use flexbox for horizontal layout */
+  gap: 40px;
+  /* Large space between action buttons */
+  width: 100%;
+  /* Take full width of container */
+  justify-content: flex-start;
+  /* Align items to the left */
 }
 
 /* 
@@ -162,8 +187,10 @@
  * Used when actions should be centered instead of left-aligned
  */
 .postview-actions-center {
-  justify-content: center; /* Center the action buttons */
-  gap: 40px; /* Maintain same spacing between buttons */
+  justify-content: center;
+  /* Center the action buttons */
+  gap: 40px;
+  /* Maintain same spacing between buttons */
 }
 
 /* 
@@ -171,14 +198,22 @@
  * Combines icon and text for each upload option
  */
 .postview-action {
-  display: flex; /* Use flexbox for icon + text layout */
-  align-items: center; /* Center icon and text vertically */
-  cursor: pointer; /* Show pointer cursor on hover */
-  font-size: 15px; /* Smaller text size */
-  font-weight: 500; /* Medium font weight */
-  background: none; /* No background color */
-  border: none; /* No border */
-  padding: 0; /* No internal padding */
+  display: flex;
+  /* Use flexbox for icon + text layout */
+  align-items: center;
+  /* Center icon and text vertically */
+  cursor: pointer;
+  /* Show pointer cursor on hover */
+  font-size: 15px;
+  /* Smaller text size */
+  font-weight: 500;
+  /* Medium font weight */
+  background: none;
+  /* No background color */
+  border: none;
+  /* No border */
+  padding: 0;
+  /* No internal padding */
 }
 
 /* 
@@ -186,13 +221,17 @@
  * Custom sizing for video/photo icons in create post and feed action icons
  */
 .postview-action svg {
-  font-size: 22px !important; /* Force smaller icon size for create post actions */
-  margin-right: 6px !important; /* Force smaller margin between icon and text */
+  font-size: 22px !important;
+  /* Force smaller icon size for create post actions */
+  margin-right: 6px !important;
+  /* Force smaller margin between icon and text */
 }
 
 .postview-feed-actions svg {
-  font-size: 16px !important; /* Smaller icon size for feed actions */
-  margin-right: 6px !important; /* Space between icon and text */
+  font-size: 16px !important;
+  /* Smaller icon size for feed actions */
+  margin-right: 6px !important;
+  /* Space between icon and text */
 }
 
 /* 
@@ -200,7 +239,8 @@
  * Contains the textarea and submit button for new posts
  */
 .postview-form {
-  margin-top: 8px; /* Space above the form */
+  margin-top: 8px;
+  /* Space above the form */
 }
 
 /* 
@@ -208,14 +248,22 @@
  * Where users type their post text/caption
  */
 .postview-textarea {
-  width: 100%; /* Take full width of container */
-  min-height: 40px; /* Minimum height for comfortable typing */
-  border-radius: 8px; /* Rounded corners */
-  border: 1px solid #ddd; /* Light gray border */
-  padding: 8px; /* Internal spacing */
-  font-size: 15px; /* Medium font size */
-  margin-bottom: 8px; /* Space below textarea */
-  resize: vertical; /* Allow vertical resizing only */
+  width: 100%;
+  /* Take full width of container */
+  min-height: 40px;
+  /* Minimum height for comfortable typing */
+  border-radius: 8px;
+  /* Rounded corners */
+  border: 1px solid #ddd;
+  /* Light gray border */
+  padding: 8px;
+  /* Internal spacing */
+  font-size: 15px;
+  /* Medium font size */
+  margin-bottom: 8px;
+  /* Space below textarea */
+  resize: vertical;
+  /* Allow vertical resizing only */
 }
 
 /* 
@@ -224,10 +272,14 @@
  */
 .postview-media-preview img,
 .postview-media-preview video {
-  max-width: 100%; /* Don't exceed container width */
-  max-height: 200px; /* Limit height for reasonable preview size */
-  border-radius: 8px; /* Rounded corners */
-  margin-bottom: 8px; /* Space below preview */
+  max-width: 100%;
+  /* Don't exceed container width */
+  max-height: 200px;
+  /* Limit height for reasonable preview size */
+  border-radius: 8px;
+  /* Rounded corners */
+  margin-bottom: 8px;
+  /* Space below preview */
 }
 
 /* 
@@ -235,8 +287,10 @@
  * Contains submit and other form-related buttons
  */
 .postview-form-buttons {
-  display: flex; /* Use flexbox for button layout */
-  gap: 8px; /* Space between buttons */
+  display: flex;
+  /* Use flexbox for button layout */
+  gap: 8px;
+  /* Space between buttons */
 }
 
 /* 
@@ -244,15 +298,24 @@
  * Red background with white text for failed operations
  */
 .postview-error {
-  background: #dc2626; /* Red background */
-  color: #ffffff; /* White text */
-  padding: 12px 16px; /* Comfortable padding */
-  border-radius: 8px; /* Rounded corners */
-  margin-bottom: 16px; /* Space below error */
-  font-size: 0.9rem; /* Slightly smaller font */
-  font-weight: 500; /* Medium font weight */
-  text-align: center; /* Center the error text */
-  border: 1px solid #b91c1c; /* Darker red border */
+  background: #dc2626;
+  /* Red background */
+  color: #ffffff;
+  /* White text */
+  padding: 12px 16px;
+  /* Comfortable padding */
+  border-radius: 8px;
+  /* Rounded corners */
+  margin-bottom: 16px;
+  /* Space below error */
+  font-size: 0.9rem;
+  /* Slightly smaller font */
+  font-weight: 500;
+  /* Medium font weight */
+  text-align: center;
+  /* Center the error text */
+  border: 1px solid #b91c1c;
+  /* Darker red border */
 }
 
 /* 
@@ -260,26 +323,40 @@
  * Blue button that submits the post form
  */
 .postview-post-btn {
-  background: #1976d2; /* Blue background matching app theme */
-  color: #fff; /* White text */
-  border: none; /* No border */
-  border-radius: 8px; /* Rounded corners */
-  padding: 6px 16px; /* Horizontal and vertical padding */
-  cursor: pointer; /* Show pointer cursor */
-  font-size: 15px; /* Medium font size */
-  font-weight: 500; /* Medium font weight */
-  transition: all 0.2s ease; /* Smooth transitions */
+  background: #1976d2;
+  /* Blue background matching app theme */
+  color: #fff;
+  /* White text */
+  border: none;
+  /* No border */
+  border-radius: 8px;
+  /* Rounded corners */
+  padding: 6px 16px;
+  /* Horizontal and vertical padding */
+  cursor: pointer;
+  /* Show pointer cursor */
+  font-size: 15px;
+  /* Medium font size */
+  font-weight: 500;
+  /* Medium font weight */
+  transition: all 0.2s ease;
+  /* Smooth transitions */
 }
 
 .postview-post-btn:disabled {
-  background: #9ca3af; /* Gray background when disabled */
-  cursor: not-allowed; /* Show not-allowed cursor */
-  opacity: 0.7; /* Slightly transparent */
+  background: #9ca3af;
+  /* Gray background when disabled */
+  cursor: not-allowed;
+  /* Show not-allowed cursor */
+  opacity: 0.7;
+  /* Slightly transparent */
 }
 
 .postview-post-btn:hover:not(:disabled) {
-  opacity: 0.9; /* Slightly transparent on hover */
-  transform: translateY(-1px); /* Slight lift effect */
+  opacity: 0.9;
+  /* Slightly transparent on hover */
+  transform: translateY(-1px);
+  /* Slight lift effect */
 }
 
 /* 
@@ -287,10 +364,14 @@
  * Vertical layout for the list of posts from all users
  */
 .postview-feed {
-  margin-top: 24px; /* Space above the feed */
-  display: flex; /* Use flexbox for layout */
-  flex-direction: column; /* Stack posts vertically */
-  gap: 24px; /* Space between individual posts */
+  margin-top: 24px;
+  /* Space above the feed */
+  display: flex;
+  /* Use flexbox for layout */
+  flex-direction: column;
+  /* Stack posts vertically */
+  gap: 24px;
+  /* Space between individual posts */
 }
 
 /* 
@@ -298,14 +379,22 @@
  * White card containing all post content and interactions
  */
 .postview-feed-card {
-  background: #fff; /* White background */
-  border-radius: 12px; /* Rounded corners */
-  border: 1px solid #ddd; /* Light gray border */
-  padding: 12px; /* Internal spacing */
-  max-width: 600px; /* Maximum width for readability */
-  width: 100%; /* Take full width up to max-width */
-  margin: 0 auto; /* Center horizontally */
-  box-shadow: 0 2px 8px #0001; /* Very subtle shadow */
+  background: #fff;
+  /* White background */
+  border-radius: 12px;
+  /* Rounded corners */
+  border: 1px solid #ddd;
+  /* Light gray border */
+  padding: 12px;
+  /* Internal spacing */
+  max-width: 600px;
+  /* Maximum width for readability */
+  width: 100%;
+  /* Take full width up to max-width */
+  margin: 0 auto;
+  /* Center horizontally */
+  box-shadow: 0 2px 8px #0001;
+  /* Very subtle shadow */
 }
 
 /* 
@@ -313,10 +402,14 @@
  * Contains author avatar, name, role, and follow button
  */
 .postview-feed-header {
-  display: flex; /* Use flexbox for horizontal layout */
-  align-items: center; /* Center items vertically */
-  gap: 12px; /* Space between avatar and author info */
-  margin-bottom: 8px; /* Space below header */
+  display: flex;
+  /* Use flexbox for horizontal layout */
+  align-items: center;
+  /* Center items vertically */
+  gap: 12px;
+  /* Space between avatar and author info */
+  margin-bottom: 8px;
+  /* Space below header */
 }
 
 /* 
@@ -324,11 +417,16 @@
  * Author's profile picture in each post
  */
 .postview-feed-avatar {
-  width: 36px; /* Smaller than create post avatar */
-  height: 36px; /* Square ratio */
-  border-radius: 50%; /* Make circular */
-  object-fit: cover; /* Crop image to fit without distortion */
-  border: 1px solid #ccc; /* Thin light gray border */
+  width: 36px;
+  /* Smaller than create post avatar */
+  height: 36px;
+  /* Square ratio */
+  border-radius: 50%;
+  /* Make circular */
+  object-fit: cover;
+  /* Crop image to fit without distortion */
+  border: 1px solid #ccc;
+  /* Thin light gray border */
 }
 
 /* 
@@ -336,7 +434,8 @@
  * Primary identification for who created the post
  */
 .postview-feed-author {
-  font-weight: bold; /* Bold text for prominence */
+  font-weight: bold;
+  /* Bold text for prominence */
 }
 
 /* 
@@ -344,8 +443,10 @@
  * Secondary information about the post author
  */
 .postview-feed-role {
-  font-size: 13px; /* Small font size */
-  color: #555; /* Medium gray color */
+  font-size: 13px;
+  /* Small font size */
+  color: #555;
+  /* Medium gray color */
 }
 
 /* 
@@ -353,8 +454,10 @@
  * Shows when the post was created and other details
  */
 .postview-feed-meta {
-  font-size: 12px; /* Very small font size */
-  color: #888; /* Light gray color */
+  font-size: 12px;
+  /* Very small font size */
+  color: #888;
+  /* Light gray color */
 }
 
 /* 
@@ -362,13 +465,20 @@
  * Positioned on the right side of post headers
  */
 .postview-feed-follow {
-  margin-left: auto; /* Push to the right side */
-  background: none; /* No background color */
-  border: none; /* No border */
-  color: #1976d2; /* Blue color matching app theme */
-  font-weight: bold; /* Bold text */
-  cursor: pointer; /* Show pointer cursor */
-  font-size: 15px; /* Medium font size */
+  margin-left: auto;
+  /* Push to the right side */
+  background: none;
+  /* No background color */
+  border: none;
+  /* No border */
+  color: #1976d2;
+  /* Blue color matching app theme */
+  font-weight: bold;
+  /* Bold text */
+  cursor: pointer;
+  /* Show pointer cursor */
+  font-size: 15px;
+  /* Medium font size */
 }
 
 /* 
@@ -376,8 +486,10 @@
  * The actual message/content that the author wrote
  */
 .postview-feed-caption {
-  margin: 8px 0 4px 0; /* Vertical spacing around caption */
-  font-size: 15px; /* Medium font size for readability */
+  margin: 8px 0 4px 0;
+  /* Vertical spacing around caption */
+  font-size: 15px;
+  /* Medium font size for readability */
 }
 
 /* 
@@ -385,8 +497,10 @@
  * Bold heading that may appear above media content
  */
 .postview-feed-title {
-  font-weight: bold; /* Bold text */
-  margin-bottom: 8px; /* Space below title */
+  font-weight: bold;
+  /* Bold text */
+  margin-bottom: 8px;
+  /* Space below title */
 }
 
 /* 
@@ -394,10 +508,14 @@
  * Styling for media content attached to posts
  */
 .postview-feed-media {
-  width: 100%; /* Take full width of post card */
-  border-radius: 8px; /* Rounded corners */
-  margin-bottom: 8px; /* Space below media */
-  margin-top: 4px; /* Small space above media */
+  width: 100%;
+  /* Take full width of post card */
+  border-radius: 8px;
+  /* Rounded corners */
+  margin-bottom: 8px;
+  /* Space below media */
+  margin-top: 4px;
+  /* Small space above media */
 }
 
 /* 
@@ -405,13 +523,20 @@
  * Row of action buttons for user engagement
  */
 .postview-feed-actions {
-  display: flex; /* Use flexbox for horizontal layout */
-  justify-content: space-between; /* Even spacing between action buttons */
-  margin-top: 8px; /* Space above actions */
-  color: #444; /* Medium dark gray text */
-  font-size: 14px; /* Small font size */
-  border-top: 1px solid #eee; /* Light gray top border for separation */
-  padding-top: 8px; /* Space above border */
+  display: flex;
+  /* Use flexbox for horizontal layout */
+  justify-content: space-between;
+  /* Even spacing between action buttons */
+  margin-top: 8px;
+  /* Space above actions */
+  color: #444;
+  /* Medium dark gray text */
+  font-size: 14px;
+  /* Small font size */
+  border-top: 1px solid #eee;
+  /* Light gray top border for separation */
+  padding-top: 8px;
+  /* Space above border */
 }
 
 /* 
@@ -419,9 +544,12 @@
  * Small text displaying post interaction counts
  */
 .postview-feed-meta2 {
-  font-size: 12px; /* Very small font size */
-  color: #888; /* Light gray color */
-  margin-top: 4px; /* Small space above statistics */
+  font-size: 12px;
+  /* Very small font size */
+  color: #888;
+  /* Light gray color */
+  margin-top: 4px;
+  /* Small space above statistics */
 }
 
 /* 
@@ -429,12 +557,20 @@
  * Displays when user is connected to LinkedIn API for cross-posting
  */
 .linkedin-status {
-  background: #E7F3FF; /* Light blue background */
-  border: 1px solid #0077B5; /* LinkedIn blue border */
-  border-radius: 8px; /* Rounded corners */
-  padding: 8px 12px; /* Internal spacing */
-  margin-bottom: 12px; /* Space below status indicator */
-  display: flex; /* Use flexbox for layout */
-  align-items: center; /* Center items vertically */
-  font-size: 14px; /* Medium font size */
+  background: #E7F3FF;
+  /* Light blue background */
+  border: 1px solid #0077B5;
+  /* LinkedIn blue border */
+  border-radius: 8px;
+  /* Rounded corners */
+  padding: 8px 12px;
+  /* Internal spacing */
+  margin-bottom: 12px;
+  /* Space below status indicator */
+  display: flex;
+  /* Use flexbox for layout */
+  align-items: center;
+  /* Center items vertically */
+  font-size: 14px;
+  /* Medium font size */
 }
