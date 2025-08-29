@@ -1,21 +1,20 @@
 /* 
- * SIGNUP.CSS - Styles for the Signup Component
- * This file contains all the styling for the user registration page.
- * It creates a clean, modern signup form similar to Facebook's design
- * with proper spacing, colors, and responsive layout.
- */
-
-/* 
  * ROOT CONTAINER - Main wrapper for the entire signup page
  * Creates a full-height, centered layout with light background
  */
 .signup-root {
-  min-height: 100vh; /* Take up at least the full viewport height */
-  background: #f0f2f5; /* Light gray background matching the login page */
-  display: flex; /* Use flexbox for layout */
-  flex-direction: column; /* Stack elements vertically */
-  align-items: center; /* Center content horizontally */
-  padding-top: 2.5rem; /* Add some space at the top */
+  min-height: 100vh;
+  /* Take up at least the full viewport height */
+  background: #f0f2f5;
+  /* Light gray background matching the login page */
+  display: flex;
+  /* Use flexbox for layout */
+  flex-direction: column;
+  /* Stack elements vertically */
+  align-items: center;
+  /* Center content horizontally */
+  padding-top: 2.5rem;
+  /* Add some space at the top */
 }
 
 /* 
@@ -23,12 +22,18 @@
  * Uses the same styling as the login page for consistency
  */
 .signup-title {
-  color: #1877f2; /* Facebook blue color */
-  font-size: 3rem; /* Large font size for prominence */
-  font-weight: bold; /* Bold text weight */
-  margin-bottom: 1.5rem; /* Space below the title */
-  font-family: sans-serif; /* Clean, modern font */
-  letter-spacing: -1px; /* Slightly tighter letter spacing for better appearance */
+  color: #1877f2;
+  /* Facebook blue color */
+  font-size: 3rem;
+  /* Large font size for prominence */
+  font-weight: bold;
+  /* Bold text weight */
+  margin-bottom: 1.5rem;
+  /* Space below the title */
+  font-family: sans-serif;
+  /* Clean, modern font */
+  letter-spacing: -1px;
+  /* Slightly tighter letter spacing for better appearance */
 }
 
 /* 
@@ -36,15 +41,24 @@
  * Creates an elevated, centered container with proper spacing
  */
 .signup-main {
-  background: #fff; /* White background */
-  border-radius: 1rem; /* More rounded corners than login form */
-  box-shadow: 0 4px 24px rgba(0,0,0,0.08); /* Subtle shadow for elevation */
-  width: 100%; /* Full width on mobile */
-  max-width: 28rem; /* Maximum width for larger screens */
-  padding: 2rem; /* Internal spacing */
-  display: flex; /* Use flexbox for layout */
-  flex-direction: column; /* Stack form elements vertically */
-  align-items: center; /* Center content horizontally */
+  background: #fff;
+  /* White background */
+  border-radius: 1rem;
+  /* More rounded corners than login form */
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  /* Subtle shadow for elevation */
+  width: 100%;
+  /* Full width on mobile */
+  max-width: 28rem;
+  /* Maximum width for larger screens */
+  padding: 2rem;
+  /* Internal spacing */
+  display: flex;
+  /* Use flexbox for layout */
+  flex-direction: column;
+  /* Stack form elements vertically */
+  align-items: center;
+  /* Center content horizontally */
 }
 
 /* 
@@ -52,10 +66,14 @@
  * Large, bold text explaining the purpose of the form
  */
 .signup-heading {
-  font-size: 1.5rem; /* Medium-large font size */
-  font-weight: bold; /* Bold text weight */
-  margin-bottom: 0.25rem; /* Small space below heading */
-  text-align: center; /* Center the heading text */
+  font-size: 1.5rem;
+  /* Medium-large font size */
+  font-weight: bold;
+  /* Bold text weight */
+  margin-bottom: 0.25rem;
+  /* Small space below heading */
+  text-align: center;
+  /* Center the heading text */
 }
 
 /* 
@@ -63,10 +81,14 @@
  * Provides encouraging context about the signup process
  */
 .signup-subheading {
-  color: #606770; /* Gray text color for less prominence */
-  font-size: 1rem; /* Standard font size */
-  margin-bottom: 1rem; /* Space below subheading */
-  text-align: center; /* Center the subheading text */
+  color: #606770;
+  /* Gray text color for less prominence */
+  font-size: 1rem;
+  /* Standard font size */
+  margin-bottom: 1rem;
+  /* Space below subheading */
+  text-align: center;
+  /* Center the subheading text */
 }
 
 /* 
@@ -74,10 +96,14 @@
  * Creates visual separation between different sections
  */
 .signup-divider {
-  border: none; /* Remove default border */
-  border-top: 1px solid #dadde1; /* Light gray top border */
-  margin: 1rem 0; /* Vertical spacing above and below */
-  width: 100%; /* Full width of container */
+  border: none;
+  /* Remove default border */
+  border-top: 1px solid #dadde1;
+  /* Light gray top border */
+  margin: 1rem 0;
+  /* Vertical spacing above and below */
+  width: 100%;
+  /* Full width of container */
 }
 
 /* 
@@ -85,12 +111,18 @@
  * Used when signup fails or validation errors occur
  */
 .signup-error {
-  color: #dc2626; /* Dark red text color */
-  background: #fee2e2; /* Light red background */
-  border-radius: 0.375rem; /* Rounded corners */
-  padding: 0.5rem; /* Internal spacing */
-  margin-bottom: 0.5rem; /* Space below error message */
-  text-align: center; /* Center the error text */
+  color: #dc2626;
+  /* Dark red text color */
+  background: #fee2e2;
+  /* Light red background */
+  border-radius: 0.375rem;
+  /* Rounded corners */
+  padding: 0.5rem;
+  /* Internal spacing */
+  margin-bottom: 0.5rem;
+  /* Space below error message */
+  text-align: center;
+  /* Center the error text */
 }
 
 /* 
@@ -98,12 +130,18 @@
  * Used when signup is successful to provide positive feedback
  */
 .signup-success {
-  color: #16a34a; /* Dark green text color */
-  background: #dcfce7; /* Light green background */
-  border-radius: 0.375rem; /* Rounded corners */
-  padding: 0.5rem; /* Internal spacing */
-  margin-bottom: 0.5rem; /* Space below success message */
-  text-align: center; /* Center the success text */
+  color: #16a34a;
+  /* Dark green text color */
+  background: #dcfce7;
+  /* Light green background */
+  border-radius: 0.375rem;
+  /* Rounded corners */
+  padding: 0.5rem;
+  /* Internal spacing */
+  margin-bottom: 0.5rem;
+  /* Space below success message */
+  text-align: center;
+  /* Center the success text */
 }
 
 /* 
@@ -111,9 +149,12 @@
  * Used for name fields, birthday dropdowns, and gender options
  */
 .signup-row {
-  display: flex; /* Use flexbox for horizontal layout */
-  gap: 0.5rem; /* Space between elements in the row */
-  margin-bottom: 1rem; /* Space below each row */
+  display: flex;
+  /* Use flexbox for horizontal layout */
+  gap: 0.5rem;
+  /* Space between elements in the row */
+  margin-bottom: 1rem;
+  /* Space below each row */
 }
 
 /* 
@@ -121,13 +162,20 @@
  * Creates clean, modern input fields with proper spacing and borders
  */
 .signup-input {
-  flex: 1; /* Take equal space in flex container */
-  padding: 0.5rem; /* Internal spacing for comfort */
-  border: 1px solid #d1d5db; /* Light gray border */
-  border-radius: 0.375rem; /* Rounded corners */
-  font-size: 1rem; /* Standard font size */
-  background: #f9fafb; /* Very light gray background */
-  transition: border 0.2s; /* Smooth border color transition on focus */
+  flex: 1;
+  /* Take equal space in flex container */
+  padding: 0.5rem;
+  /* Internal spacing for comfort */
+  border: 1px solid #d1d5db;
+  /* Light gray border */
+  border-radius: 0.375rem;
+  /* Rounded corners */
+  font-size: 1rem;
+  /* Standard font size */
+  background: #f9fafb;
+  /* Very light gray background */
+  transition: border 0.2s;
+  /* Smooth border color transition on focus */
 }
 
 /* 
@@ -135,8 +183,10 @@
  * Used for contact information and password fields
  */
 .signup-input-full {
-  width: 100%; /* Take full width of container */
-  margin-bottom: 1rem; /* Space below input */
+  width: 100%;
+  /* Take full width of container */
+  margin-bottom: 1rem;
+  /* Space below input */
 }
 
 /* 
@@ -144,10 +194,14 @@
  * Used for birthday and gender section headers
  */
 .signup-label {
-  display: block; /* Make label a block element */
-  color: #374151; /* Dark gray text color */
-  margin-bottom: 0.25rem; /* Small space below label */
-  font-weight: 500; /* Medium font weight for emphasis */
+  display: block;
+  /* Make label a block element */
+  color: #374151;
+  /* Dark gray text color */
+  margin-bottom: 0.25rem;
+  /* Small space below label */
+  font-weight: 500;
+  /* Medium font weight for emphasis */
 }
 
 /* 
@@ -155,12 +209,18 @@
  * Used for birthday month, day, and year selection
  */
 .signup-select {
-  flex: 1; /* Take equal space in flex container */
-  padding: 0.5rem; /* Internal spacing */
-  border: 1px solid #d1d5db; /* Light gray border */
-  border-radius: 0.375rem; /* Rounded corners */
-  font-size: 1rem; /* Standard font size */
-  background: #f9fafb; /* Very light gray background */
+  flex: 1;
+  /* Take equal space in flex container */
+  padding: 0.5rem;
+  /* Internal spacing */
+  border: 1px solid #d1d5db;
+  /* Light gray border */
+  border-radius: 0.375rem;
+  /* Rounded corners */
+  font-size: 1rem;
+  /* Standard font size */
+  background: #f9fafb;
+  /* Very light gray background */
 }
 
 /* 
@@ -168,11 +228,16 @@
  * Creates horizontal layout for radio buttons with their labels
  */
 .signup-radio-label {
-  display: flex; /* Use flexbox for horizontal layout */
-  align-items: center; /* Center radio button and text vertically */
-  gap: 0.25rem; /* Small space between radio button and text */
-  font-size: 1rem; /* Standard font size */
-  margin-right: 1rem; /* Space between different radio options */
+  display: flex;
+  /* Use flexbox for horizontal layout */
+  align-items: center;
+  /* Center radio button and text vertically */
+  gap: 0.25rem;
+  /* Small space between radio button and text */
+  font-size: 1rem;
+  /* Standard font size */
+  margin-right: 1rem;
+  /* Space between different radio options */
 }
 
 /* 
@@ -180,7 +245,8 @@
  * Changes the default radio button color to match the app theme
  */
 .signup-radio {
-  accent-color: #1877f2; /* Facebook blue color for radio buttons */
+  accent-color: #1877f2;
+  /* Facebook blue color for radio buttons */
 }
 
 /* 
@@ -188,9 +254,12 @@
  * Used for terms of service and privacy policy disclaimers
  */
 .signup-info {
-  font-size: 0.85rem; /* Smaller font size for less prominence */
-  color: #606770; /* Gray text color */
-  margin-bottom: 0.5rem; /* Space below each info paragraph */
+  font-size: 0.85rem;
+  /* Smaller font size for less prominence */
+  color: #606770;
+  /* Gray text color */
+  margin-bottom: 0.5rem;
+  /* Space below each info paragraph */
 }
 
 /* 
@@ -198,8 +267,10 @@
  * Maintains Facebook blue color theme for all clickable elements
  */
 .signup-link {
-  color: #1877f2; /* Facebook blue color */
-  text-decoration: none; /* Remove default underline */
+  color: #1877f2;
+  /* Facebook blue color */
+  text-decoration: none;
+  /* Remove default underline */
 }
 
 /* 
@@ -207,7 +278,8 @@
  * Provides visual feedback that the text is clickable
  */
 .signup-link:hover {
-  text-decoration: underline; /* Show underline on hover */
+  text-decoration: underline;
+  /* Show underline on hover */
 }
 
 /* 
@@ -215,18 +287,30 @@
  * Uses green color to indicate a positive, create action
  */
 .signup-btn {
-  width: 100%; /* Take full width of container */
-  background: #42b72a; /* Green background for positive action */
-  color: #fff; /* White text */
-  padding: 0.75rem 0; /* Vertical padding only */
-  border-radius: 0.375rem; /* Rounded corners */
-  font-size: 1.125rem; /* Slightly larger font */
-  font-weight: bold; /* Bold text */
-  border: none; /* Remove default border */
-  cursor: pointer; /* Show pointer cursor */
-  margin-top: 0.5rem; /* Space above button */
-  margin-bottom: 0.5rem; /* Space below button */
-  transition: background 0.2s; /* Smooth color transition */
+  width: 100%;
+  /* Take full width of container */
+  background: #42b72a;
+  /* Green background for positive action */
+  color: #fff;
+  /* White text */
+  padding: 0.75rem 0;
+  /* Vertical padding only */
+  border-radius: 0.375rem;
+  /* Rounded corners */
+  font-size: 1.125rem;
+  /* Slightly larger font */
+  font-weight: bold;
+  /* Bold text */
+  border: none;
+  /* Remove default border */
+  cursor: pointer;
+  /* Show pointer cursor */
+  margin-top: 0.5rem;
+  /* Space above button */
+  margin-bottom: 0.5rem;
+  /* Space below button */
+  transition: background 0.2s;
+  /* Smooth color transition */
 }
 
 /* 
@@ -234,7 +318,8 @@
  * Provides visual feedback for better user experience
  */
 .signup-btn:hover {
-  background: #36a420; /* Darker green on hover */
+  background: #36a420;
+  /* Darker green on hover */
 }
 
 /* 
@@ -242,8 +327,10 @@
  * Centers the login link below the form
  */
 .signup-login-link {
-  text-align: center; /* Center the login link */
-  margin-top: 1rem; /* Space above the login link */
+  text-align: center;
+  /* Center the login link */
+  margin-top: 1rem;
+  /* Space above the login link */
 }
 
 /* 
@@ -251,13 +338,20 @@
  * Styled as a simple text link with Facebook blue color
  */
 .signup-login-btn {
-  background: none; /* No background color */
-  border: none; /* No border */
-  color: #1877f2; /* Facebook blue color */
-  font-size: 1rem; /* Standard font size */
-  cursor: pointer; /* Show pointer cursor */
-  text-decoration: underline; /* Underlined to indicate it's clickable */
-  padding: 0; /* No internal padding */
+  background: none;
+  /* No background color */
+  border: none;
+  /* No border */
+  color: #1877f2;
+  /* Facebook blue color */
+  font-size: 1rem;
+  /* Standard font size */
+  cursor: pointer;
+  /* Show pointer cursor */
+  text-decoration: underline;
+  /* Underlined to indicate it's clickable */
+  padding: 0;
+  /* No internal padding */
 }
 
 /* 
@@ -265,5 +359,6 @@
  * Provides visual feedback for better user experience
  */
 .signup-login-btn:hover {
-  color: #145db2; /* Darker blue on hover */
+  color: #145db2;
+  /* Darker blue on hover */
 }
