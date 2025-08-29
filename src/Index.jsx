@@ -230,7 +230,7 @@
 // }
 
 import React, { useState, useEffect } from 'react';
-import './index.css';
+import './Index.css';
 
 import { Login } from './Login';
 import { Calendar } from './Calendar';

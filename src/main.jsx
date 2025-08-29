@@ -26,8 +26,8 @@
 
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './index.jsx'
+import './Index.css'
+import App from './Index.jsx'
 
 // Create root and render the app
 const root = createRoot(document.getElementById('root'));
