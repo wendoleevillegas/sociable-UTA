@@ -1,14 +1,12 @@
-/*
- * STUDENTINFORMATION.JSX - User Profile Management Component
- * This component allows users to view and edit their personal information including
- * name, birthday, email, phone number, and password. It provides a toggle between
- * view and edit modes with proper validation and server synchronization.
- */
 
 // Import necessary React hooks and external libraries
 import React, { useState, useEffect } from 'react'; // React hooks for state and lifecycle management
 import axios from 'axios'; // HTTP client for making API requests
 import './StudentInformation.css'; // Import component-specific styles
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faLinkedin } from '@fortawesome/free-brands-svg-icons';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { getLinkedInAccount, disconnectLinkedInAccount, getLinkedInAccountSummary } from './LinkedInAccountService';
 
 /*
  * PERSONALINFO COMPONENT - User account information management
@@ -17,13 +15,6 @@ import './StudentInformation.css'; // Import component-specific styles
  * - token: Authentication token for making authorized API requests
  * - onBack: Function to navigate back to the previous page/component
  * 
- * Features:
- * - Display user's personal information in read-only mode
- * - Toggle to edit mode for updating information
- * - Form validation for all input fields
- * - Real-time API synchronization for data persistence
- * - Success and error message feedback
- * - Secure password handling
  */
 export const PersonalInfo = ({ token, onBack }) => {
   // STATE MANAGEMENT - Component state for user information and UI control
@@ -35,9 +26,10 @@ export const PersonalInfo = ({ token, onBack }) => {
     phone: '',        // User's phone number
     password: '',     // User's password (for updates only)
   });
-  
+
   const [editMode, setEditMode] = useState(false); // Toggle between view and edit modes
   const [message, setMessage] = useState('');      // Success/error messages for user feedback
+  const [linkedInAccount, setLinkedInAccount] = useState(null); // LinkedIn account information
 
   /*
    * FETCH USER INFO EFFECT - Load user data when component mounts
@@ -48,30 +40,27 @@ export const PersonalInfo = ({ token, onBack }) => {
     // FETCH USER DATA FROM SERVER
     axios
       .get('http://localhost:5500/api/users/me', {
-        headers: { Authorization: `Bearer ${token}` }, // Include auth token in request
+        headers: { Authorization: `Bearer ${token}` }, // Include auth token in headers
       })
-      .then((res) => {
-        // SUCCESS: Update state with user information from server
-        setInfo({
-          firstName: res.data.firstName || '',
-          lastName: res.data.lastName || '',
-          birthday: res.data.birthday || '',
-          email: res.data.email || '',
-          phone: res.data.phone || '',
-          password: '', // Don't populate password field for security
-        });
+      .then((response) => {
+        // UPDATE STATE with fetched user data
+        setInfo(response.data);
       })
-      .catch(() => {
-        // ERROR: Display error message if data loading fails
-        setMessage('Failed to load user info.');
+      .catch((error) => {
+        // HANDLE FETCH ERRORS
+        console.error('Error fetching user data:', error);
+        setMessage('Failed to load user information.');
       });
+
+    // LOAD LINKEDIN ACCOUNT INFORMATION
+    const linkedInData = getLinkedInAccount();
+    setLinkedInAccount(linkedInData);
   }, [token]); // Re-run effect if token changes
 
   /*
    * HANDLE INPUT CHANGES - Update form state when user types in any field
    * This function is called every time the user modifies an input field
    * 
-   * @param {Event} e - The input change event containing field name and new value
    */
   const handleChange = (e) => {
     const { name, value } = e.target; // Extract field name and new value
@@ -81,13 +70,11 @@ export const PersonalInfo = ({ token, onBack }) => {
   /*
    * HANDLE SAVE OPERATION - Submit updated information to server
    * This function processes form submission and sends updated data to the API
-   * 
-   * @param {Event} e - The form submission event
    */
   const handleSave = async (e) => {
     e.preventDefault(); // Prevent default form submission behavior
     setMessage(''); // Clear any existing messages
-    
+
     try {
       // SEND UPDATE REQUEST TO SERVER
       await axios.put(
@@ -102,14 +89,27 @@ export const PersonalInfo = ({ token, onBack }) => {
         },
         { headers: { Authorization: `Bearer ${token}` } } // Include auth token
       );
-      
+
       // SUCCESS HANDLING
       setMessage('Information updated successfully!');
       setEditMode(false); // Switch back to view mode after successful save
-      
+
     } catch (err) {
       // ERROR HANDLING
       setMessage('Failed to update information.');
+    }
+  };
+
+  // HANDLE LINKEDIN ACCOUNT DISCONNECTION
+  const handleLinkedInDisconnect = () => {
+    if (window.confirm('Are you sure you want to disconnect your LinkedIn account?')) {
+      const success = disconnectLinkedInAccount();
+      if (success) {
+        setLinkedInAccount(null);
+        setMessage('LinkedIn account disconnected successfully!');
+      } else {
+        setMessage('Failed to disconnect LinkedIn account.');
+      }
     }
   };
 
@@ -117,20 +117,20 @@ export const PersonalInfo = ({ token, onBack }) => {
   return (
     <div className="personal-root"> {/* Main container for the personal info page */}
       <div className="personal-main"> {/* Form container with styling */}
-        
+
         {/* PAGE TITLE */}
         <h2 className="personal-title">Personal Information</h2>
-        
+
         {/* SUCCESS/ERROR MESSAGE DISPLAY - Conditional rendering based on message state */}
         {message && (
           <div className={`personal-message ${message.includes('success') ? 'personal-success' : 'personal-error'}`}>
             {message}
           </div>
         )}
-        
+
         {/* PERSONAL INFORMATION FORM */}
         <form onSubmit={handleSave}>
-          
+
           {/* FULL NAME FIELD - First and last name in a single row */}
           <div className="personal-field">
             <label className="personal-label">Full Name</label>
@@ -157,7 +157,7 @@ export const PersonalInfo = ({ token, onBack }) => {
               />
             </div>
           </div>
-          
+
           {/* DATE OF BIRTH FIELD */}
           <div className="personal-field">
             <label className="personal-label">Date of Birth</label>
@@ -171,7 +171,7 @@ export const PersonalInfo = ({ token, onBack }) => {
               required // HTML5 validation - field is required
             />
           </div>
-          
+
           {/* EMAIL ADDRESS FIELD */}
           <div className="personal-field">
             <label className="personal-label">Email Address</label>
@@ -185,7 +185,7 @@ export const PersonalInfo = ({ token, onBack }) => {
               required // HTML5 validation - field is required
             />
           </div>
-          
+
           {/* PHONE NUMBER FIELD */}
           <div className="personal-field">
             <label className="personal-label">Phone Number</label>
@@ -196,10 +196,10 @@ export const PersonalInfo = ({ token, onBack }) => {
               onChange={handleChange} // Update state when user types
               className="personal-input"
               disabled={!editMode} // Only editable when in edit mode
-              // Note: Phone is not required (no 'required' attribute)
+            // Note: Phone is not required (no 'required' attribute)
             />
           </div>
-          
+
           {/* PASSWORD FIELD */}
           <div className="personal-field">
             <label className="personal-label">Password</label>
@@ -213,10 +213,62 @@ export const PersonalInfo = ({ token, onBack }) => {
               placeholder={editMode ? "Enter new password" : "********"} // Different placeholders for different modes
             />
           </div>
-          
+
+          {/* LINKEDIN ACCOUNT SECTION */}
+          <div className="personal-field">
+            <label className="personal-label">
+              <FontAwesomeIcon icon={faLinkedin} style={{ marginRight: '8px', color: '#0077B5' }} />
+              LinkedIn Account
+            </label>
+
+            {linkedInAccount ? (
+              // CONNECTED LINKEDIN ACCOUNT DISPLAY
+              <div className="linkedin-account-info">
+                <div className="linkedin-account-details">
+                  <div className="linkedin-account-row">
+                    <span className="linkedin-account-label">Connected Account:</span>
+                    <span className="linkedin-account-value">{linkedInAccount.firstName} {linkedInAccount.lastName}</span>
+                  </div>
+                  <div className="linkedin-account-row">
+                    <span className="linkedin-account-label">Connection Date:</span>
+                    <span className="linkedin-account-value">
+                      {new Date(linkedInAccount.connectionDate).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                      })}
+                    </span>
+                  </div>
+                  <div className="linkedin-account-row">
+                    <span className="linkedin-account-label">Status:</span>
+                    <span className="linkedin-account-status connected">Connected</span>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  className="linkedin-disconnect-btn"
+                  onClick={handleLinkedInDisconnect}
+                  title="Disconnect LinkedIn Account"
+                >
+                  <FontAwesomeIcon icon={faTrash} />
+                  Disconnect
+                </button>
+              </div>
+            ) : (
+              // NO LINKEDIN ACCOUNT CONNECTED
+              <div className="linkedin-account-info">
+                <div className="linkedin-account-message">
+                  <p>No LinkedIn account connected</p>
+                  <small>Connect your LinkedIn account in the Post section to enable LinkedIn posting and analytics.</small>
+                </div>
+              </div>
+            )}
+          </div>
+
           {/* ACTION BUTTONS - Back, Edit, and Save buttons */}
           <div className="personal-actions">
-            
+
             {/* BACK BUTTON - Navigate to previous page */}
             <button
               type="button" // Not a submit button
@@ -225,7 +277,7 @@ export const PersonalInfo = ({ token, onBack }) => {
             >
               Back
             </button>
-            
+
             {/* CONDITIONAL BUTTONS - Show Save or Edit button based on current mode */}
             {editMode ? (
               // SAVE BUTTON - Submit form and save changes (only visible in edit mode)
