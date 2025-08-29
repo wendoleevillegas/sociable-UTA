@@ -1,10 +1,4 @@
 /* 
- * LOGIN.CSS - Styles for the Login component
- * This file contains all the styles for the login page layout, form styling,
- * and responsive design. It creates a Facebook-like login interface.
- */
-
-/* 
  * ROOT CONTAINER - Main wrapper for the entire login page
  * Creates a full-height layout with a light gray background
  */
@@ -65,7 +59,7 @@
  * Uses Facebook's signature blue color and large font size
  */
 .login-title {
-  color: #0064B1;
+  color: #1877f2;
   /* Facebook blue color */
   font-size: 4rem;
   /* Large font size for prominence */
@@ -152,7 +146,7 @@
 .login-btn {
   width: 100%;
   /* Take full width of container */
-  background: #0064B1;
+  background: #1877f2;
   /* Facebook blue background */
   color: #fff;
   /* White text */
@@ -188,7 +182,7 @@
  * Styled as a link with Facebook blue color and underline on hover
  */
 .login-forgot {
-  color: #0064B1;
+  color: #1877f2;
   /* Facebook blue color */
   font-size: 0.95rem;
   /* Slightly smaller font */
