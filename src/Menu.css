@@ -1,19 +1,16 @@
 /* 
- * MENU.CSS - Styles for the Navigation Menu Component
- * This file contains all styling for the main navigation bar that appears
- * after user login. It creates a professional, university-themed header
- * with branding and navigation links.
- */
-
-/* 
  * MAIN NAVBAR CONTAINER - Top-level navigation bar
  * Creates the foundation for the entire navigation system
  */
 .navbar {
-  background: #fcfbf8; /* Light cream background */
-  padding: 0 24px 0 12px; /* Asymmetric padding - more on right for balance */
-  border-bottom: 4px solid #444; /* Dark gray bottom border for emphasis */
-  display: block; /* Block layout for the navbar */
+  background: #fcfbf8;
+  /* Light cream background */
+  padding: 0 24px 0 12px;
+  /* Asymmetric padding - more on right for balance */
+  border-bottom: 4px solid #444;
+  /* Dark gray bottom border for emphasis */
+  display: block;
+  /* Block layout for the navbar */
 }
 
 /* 
@@ -21,14 +18,22 @@
  * Displays the application name with university branding colors
  */
 .navbar-logo {
-  font-size: 2.4rem; /* Large font size for prominence */
-  font-weight: bold; /* Bold text weight */
-  color: #1976d2; /* Blue color matching university theme */
-  font-family: inherit; /* Use the default font family */
-  line-height: 1; /* Tight line height for better appearance */
-  margin-bottom: 0.2rem; /* Small space below logo */
-  display: block; /* Block element for full width */
-  padding-top: 18px; /* Top padding for vertical spacing */
+  font-size: 2.4rem;
+  /* Large font size for prominence */
+  font-weight: bold;
+  /* Bold text weight */
+  color: #1976d2;
+  /* Blue color matching university theme */
+  font-family: inherit;
+  /* Use the default font family */
+  line-height: 1;
+  /* Tight line height for better appearance */
+  margin-bottom: 0.2rem;
+  /* Small space below logo */
+  display: block;
+  /* Block element for full width */
+  padding-top: 18px;
+  /* Top padding for vertical spacing */
 }
 
 /* 
@@ -36,10 +41,14 @@
  * Creates horizontal layout with space between left and right sections
  */
 .navbar-menu-row {
-  display: flex; /* Use flexbox for layout */
-  align-items: flex-end; /* Align items to bottom for consistent baseline */
-  justify-content: space-between; /* Space between left and right sections */
-  margin-top: 8px; /* Space above the navigation row */
+  display: flex;
+  /* Use flexbox for layout */
+  align-items: flex-end;
+  /* Align items to bottom for consistent baseline */
+  justify-content: space-between;
+  /* Space between left and right sections */
+  margin-top: 8px;
+  /* Space above the navigation row */
 }
 
 /* 
@@ -47,9 +56,12 @@
  * Houses the primary navigation links (Calendar, Posts, etc.)
  */
 .navbar-left {
-  display: flex; /* Use flexbox for horizontal layout */
-  align-items: flex-end; /* Align to bottom for consistent baseline */
-  gap: 32px; /* Space between navigation links */
+  display: flex;
+  /* Use flexbox for horizontal layout */
+  align-items: flex-end;
+  /* Align to bottom for consistent baseline */
+  gap: 32px;
+  /* Space between navigation links */
 }
 
 /* 
@@ -57,14 +69,22 @@
  * Default styling for all clickable navigation elements
  */
 .navbar-link {
-  font-size: 1.25rem; /* Medium-large font size */
-  font-weight: 700; /* Bold font weight for prominence */
-  color: #1976d2 !important; /* Blue color (important to override other styles) */
-  cursor: pointer; /* Show pointer cursor on hover */
-  opacity: 0.85; /* Slightly transparent for inactive state */
-  transition: all 0.2s; /* Smooth transition on state changes */
-  padding-bottom: 8px; /* Padding at bottom for border space */
-  border-bottom: 3px solid transparent; /* Invisible bottom border for inactive state */
+  font-size: 1.25rem;
+  /* Medium-large font size */
+  font-weight: 700;
+  /* Bold font weight for prominence */
+  color: #1976d2 !important;
+  /* Blue color (important to override other styles) */
+  cursor: pointer;
+  /* Show pointer cursor on hover */
+  opacity: 0.85;
+  /* Slightly transparent for inactive state */
+  transition: all 0.2s;
+  /* Smooth transition on state changes */
+  padding-bottom: 8px;
+  /* Padding at bottom for border space */
+  border-bottom: 3px solid transparent;
+  /* Invisible bottom border for inactive state */
 }
 
 /* 
@@ -73,21 +93,28 @@
  */
 .navbar-link-active,
 .navbar-left .navbar-link.navbar-link-active {
-  color: #f57c1a !important; /* Orange color for active state */
-  font-weight: 700; /* Bold font weight */
-  opacity: 1; /* Full opacity for active state */
-  border-bottom: 3px solid #f57c1a; /* Orange bottom border for active state */
+  color: #f57c1a !important;
+  /* Orange color for active state */
+  font-weight: 700;
+  /* Bold font weight */
+  opacity: 1;
+  /* Full opacity for active state */
+  border-bottom: 3px solid #f57c1a;
+  /* Orange bottom border for active state */
 }
 
 /* 
  * EXTRA SPECIFICITY FOR ACTIVE LINKS - Ensures orange color and border always wins
  * Higher CSS specificity to guarantee the orange active color and border is applied
  */
-.navbar-left > .navbar-link.navbar-link-active,
+.navbar-left>.navbar-link.navbar-link-active,
 .navbar-link.navbar-link-active {
-  color: #f57c1a !important; /* Orange color with highest priority */
-  opacity: 1 !important; /* Full opacity with highest priority */
-  border-bottom: 3px solid #f57c1a !important; /* Orange bottom border with highest priority */
+  color: #f57c1a !important;
+  /* Orange color with highest priority */
+  opacity: 1 !important;
+  /* Full opacity with highest priority */
+  border-bottom: 3px solid #f57c1a !important;
+  /* Orange bottom border with highest priority */
 }
 
 /* 
@@ -95,10 +122,14 @@
  * Houses user-specific actions like account management and logout
  */
 .navbar-right {
-  display: flex; /* Use flexbox for horizontal layout */
-  align-items: flex-end; /* Align to bottom for consistent baseline */
-  gap: 24px; /* Space between right-side elements */
-  margin-bottom: 2px; /* Small bottom margin for alignment */
+  display: flex;
+  /* Use flexbox for horizontal layout */
+  align-items: flex-end;
+  /* Align to bottom for consistent baseline */
+  gap: 24px;
+  /* Space between right-side elements */
+  margin-bottom: 2px;
+  /* Small bottom margin for alignment */
 }
 
 /* 
@@ -106,10 +137,14 @@
  * Links to user's personal information and account settings
  */
 .navbar-account {
-  font-size: 1.1rem; /* Slightly smaller than main nav links */
-  font-weight: 700; /* Bold font weight */
-  color: #1976d2; /* Blue color matching other nav links */
-  cursor: pointer; /* Show pointer cursor on hover */
+  font-size: 1.1rem;
+  /* Slightly smaller than main nav links */
+  font-weight: 700;
+  /* Bold font weight */
+  color: #1976d2;
+  /* Blue color matching other nav links */
+  cursor: pointer;
+  /* Show pointer cursor on hover */
 }
 
 /* 
@@ -118,8 +153,12 @@
  * May be intentionally hidden or needs to be updated to display: block
  */
 .navbar-logout {
-  font-size: 1.1rem; /* Slightly smaller than main nav links */
-  font-weight: 700; /* Bold font weight */
-  color: #1976d2; /* Blue color matching other nav links */
-  cursor: pointer; /* Show pointer cursor on hover */
+  font-size: 1.1rem;
+  /* Slightly smaller than main nav links */
+  font-weight: 700;
+  /* Bold font weight */
+  color: #1976d2;
+  /* Blue color matching other nav links */
+  cursor: pointer;
+  /* Show pointer cursor on hover */
 }
