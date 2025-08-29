@@ -16,7 +16,7 @@ export const Calendar = ({ token, setToken, apiSource = 'instagram', onNavigate 
   const handleDateClick = (info) => {
     const clickedDate = info.dateStr;
     setSelectedDate(clickedDate);
-    
+
     const eventsForDay = events.filter((evt) => {
       let eventDateStr;
       if (typeof evt.start === 'string') {
@@ -26,7 +26,7 @@ export const Calendar = ({ token, setToken, apiSource = 'instagram', onNavigate 
       }
       return eventDateStr === clickedDate;
     });
-    
+
     setDayEvents(eventsForDay);
     setShowModal(true);
   };
@@ -46,15 +46,15 @@ export const Calendar = ({ token, setToken, apiSource = 'instagram', onNavigate 
 
   const handleNotificationClick = (notificationId) => {
     const clickedNotification = notifications.find(n => n.id === notificationId);
-    
-    setNotifications(prev => 
-      prev.map(notification => 
-        notification.id === notificationId 
+
+    setNotifications(prev =>
+      prev.map(notification =>
+        notification.id === notificationId
           ? { ...notification, unread: false }
           : notification
       )
     );
-    
+
     if (clickedNotification?.targetPage && onNavigate) {
       onNavigate(clickedNotification.targetPage);
     }
@@ -65,7 +65,7 @@ export const Calendar = ({ token, setToken, apiSource = 'instagram', onNavigate 
   const fetchEvents = async () => {
     try {
       const mockEvents = await fetchPlatformCalendarEvents(apiSource);
-      
+
       const fetchedEvents = mockEvents.map((event) => ({
         title: event.title,
         start: event.start,
@@ -79,9 +79,9 @@ export const Calendar = ({ token, setToken, apiSource = 'instagram', onNavigate 
         },
         id: event.id,
       }));
-      
+
       setEvents(fetchedEvents);
-      
+
     } catch (err) {
       console.error(`Error fetching ${apiSource} events:`, err);
     }
@@ -89,7 +89,7 @@ export const Calendar = ({ token, setToken, apiSource = 'instagram', onNavigate 
 
   useEffect(() => {
     fetchEvents();
-    
+
     // Fetch platform notifications
     const fetchNotifications = async () => {
       try {
@@ -135,11 +135,11 @@ export const Calendar = ({ token, setToken, apiSource = 'instagram', onNavigate 
             dayHeaderFormat={{ weekday: 'short' }}
           />
         </div>
-        
+
         {/* Platform Notifications Panel */}
         <div className="calendar-notifications">
-          <NotificationPanel 
-            notifications={notifications} 
+          <NotificationPanel
+            notifications={notifications}
             onNotificationClick={handleNotificationClick}
             unreadCount={unreadCount}
           />
@@ -175,9 +175,9 @@ export const Calendar = ({ token, setToken, apiSource = 'instagram', onNavigate 
                           </div>
                         )}
                         <div className="event-time">
-                          {typeof event.start === 'string' 
-                            ? new Date(event.start).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
-                            : event.start?.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+                          {typeof event.start === 'string'
+                            ? new Date(event.start).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                            : event.start?.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
                           }
                         </div>
                       </div>
