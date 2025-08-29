@@ -1,10 +1,10 @@
 import React from 'react';
 import './NotificationPanel.css';
 
-export const NotificationPanel = ({ 
-  notifications, 
-  onNotificationClick, 
-  unreadCount 
+export const NotificationPanel = ({
+  notifications,
+  onNotificationClick,
+  unreadCount
 }) => {
   return (
     <div className="notifications-panel">
@@ -16,7 +16,7 @@ export const NotificationPanel = ({
       </div>
       <div className="notifications-list">
         {notifications.map(notification => (
-          <div 
+          <div
             key={notification.id}
             className={`notification-item ${notification.unread ? 'unread' : ''}`}
             onClick={() => onNotificationClick(notification.id)}
