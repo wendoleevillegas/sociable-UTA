@@ -101,121 +101,121 @@ export const Inbox = ({ token, apiSource = 'instagram', onNavigate }) => {
       <div className="inbox-main-container">
         {/* Platform indicator removed per user request */}
         <div className="inbox-layout">
-        
-        {/* MESSAGE LIST - Left sidebar with list of all messages */}
-        <div className="inbox-message-list">
-          <div className="inbox-header">
-            <h3>Messages</h3>
-            {loading && <div className="inbox-loading">Loading...</div>}
-          </div>
-          
-          <div className="inbox-messages">
-            {messages.map(message => (
-              <div
-                key={message.id}
-                className={`inbox-message-item ${message.unread ? 'unread' : ''} ${selectedMessage?.id === message.id ? 'selected' : ''}`}
-                onClick={() => handleMessageClick(message)}
-                style={getMessageTypeStyle(message.messageType)}
-              >
-                <div className="message-avatar">
-                  <img src={message.senderAvatar} alt={message.senderName} />
-                  {message.unread && <div className="unread-indicator"></div>}
-                </div>
-                
-                <div className="message-content">
-                  <div className="message-header">
-                    <span className="message-sender">{message.senderName}</span>
-                    <span className="message-time">{message.timestamp}</span>
+
+          {/* MESSAGE LIST - Left sidebar with list of all messages */}
+          <div className="inbox-message-list">
+            <div className="inbox-header">
+              <h3>Messages</h3>
+              {loading && <div className="inbox-loading">Loading...</div>}
+            </div>
+
+            <div className="inbox-messages">
+              {messages.map(message => (
+                <div
+                  key={message.id}
+                  className={`inbox-message-item ${message.unread ? 'unread' : ''} ${selectedMessage?.id === message.id ? 'selected' : ''}`}
+                  onClick={() => handleMessageClick(message)}
+                  style={getMessageTypeStyle(message.messageType)}
+                >
+                  <div className="message-avatar">
+                    <img src={message.senderAvatar} alt={message.senderName} />
+                    {message.unread && <div className="unread-indicator"></div>}
                   </div>
-                  <div className="message-preview">
-                    {message.lastMessage}
-                  </div>
-                  <div className="message-type-badge">
-                    {message.messageType.replace('_', ' ')}
-                  </div>
-                </div>
-              </div>
-            ))}
-            
-            {/* EMPTY STATE - Show when no messages */}
-            {!loading && messages.length === 0 && (
-              <div className="inbox-empty">
-                <p>No messages from {platformConfig.name}</p>
-              </div>
-            )}
-          </div>
-        </div>
-        
-        {/* MESSAGE DETAIL - Right side detailed view of selected message */}
-        <div className="inbox-message-detail">
-          {selectedMessage ? (
-            <div className="message-detail-content">
-              <div className="message-detail-header">
-                <img src={selectedMessage.senderAvatar} alt={selectedMessage.senderName} />
-                <div className="message-header-info">
-                  <h3>{selectedMessage.senderName}</h3>
-                  <p className="message-detail-time">{selectedMessage.timestamp}</p>
-                  <span className="message-detail-type" style={{ backgroundColor: platformConfig.color }}>
-                    {selectedMessage.messageType.replace('_', ' ')}
-                  </span>
-                </div>
-              </div>
-              
-              <div className="message-detail-body">
-                <div className="message-conversation">
-                  <div className="message-bubble incoming">
-                    <p>{selectedMessage.lastMessage}</p>
-                    <span className="message-timestamp">{selectedMessage.timestamp}</span>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="message-reply-area">
-                <div className="chat-input-section">
-                  <div className="chat-input-header">
-                    <span className="typing-indicator">Type a message...</span>
-                  </div>
-                  <div className="reply-input-container">
-                    <input
-                      type="text"
-                      placeholder={`Message ${selectedMessage.senderName}...`}
-                      className="reply-input"
-                    />
-                    <div className="input-actions">
-                      <button className="attachment-btn" title="Attach file">
-                        📎
-                      </button>
-                      <button className="emoji-btn" title="Add emoji">
-                        😊
-                      </button>
-                      <button className="reply-send-btn" style={{ backgroundColor: platformConfig.color }}>
-                        <span>Send</span>
-                        <span className="send-icon">➤</span>
-                      </button>
+
+                  <div className="message-content">
+                    <div className="message-header">
+                      <span className="message-sender">{message.senderName}</span>
+                      <span className="message-time">{message.timestamp}</span>
+                    </div>
+                    <div className="message-preview">
+                      {message.lastMessage}
+                    </div>
+                    <div className="message-type-badge">
+                      {message.messageType.replace('_', ' ')}
                     </div>
                   </div>
                 </div>
-                <div className="message-actions">
-                  <button className="action-btn primary">
-                    Mark as Read
-                  </button>
-                  <button className="action-btn">
-                    Archive
-                  </button>
-                  <button className="action-btn">
-                    Block
-                  </button>
+              ))}
+
+              {/* EMPTY STATE - Show when no messages */}
+              {!loading && messages.length === 0 && (
+                <div className="inbox-empty">
+                  <p>No messages from {platformConfig.name}</p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* MESSAGE DETAIL - Right side detailed view of selected message */}
+          <div className="inbox-message-detail">
+            {selectedMessage ? (
+              <div className="message-detail-content">
+                <div className="message-detail-header">
+                  <img src={selectedMessage.senderAvatar} alt={selectedMessage.senderName} />
+                  <div className="message-header-info">
+                    <h3>{selectedMessage.senderName}</h3>
+                    <p className="message-detail-time">{selectedMessage.timestamp}</p>
+                    <span className="message-detail-type" style={{ backgroundColor: platformConfig.color }}>
+                      {selectedMessage.messageType.replace('_', ' ')}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="message-detail-body">
+                  <div className="message-conversation">
+                    <div className="message-bubble incoming">
+                      <p>{selectedMessage.lastMessage}</p>
+                      <span className="message-timestamp">{selectedMessage.timestamp}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="message-reply-area">
+                  <div className="chat-input-section">
+                    <div className="chat-input-header">
+                      <span className="typing-indicator">Type a message...</span>
+                    </div>
+                    <div className="reply-input-container">
+                      <input
+                        type="text"
+                        placeholder={`Message ${selectedMessage.senderName}...`}
+                        className="reply-input"
+                      />
+                      <div className="input-actions">
+                        <button className="attachment-btn" title="Attach file">
+                          📎
+                        </button>
+                        <button className="emoji-btn" title="Add emoji">
+                          😊
+                        </button>
+                        <button className="reply-send-btn" style={{ backgroundColor: platformConfig.color }}>
+                          <span>Send</span>
+                          <span className="send-icon">➤</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="message-actions">
+                    <button className="action-btn primary">
+                      Mark as Read
+                    </button>
+                    <button className="action-btn">
+                      Archive
+                    </button>
+                    <button className="action-btn">
+                      Block
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ) : (
-            <div className="inbox-no-selection">
-              <div className="no-selection-icon">💬</div>
-              <h3>Select a message</h3>
-              <p>Choose a message from the list to start chatting</p>
-            </div>
-          )}
-        </div>
+            ) : (
+              <div className="inbox-no-selection">
+                <div className="no-selection-icon">💬</div>
+                <h3>Select a message</h3>
+                <p>Choose a message from the list to start chatting</p>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
