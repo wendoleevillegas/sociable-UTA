@@ -13,7 +13,7 @@ export const PostView = ({ token, user, apiSource = 'instagram', onNavigate }) =
   const [isPosting, setIsPosting] = useState(false);
   const [linkedInToken, setLinkedInToken] = useState(localStorage.getItem('linkedin_token') || '');
   const [isLinkedInAuthenticated, setIsLinkedInAuthenticated] = useState(!!localStorage.getItem('linkedin_token'));
-  
+
   const fileInputRef = useRef();
 
   useEffect(() => {
@@ -26,14 +26,14 @@ export const PostView = ({ token, user, apiSource = 'instagram', onNavigate }) =
         setPosts([]);
       }
     };
-    
+
     fetchPosts();
 
     // Check for LinkedIn OAuth callback
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
     const state = urlParams.get('state');
-    
+
     if (code && state === 'linkedin_auth') {
       handleLinkedInCallback(code);
     }
@@ -50,16 +50,16 @@ export const PostView = ({ token, user, apiSource = 'instagram', onNavigate }) =
         },
         body: JSON.stringify({ code }),
       });
-      
+
       if (response.ok) {
         const { access_token } = await response.json();
         setLinkedInToken(access_token);
         setIsLinkedInAuthenticated(true);
         localStorage.setItem('linkedin_token', access_token);
-        
+
         // Clean up URL
         window.history.replaceState({}, document.title, window.location.pathname);
-        
+
       } else {
         const errorData = await response.json();
         throw new Error(errorData.error || 'Authentication failed');
@@ -87,15 +87,15 @@ export const PostView = ({ token, user, apiSource = 'instagram', onNavigate }) =
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!caption.trim() && !media) {
       setError('Please add some content or media to your post');
       return;
     }
-    
+
     setIsPosting(true);
     setError('');
-    
+
     try {
       const formData = new FormData();
       formData.append('caption', caption);
@@ -121,15 +121,15 @@ export const PostView = ({ token, user, apiSource = 'instagram', onNavigate }) =
           setError('Posted locally but failed to post to LinkedIn. Please try again.');
         }
       }
-      
+
       setMedia(null);
       setCaption('');
-      
+
       const response = await axios.get('http://localhost:5500/api/posts', {
         headers: { Authorization: `Bearer ${token}` }
       });
       setPosts(response.data);
-      
+
     } catch (err) {
       console.error('Failed to create post:', err);
       setError('Failed to create post. Please try again.');
@@ -181,7 +181,7 @@ export const PostView = ({ token, user, apiSource = 'instagram', onNavigate }) =
                 alt="avatar"
                 className="postview-avatar"
               />
-              
+
               <div className="postview-actions postview-actions-center">
                 <div
                   className="postview-action"
@@ -190,7 +190,7 @@ export const PostView = ({ token, user, apiSource = 'instagram', onNavigate }) =
                   <FontAwesomeIcon icon={faVideo} style={{ color: '#4caf50', fontSize: 32, marginRight: 8 }} />
                   <span style={{ fontSize: 22, fontWeight: 500 }}>Video</span>
                 </div>
-                
+
                 <div
                   className="postview-action"
                   onClick={() => handleMediaClick('image')}
@@ -200,14 +200,14 @@ export const PostView = ({ token, user, apiSource = 'instagram', onNavigate }) =
                 </div>
               </div>
             </div>
-            
+
             <input
               ref={fileInputRef}
               type="file"
               style={{ display: 'none' }}
               onChange={handleMediaChange}
             />
-            
+
             <form onSubmit={handleSubmit} className="postview-form">
               <textarea
                 placeholder={platformConfig.placeholder}
@@ -216,7 +216,7 @@ export const PostView = ({ token, user, apiSource = 'instagram', onNavigate }) =
                 className="postview-textarea"
                 required
               />
-              
+
               {media && (
                 <div className="postview-media-preview">
                   {media.type && media.type.startsWith('image') ? (
@@ -229,16 +229,16 @@ export const PostView = ({ token, user, apiSource = 'instagram', onNavigate }) =
                   ) : null}
                 </div>
               )}
-              
+
               {error && (
                 <div className="postview-error">
                   {error}
                 </div>
               )}
-              
+
               <div className="postview-form-buttons">
-                <button 
-                  type="submit" 
+                <button
+                  type="submit"
                   className="postview-post-btn"
                   style={{ backgroundColor: platformConfig.color }}
                   disabled={isPosting}
@@ -258,40 +258,40 @@ export const PostView = ({ token, user, apiSource = 'instagram', onNavigate }) =
                     alt="avatar"
                     className="postview-feed-avatar"
                   />
-                  
+
                   <div>
                     <div className="postview-feed-author">{post.authorName}</div>
                     <div className="postview-feed-role">{post.authorRole}</div>
                     <div className="postview-feed-meta">{post.meta}</div>
                   </div>
-                  
+
                   <button className="postview-feed-follow">+ Follow</button>
                 </div>
-                
+
                 <div className="postview-feed-caption">
                   {post.caption}
                 </div>
-                
+
                 <div className="postview-feed-content">
                   {post.title && (
                     <div className="postview-feed-title">{post.title}</div>
                   )}
-                  
+
                   {post.mediaType === 'image' && (
                     <img src={post.mediaUrl} alt={post.title || 'media'} className="postview-feed-media" />
                   )}
-                  
+
                   {post.mediaType === 'video' && (
                     <video controls src={post.mediaUrl} className="postview-feed-media" />
                   )}
                 </div>
-                
+
                 <div className="postview-feed-actions">
                   <span><FontAwesomeIcon icon={faThumbsUp} /> Like</span>
                   <span><FontAwesomeIcon icon={faComments} /> Comment</span>
                   <span><FontAwesomeIcon icon={faShareFromSquare} /> Share</span>
                 </div>
-                
+
                 <div className="postview-feed-meta2">
                   <span>{post.likes ?? 0} likes</span>
                   {' · '}
