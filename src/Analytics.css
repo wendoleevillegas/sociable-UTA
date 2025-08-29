@@ -106,7 +106,7 @@
   .analytics-row {
     flex-direction: column;
   }
-  
+
   .analytics-card.large,
   .analytics-card.medium {
     flex: none;
@@ -119,11 +119,11 @@
   .analytics-container {
     padding: 10px;
   }
-  
+
   .analytics-card {
     padding: 15px;
   }
-  
+
   .analytics-view-toggle {
     justify-content: center;
   }
