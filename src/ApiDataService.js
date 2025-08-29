@@ -2,7 +2,7 @@ export const generateMockPosts = (platform) => {
   if (platform !== 'linkedin') {
     return [];
   }
-  
+
   const basePosts = {
     instagram: [
       {
@@ -189,7 +189,7 @@ export const fetchPlatformPosts = async (platform) => {
       return [];
     }
   }
-  
+
   // Return empty array for Instagram, Facebook, X, etc.
   return [];
 };
@@ -229,15 +229,16 @@ export const getPlatformEndpoints = (platform) => {
 // LinkedIn OAuth configuration
 export const LINKEDIN_CONFIG = {
   CLIENT_ID: import.meta.env.VITE_LINKEDIN_CLIENT_ID || '',
+  CLIENT_SECRET: import.meta.env.VITE_LINKEDIN_CLIENT_SECRET || '',
   REDIRECT_URI: import.meta.env.VITE_LINKEDIN_REDIRECT_URI || 'http://localhost:5173/auth/linkedin/callback',
-  SCOPE: 'r_liteprofile r_emailaddress w_member_social'
+  SCOPE: import.meta.env.VITE_LINKEDIN_SCOPE || 'r_liteprofile r_emailaddress w_member_social'
 };
 
 // Function to initiate LinkedIn OAuth
 export const initiateLinkedInAuth = () => {
   if (!LINKEDIN_CONFIG.CLIENT_ID) {
     console.error('LinkedIn Client ID not configured. Please set VITE_LINKEDIN_CLIENT_ID in your environment variables.');
-    alert('LinkedIn integration not configured.\n\nTo set up LinkedIn integration:\n1. Create a LinkedIn Developer app\n2. Add your Client ID to .env.local file\n3. Restart the development server\n\nSee LINKEDIN_SETUP.md for detailed instructions.');
+    alert('LinkedIn integration not configured.\n\nTo set up LinkedIn integration:\n1. Create a LinkedIn Developer app\n2. Add your Client ID to .env.local file\n3. Restart the development server\n\nFor detailed instructions, visit the LinkedIn Developer Portal.');
     return;
   }
 
@@ -246,8 +247,9 @@ export const initiateLinkedInAuth = () => {
     `client_id=${LINKEDIN_CONFIG.CLIENT_ID}&` +
     `redirect_uri=${encodeURIComponent(LINKEDIN_CONFIG.REDIRECT_URI)}&` +
     `scope=${encodeURIComponent(LINKEDIN_CONFIG.SCOPE)}&` +
-    `state=linkedin_auth`;
-  
+    `state=linkedin_auth&` +
+    `prompt=login`; // Force fresh login
+
   window.location.href = authUrl;
 };
 
@@ -279,7 +281,7 @@ export const exchangeLinkedInCode = async (code) => {
 // Function to get LinkedIn user posts/shares
 export const getLinkedInPosts = async () => {
   const accessToken = 'AQVhOkZ1DDqiwhK_f0FE0H5IW93zlcYT9BsDT1_YCpjNH0KQ7MZyHIUsqWtmALSKslN4DCH2-COHUMcmdtXk4xbENdjDc7HZ4aogaMA8ZHVJtfylpVBWNF2cr4aURENfiUm63PK6X5j4JUWHQeTQnwepm2kLWUAEMO3i35BiPsnAd77mhNkdnVmr1lqQPMkB5W3hLgbqAKd8yN3CaEr5_EZxWCK0_z0611py53YFjDTdxj9Tkrepxv0G07SDdRUNurHrIHKc4vTStP8pemVkXQA2MhRcXWtLeX5cgiqRWtw_gI83C_aO36zvIjTeQHWYNywIKqpfzIjs4T6_88KHMvXqvom9zA';
-  
+
   try {
     // First get user profile to get the person ID
     const profileResponse = await fetch('https://api.linkedin.com/v2/people/~:(id,firstName,lastName)', {
@@ -311,12 +313,12 @@ export const getLinkedInPosts = async () => {
     }
 
     const sharesData = await sharesResponse.json();
-    
+
     // Transform LinkedIn API response to our post format
     const posts = sharesData.elements?.map((share, index) => {
       const firstName = profile.firstName?.localized?.en_US || 'LinkedIn';
       const lastName = profile.lastName?.localized?.en_US || 'User';
-      
+
       return {
         id: `li_real_${share.id || index}`,
         authorName: `${firstName} ${lastName}`,
@@ -365,11 +367,15 @@ export const getLinkedInProfile = async (accessToken) => {
 // Function to post to LinkedIn
 export const postToLinkedIn = async (accessToken, postData) => {
   try {
+    console.log('Starting LinkedIn post with token:', accessToken.substring(0, 10) + '...');
+
     // First, get the user's LinkedIn ID
     const profile = await getLinkedInProfile(accessToken);
+    console.log('Got LinkedIn profile:', profile);
+
     const authorUrn = `urn:li:person:${profile.id}`;
 
-    // Prepare the post payload
+    // Prepare the post payload using the correct LinkedIn UGC API format
     const payload = {
       author: authorUrn,
       lifecycleState: 'PUBLISHED',
@@ -378,7 +384,7 @@ export const postToLinkedIn = async (accessToken, postData) => {
           shareCommentary: {
             text: postData.text
           },
-          shareMediaCategory: postData.media ? 'IMAGE' : 'NONE'
+          shareMediaCategory: 'NONE'
         }
       },
       visibility: {
@@ -386,23 +392,7 @@ export const postToLinkedIn = async (accessToken, postData) => {
       }
     };
 
-    // If there's media, handle media upload first
-    if (postData.media) {
-      // This is a simplified version - in a real implementation,
-      // you'd need to upload the media first and get the asset URN
-      payload.specificContent['com.linkedin.ugc.ShareContent'].media = [
-        {
-          status: 'READY',
-          description: {
-            text: postData.text
-          },
-          media: 'urn:li:digitalmediaAsset:your_uploaded_asset_id',
-          title: {
-            text: 'Shared Image'
-          }
-        }
-      ];
-    }
+    console.log('Posting to LinkedIn with payload:', JSON.stringify(payload, null, 2));
 
     const response = await fetch('https://api.linkedin.com/v2/ugcPosts', {
       method: 'POST',
@@ -414,12 +404,17 @@ export const postToLinkedIn = async (accessToken, postData) => {
       body: JSON.stringify(payload)
     });
 
+    console.log('LinkedIn API response status:', response.status);
+
     if (!response.ok) {
       const errorData = await response.json();
-      throw new Error(`LinkedIn posting failed: ${JSON.stringify(errorData)}`);
+      console.error('LinkedIn API error:', errorData);
+      throw new Error(`LinkedIn posting failed: ${response.status} - ${JSON.stringify(errorData)}`);
     }
 
-    return await response.json();
+    const result = await response.json();
+    console.log('LinkedIn post successful:', result);
+    return result;
   } catch (error) {
     console.error('Error posting to LinkedIn:', error);
     throw error;
@@ -490,21 +485,21 @@ export const generateMockCalendarEvents = (platform) => {
   if (platform !== 'linkedin') {
     return [];
   }
-  
+
   // Get current date and create relative dates
   const today = new Date();
   const tomorrow = new Date(today);
   tomorrow.setDate(today.getDate() + 1);
-  
+
   const dayAfterTomorrow = new Date(today);
   dayAfterTomorrow.setDate(today.getDate() + 2);
-  
+
   const nextWeek = new Date(today);
   nextWeek.setDate(today.getDate() + 7);
-  
+
   const nextWeekEnd = new Date(today);
   nextWeekEnd.setDate(today.getDate() + 10);
-  
+
   // Helper function to format date for FullCalendar (date only, no time)
   const formatDate = (date) => {
     const year = date.getFullYear();
@@ -703,7 +698,7 @@ export const fetchPlatformCalendarEvents = async (platform) => {
       return [];
     }
   }
-  
+
   // Return empty array for Instagram, Facebook, X, etc.
   return [];
 };
@@ -711,7 +706,7 @@ export const fetchPlatformCalendarEvents = async (platform) => {
 // Function to get LinkedIn events
 export const getLinkedInEvents = async () => {
   const accessToken = 'AQVhOkZ1DDqiwhK_f0FE0H5IW93zlcYT9BsDT1_YCpjNH0KQ7MZyHIUsqWtmALSKslN4DCH2-COHUMcmdtXk4xbENdjDc7HZ4aogaMA8ZHVJtfylpVBWNF2cr4aURENfiUm63PK6X5j4JUWHQeTQnwepm2kLWUAEMO3i35BiPsnAd77mhNkdnVmr1lqQPMkB5W3hLgbqAKd8yN3CaEr5_EZxWCK0_z0611py53YFjDTdxj9Tkrepxv0G07SDdRUNurHrIHKc4vTStP8pemVkXQA2MhRcXWtLeX5cgiqRWtw_gI83C_aO36zvIjTeQHWYNywIKqpfzIjs4T6_88KHMvXqvom9zA';
-  
+
   try {
     // First get user profile
     const profileResponse = await fetch('https://api.linkedin.com/v2/people/~:(id,firstName,lastName)', {
@@ -727,12 +722,12 @@ export const getLinkedInEvents = async () => {
     }
 
     const profile = await profileResponse.json();
-    
+
     // LinkedIn doesn't have a public events API for personal events
     // So we'll create enhanced mock events based on real profile data
     const firstName = profile.firstName?.localized?.en_US || 'LinkedIn';
     const lastName = profile.lastName?.localized?.en_US || 'User';
-    
+
     // Generate realistic events based on real profile
     const today = new Date();
     const events = [
@@ -793,7 +788,7 @@ const formatEventDate = (date) => {
 // Function to get LinkedIn messages
 export const getLinkedInMessages = async () => {
   const accessToken = 'AQVhOkZ1DDqiwhK_f0FE0H5IW93zlcYT9BsDT1_YCpjNH0KQ7MZyHIUsqWtmALSKslN4DCH2-COHUMcmdtXk4xbENdjDc7HZ4aogaMA8ZHVJtfylpVBWNF2cr4aURENfiUm63PK6X5j4JUWHQeTQnwepm2kLWUAEMO3i35BiPsnAd77mhNkdnVmr1lqQPMkB5W3hLgbqAKd8yN3CaEr5_EZxWCK0_z0611py53YFjDTdxj9Tkrepxv0G07SDdRUNurHrIHKc4vTStP8pemVkXQA2MhRcXWtLeX5cgiqRWtw_gI83C_aO36zvIjTeQHWYNywIKqpfzIjs4T6_88KHMvXqvom9zA';
-  
+
   try {
     // First get user profile for personalized messages
     const profileResponse = await fetch('https://api.linkedin.com/v2/people/~:(id,firstName,lastName)', {
@@ -809,11 +804,11 @@ export const getLinkedInMessages = async () => {
     }
 
     const profile = await profileResponse.json();
-    
+
     // LinkedIn messaging API requires specific scopes and permissions
     // For now, create enhanced mock messages based on real profile
     const firstName = profile.firstName?.localized?.en_US || 'LinkedIn';
-    
+
     const messages = [
       {
         id: 'li_real_msg_1',
@@ -874,7 +869,7 @@ export const generateMockInboxMessages = (platform) => {
   if (platform !== 'linkedin') {
     return [];
   }
-  
+
   const baseMessages = {
     instagram: [
       {
@@ -1026,7 +1021,7 @@ export const fetchPlatformInboxMessages = async (platform) => {
       return [];
     }
   }
-  
+
   // Return empty array for Instagram, Facebook, X, etc.
   return [];
 };
@@ -1042,7 +1037,7 @@ export const generateMockNotifications = (platform) => {
   if (platform !== 'linkedin') {
     return []; // Return empty array for non-LinkedIn platforms instead of navigation notifications
   }
-  
+
   const baseNotifications = {
     instagram: [
       {
@@ -1206,7 +1201,7 @@ export const fetchPlatformNotifications = async (platform) => {
       return [];
     }
   }
-  
+
   // Return empty array for Instagram, Facebook, X, etc.
   return [];
 };
@@ -1267,40 +1262,19 @@ export const getLinkedInAnalytics = async (accessToken) => {
 
 // Test function with provided LinkedIn access token
 export const testLinkedInWithToken = async () => {
-    const testToken = 'AQVhOkZ1DDqiwhK_f0FE0H5IW93zlcYT9BsDT1_YCpjNH0KQ7MZyHIUsqWtmALSKslN4DCH2-COHUMcmdtXk4xbENdjDc7HZ4aogaMA8ZHVJtfylpVBWNF2cr4aURENfiUm63PK6X5j4JUWHQeTQnwepm2kLWUAEMO3i35BiPsnAd77mhNkdnVmr1lqQPMkB5W3hLgbqAKd8yN3CaEr5_EZxWCK0_z0611py53YFjDTdxj9Tkrepxv0G07SDdRUNurHrIHKc4vTStP8pemVkXQA2MhRcXWtLeX5cgiqRWtw_gI83C_aO36zvIjTeQHWYNywIKqpfzIjs4T6_88KHMvXqvom9zA';
-  
-  // Return mock profile data that represents what we'd get from LinkedIn
-  
-  console.log('🔥🔥🔥 LINKEDIN API TOKEN ANALYSIS 🔥🔥🔥');
-  console.log('🔍 LinkedIn Token Information:');
-  console.log('✅ Token length:', testToken.length, '(Should be ~512 chars for valid tokens)');
-  console.log('✅ Token format: Bearer token for LinkedIn API v2');
-  console.log('✅ Token (first 30 chars):', testToken.substring(0, 30) + '...');
-  
-  console.log('\n🌐 CORS Issue Explanation:');
-  console.log('❌ Direct browser-to-LinkedIn API calls are blocked by CORS policy');
-  console.log('❌ LinkedIn API requires server-side calls or proper CORS setup');
-  console.log('� Solution: In production, API calls should be made from a backend server');
-  
-  console.log('\n📊 What we can do with your token:');
-  console.log('✅ Token is properly formatted for LinkedIn API v2');
-  console.log('✅ Can be used for server-side API calls');
-  console.log('✅ Token scope likely includes: r_liteprofile, r_emailaddress');
-  
-  console.log('\n🎯 Available LinkedIn API endpoints (for server-side use):');
+  const testToken = 'AQVhOkZ1DDqiwhK_f0FE0H5IW93zlcYT9BsDT1_YCpjNH0KQ7MZyHIUsqWtmALSKslN4DCH2-COHUMcmdtXk4xbENdjDc7HZ4aogaMA8ZHVJtfylpVBWNF2cr4aURENfiUm63PK6X5j4JUWHQeTQnwepm2kLWUAEMO3i35BiPsnAd77mhNkdnVmr1lqQPMkB5W3hLgbqAKd8yN3CaEr5_EZxWCK0_z0611py53YFjDTdxj9Tkrepxv0G07SDdRUNurHrIHKc4vTStP8pemVkXQA2MhRcXWtLeX5cgiqRWtw_gI83C_aO36zvIjTeQHWYNywIKqpfzIjs4T6_88KHMvXqvom9zA';
+
+
   const endpoints = [
     '📊 Profile: https://api.linkedin.com/v2/people/~:(id,firstName,lastName,profilePicture)',
-    '📈 Network Info: https://api.linkedin.com/v2/people/~:(id,firstName,lastName,networkInfo)', 
+    '📈 Network Info: https://api.linkedin.com/v2/people/~:(id,firstName,lastName,networkInfo)',
     '📝 Shares: https://api.linkedin.com/v2/shares?q=owners&owners=urn:li:person:{id}',
     '💼 Companies: https://api.linkedin.com/v2/organizationAcls',
     '📧 Email: https://api.linkedin.com/v2/emailAddress?q=members&projection=(elements*(handle~))'
   ];
-  
+
   endpoints.forEach(endpoint => console.log(endpoint));
-  
-  console.log('\n🔥🔥� LINKEDIN TOKEN ANALYSIS COMPLETED 🔥🔥🔥');
-  console.log('💡 For real data: Set up a backend proxy server to handle LinkedIn API calls');
-  
+
   // Return mock profile data that represents what we'd get from LinkedIn
   return {
     id: 'linkedin_user_123',
@@ -1318,7 +1292,7 @@ export const testLinkedInWithToken = async () => {
 export const getFacebookAnalytics = async (accessToken) => {
   try {
     const response = await fetch(`https://graph.facebook.com/v18.0/me/insights?metric=page_fans,page_impressions,page_engaged_users&access_token=${accessToken}`);
-    
+
     if (!response.ok) {
       throw new Error('Failed to fetch Facebook analytics');
     }
