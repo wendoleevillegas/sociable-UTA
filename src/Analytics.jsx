@@ -31,15 +31,15 @@ export const Analytics = ({ token, apiSource = 'instagram', onNavigate }) => {
 
       try {
         let data;
-        
+
         // Only show data for LinkedIn
         if (apiSource === 'linkedin') {
           // Use the provided LinkedIn access token for testing
           const linkedinToken = 'AQVhOkZ1DDqiwhK_f0FE0H5IW93zlcYT9BsDT1_YCpjNH0KQ7MZyHIUsqWtmALSKslN4DCH2-COHUMcmdtXk4xbENdjDc7HZ4aogaMA8ZHVJtfylpVBWNF2cr4aURENfiUm63PK6X5j4JUWHQeTQnwepm2kLWUAEMO3i35BiPsnAd77mhNkdnVmr1lqQPMkB5W3hLgbqAKd8yN3CaEr5_EZxWCK0_z0611py53YFjDTdxj9Tkrepxv0G07SDdRUNurHrIHKc4vTStP8pemVkXQA2MhRcXWtLeX5cgiqRWtw_gI83C_aO36zvIjTeQHWYNywIKqpfzIjs4T6_88KHMvXqvom9zA';
-          
+
           try {
             const mockProfileData = await testLinkedInWithToken();
-            
+
             // Create enhanced mock data with "LinkedIn-like" real information
             data = {
               ...getMockAnalyticsData(),
@@ -57,7 +57,7 @@ export const Analytics = ({ token, apiSource = 'instagram', onNavigate }) => {
               corsLimitation: true,
               note: 'Real LinkedIn token provided - In production, use backend server for API calls'
             };
-            
+
           } catch (apiError) {
             data = {
               ...getMockAnalyticsData(),
@@ -162,14 +162,14 @@ export const Analytics = ({ token, apiSource = 'instagram', onNavigate }) => {
       <div className="analytics-content">
         {/* View Toggle */}
         <div className="analytics-view-toggle">
-          <button 
-            className={viewType === 'graph' ? 'active' : ''} 
+          <button
+            className={viewType === 'graph' ? 'active' : ''}
             onClick={() => setViewType('graph')}
           >
             Graph
           </button>
-          <button 
-            className={viewType === 'table' ? 'active' : ''} 
+          <button
+            className={viewType === 'table' ? 'active' : ''}
             onClick={() => setViewType('table')}
           >
             Table
