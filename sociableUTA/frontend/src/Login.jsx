@@ -2,26 +2,41 @@ import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import './Login.css';
 
+import axios from 'axios';
+
 export const Login = ({ setToken, onShowSignup, onShowForgot }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
 
-    // TESTING
-    const MOCK_USER = "testuser";
-    const MOCK_PASS = "password123";
+    setIsLoading(true);
+    setError('');
 
-    if (username === MOCK_USER && password === MOCK_PASS) {
-      // call setToken function from props, will update state in App.jsx and trigger a re-render
-      setToken('mock-token');
-      // localStorage.setItem('token', 'mock-token');
-      setError('');
-    } else {
-      setError('Invalid credentials');
+    try {
+      const response = await axios.post('http://localhost:5000/login', // backend login URL
+        JSON.stringify({ user: username, pwd: password }),
+        {
+          headers: { 'Content-Type': 'application/json' },
+          withCredentials: true
+        }
+      );
+
+      const accessToken = response?.data?.accessToken; // get real token from the server
+      setToken(accessToken); // update the app state
+    } catch (err) {
+      if (!err?.response) {
+        setError('No Server Response');
+      } else if (err.response?.status === 400 || err.response?.status === 401) {
+        setError('Invalid Credentials');
+      } else {
+        setError('Login Failed');
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 
