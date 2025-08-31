@@ -4,12 +4,20 @@ const cors = require('cors');
 const app = express();
 const PORT = 5000;
 
+const mongoose = require('mongoose');
+
 // --- MIDDLEWARE ---
-// Configure CORS to allow requests from your React frontend
-app.use(cors({
-    origin: 'http://localhost:5000', // URL of React
+// Configure CORS to allow requests from React frontend
+const corsOptions = {
+    origin: [
+        'http://localhost:3000',
+        'http://localhost:5173',
+        'http://127.0.0.1:5173' // <-- Add the exact URL from your error message
+    ],
     credentials: true
-}));
+};
+
+app.use(cors(corsOptions));
 
 app.use(express.json());
 

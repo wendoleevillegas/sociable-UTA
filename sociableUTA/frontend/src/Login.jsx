@@ -8,6 +8,7 @@ export const Login = ({ setToken, onShowSignup, onShowForgot }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
@@ -18,7 +19,7 @@ export const Login = ({ setToken, onShowSignup, onShowForgot }) => {
 
     try {
       const response = await axios.post('http://localhost:5000/login', // backend login URL
-        JSON.stringify({ user: username, pwd: password }),
+        { user: username, pwd: password },
         {
           headers: { 'Content-Type': 'application/json' },
           withCredentials: true
@@ -67,8 +68,8 @@ export const Login = ({ setToken, onShowSignup, onShowForgot }) => {
             className="login-input"
             required
           />
-          <button type="submit" className="login-btn">
-            Log In
+          <button type="submit" className="login-btn" disabled={isLoading}>
+            {isLoading ? 'Logging In...' : 'Log In'}
           </button>
           <a
             href="#"
