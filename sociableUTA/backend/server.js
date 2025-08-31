@@ -1,10 +1,11 @@
+require('dotenv').config();
+
 const express = require('express');
 const cors = require('cors');
+const mongoose = require('mongoose');
 
 const app = express();
 const PORT = 5000;
-
-const mongoose = require('mongoose');
 
 // --- MIDDLEWARE ---
 // Configure CORS to allow requests from React frontend
@@ -26,8 +27,11 @@ app.get('/', (req, res) => {
     res.send('Backend server is running!');
 });
 
-// temporary in-memory DB to store users
-let users = {};
+const DB_URL = process.env.DATABASE_URL;
+
+mongoose.connect(DB_URL)
+    .then(() => console.log('MongoDB connected successfully.'))
+    .catch(err => console.error(err));
 
 // ROUTES
 
