@@ -28,7 +28,7 @@ mongoose.connect(DB_URL)
     .catch(err => console.error(err));
 
 
-// --- ROUTES ---
+// ROUTES
 
 // test route
 app.get('/', (req, res) => {
@@ -50,6 +50,7 @@ app.post('/register', async (req, res) => {
 
         res.status(201).json({ message: 'User registered successfully' });
     } catch (error) {
+        console.error('Error during registration:', error); // <-- Add this log
         res.status(500).json({ message: 'Server error' });
     }
 });
@@ -71,6 +72,7 @@ app.post('/login', async (req, res) => {
         // We will implement a real token next
         res.json({ accessToken: 'real-token-coming-soon' });
     } catch (error) {
+        console.error('Error during login:', error); // <-- Add this log
         res.status(500).json({ message: 'Server error' });
     }
 });

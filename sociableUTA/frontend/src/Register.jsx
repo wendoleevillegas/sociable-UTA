@@ -61,9 +61,20 @@ const Register = () => {
         }
 
         try {
+            // const response = await axios.post(REGISTER_URL,
+            //     { user: user, password: pwd },
+            //     {
+            //         headers: { 'Content-Type': 'application/json' },
+            //         withCredentials: true
+            //     }
+            // );
+            const payload = { user: user, pwd: pwd };
+
+            // --- ADD THIS LINE FOR DEBUGGING ---
+            console.log('Sending this payload to the backend:', payload);
 
             const response = await axios.post(REGISTER_URL,
-                { user: user, password: pwd },
+                payload, // Use the payload variable here
                 {
                     headers: { 'Content-Type': 'application/json' },
                     withCredentials: true
