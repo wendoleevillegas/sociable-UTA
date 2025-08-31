@@ -3,66 +3,79 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs'); // <-- Import bcryptjs
+const User = require('./models/User'); // <-- Import the User model
 
 const app = express();
 const PORT = 5000;
 
-// --- MIDDLEWARE ---
-// Configure CORS to allow requests from React frontend
+// middleware?
 const corsOptions = {
     origin: [
         'http://localhost:3000',
         'http://localhost:5173',
-        'http://127.0.0.1:5173' // <-- Add the exact URL from your error message
+        'http://127.0.0.1:5173'
     ],
     credentials: true
 };
-
 app.use(cors(corsOptions));
-
 app.use(express.json());
 
-// Test route
-app.get('/', (req, res) => {
-    res.send('Backend server is running!');
-});
-
+// DB connection
 const DB_URL = process.env.DATABASE_URL;
-
 mongoose.connect(DB_URL)
     .then(() => console.log('MongoDB connected successfully.'))
     .catch(err => console.error(err));
 
-// ROUTES
 
-// Registration Route
-app.post('/register', (req, res) => {
-    const { user, pwd } = req.body;
+// --- ROUTES ---
 
-    if (users[user]) {
-        return res.status(409).json({ message: 'Username already exists' }); // 409 Conflict
-    }
-
-    // In a real app, you would hash the password here!
-    users[user] = { password: pwd };
-    console.log('Registered Users:', users);
-    res.status(201).json({ message: 'User registered successfully' });
+// test route
+app.get('/', (req, res) => {
+    res.send('Backend server is running!');
 });
 
-// Login Route
-app.post('/login', (req, res) => {
+// register route using mongodb
+app.post('/register', async (req, res) => {
     const { user, pwd } = req.body;
-    const userAccount = users[user];
+    try {
+        const existingUser = await User.findOne({ username: user });
+        if (existingUser) {
+            return res.status(409).json({ message: 'Username already exists' });
+        }
 
-    if (!userAccount || userAccount.password !== pwd) {
-        return res.status(401).json({ message: 'Invalid credentials' }); // 401 Unauthorized
+        const hashedPassword = await bcrypt.hash(pwd, 12);
+        const newUser = new User({ username: user, password: hashedPassword });
+        await newUser.save();
+
+        res.status(201).json({ message: 'User registered successfully' });
+    } catch (error) {
+        res.status(500).json({ message: 'Server error' });
     }
-
-    // In a real app, you would generate a real token (JWT) here
-    res.json({ accessToken: 'mock-token-from-server' });
 });
 
-// Start the server
+// login route using mongodb
+app.post('/login', async (req, res) => {
+    const { user, pwd } = req.body;
+    try {
+        const userAccount = await User.findOne({ username: user });
+        if (!userAccount) {
+            return res.status(401).json({ message: 'Invalid credentials' });
+        }
+
+        const isMatch = await bcrypt.compare(pwd, userAccount.password);
+        if (!isMatch) {
+            return res.status(401).json({ message: 'Invalid credentials' });
+        }
+
+        // We will implement a real token next
+        res.json({ accessToken: 'real-token-coming-soon' });
+    } catch (error) {
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+// starting the server
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
 });
