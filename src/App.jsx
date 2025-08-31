@@ -1,7 +1,12 @@
+
+// ETHAN VERSION
+
 import { Routes, Route, Navigate } from 'react-router-dom';
-import Login from './Login';
+// CHANGED:
+import { Login } from './Login';
 import Register from './Register';
-import ForgotPassword from './ForgotPassword';
+// CHANGED:
+import { ForgotPassword } from './ForgotPassword';
 import Home from './Index';
 
 
@@ -19,11 +24,19 @@ const RedirectIfLoggedIn = ({ children }) => {
 function App() {
     return (
         <Routes>
-            <Route
+            {/* <Route
                 path="/login"
                 element={
                     <RedirectIfLoggedIn>
                         <Login />
+                    </RedirectIfLoggedIn>
+                }
+            /> */}
+            <Route
+                path="/login"
+                element={
+                    <RedirectIfLoggedIn>
+                        <Login setToken={(token) => localStorage.setItem('token', token)} />
                     </RedirectIfLoggedIn>
                 }
             />
