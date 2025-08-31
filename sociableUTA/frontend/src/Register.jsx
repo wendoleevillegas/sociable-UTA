@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNavigate } from 'react-router-dom';
 
 import axios from 'axios';
-const REGISTER_URL = 'api/auth/register';
+const REGISTER_URL = 'http://localhost:5000/register';
 
 
 const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
@@ -63,7 +63,7 @@ const Register = () => {
         try {
 
             const response = await axios.post(REGISTER_URL,
-                JSON.stringify({ user: user, password: pwd }),
+                { user: user, password: pwd },
                 {
                     headers: { 'Content-Type': 'application/json' },
                     withCredentials: true
@@ -73,13 +73,6 @@ const Register = () => {
             console.log(response.data);
             setSuccess(true);
 
-            // console.log(response?.data);
-            // console.log(response?.accessToken);
-            // console.log(JSON.stringify(response));
-            // setSuccess(true);
-            // setUser('');
-            // setPwd('');
-            // setMatchPwd('');
         } catch (err) {
             // display errors
             if (!err?.response) {

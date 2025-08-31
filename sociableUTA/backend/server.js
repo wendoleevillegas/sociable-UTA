@@ -7,7 +7,7 @@ const PORT = 5000;
 // --- MIDDLEWARE ---
 // Configure CORS to allow requests from your React frontend
 app.use(cors({
-    origin: 'http://localhost:3000', // URL of React
+    origin: 'http://localhost:5000', // URL of React
     credentials: true
 }));
 
