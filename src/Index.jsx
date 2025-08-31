@@ -1,6 +1,3 @@
-
-// ETHAN VERSION
-
 import React, { useState, useEffect } from 'react';
 import './Index.css';
 
@@ -14,7 +11,7 @@ import { Inbox } from './Inbox';
 import { Analytics } from './Analytics';
 import { PersonalInfo } from './Studentinformation';
 
-function App() {
+function Home({ onLogout }) {
   const [currentUser, setCurrentUser] = useState(null);
   const [currentPage, setCurrentPage] = useState('calendar');
   const [selectedSources, setSelectedSources] = useState(['instagram']);
@@ -27,9 +24,14 @@ function App() {
     }
   }, []);
 
-  const logout = () => {
-    localStorage.removeItem('token');
-    setCurrentUser(null);
+  // const logout = () => {
+  //   localStorage.removeItem('token');
+  //   setCurrentUser(null);
+  // };
+  const handleLogoutClick = () => {
+    if (onLogout) {
+      onLogout;
+    }
   };
 
   // Handle page navigation and reset API source to Instagram
@@ -65,7 +67,7 @@ function App() {
       <Menu
         active={currentPage}
         onSelect={handlePageChange}
-        onLogout={logout}
+        onLogout={handleLogoutClick}
       />
 
       {/* API Source Submenu - Hide for CreatePost page */}
@@ -130,5 +132,5 @@ function App() {
   );
 }
 
-export default App;
+export default Home;
 

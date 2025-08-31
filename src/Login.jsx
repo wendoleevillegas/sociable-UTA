@@ -3,7 +3,7 @@ import { useState } from 'react';
 import './Login.css';
 
 export const Login = ({ setToken, onShowSignup, onShowForgot }) => {
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
@@ -11,9 +11,14 @@ export const Login = ({ setToken, onShowSignup, onShowForgot }) => {
   const handleLogin = (e) => {
     e.preventDefault();
 
-    if (email && password) {
+    // TESTING
+    const MOCK_USER = "testuser";
+    const MOCK_PASS = "password123";
+
+    if (username === MOCK_USER && password === MOCK_PASS) {
+      // call setToken function from props, will update state in App.jsx and trigger a re-render
       setToken('mock-token');
-      localStorage.setItem('token', 'mock-token');
+      // localStorage.setItem('token', 'mock-token');
       setError('');
     } else {
       setError('Invalid credentials');
@@ -33,9 +38,9 @@ export const Login = ({ setToken, onShowSignup, onShowForgot }) => {
           {error && <p className="login-error">{error}</p>}
           <input
             type="text"
-            placeholder="Email or phone number"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
             className="login-input"
             required
           />
@@ -58,14 +63,24 @@ export const Login = ({ setToken, onShowSignup, onShowForgot }) => {
             Forgot password?
           </a>
           <div className="login-divider"></div>
-          <button
+          {/* <button
             type="button"
             className="login-create-btn"
             onClick={() => navigate('/register')}
           >
             Create new account
-          </button>
+          </button> */}
         </form>
+
+        {/* Moved new account button because it is a redirect, not submission */}
+
+        <button
+          type="button"
+          className="login-create-btn"
+          onClick={() => navigate('/register')}
+        >
+          Create new account
+        </button>
       </div>
       <footer className="login-footer">
         <div className="login-footer-content">

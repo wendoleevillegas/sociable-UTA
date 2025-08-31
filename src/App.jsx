@@ -1,13 +1,9 @@
-
-// ETHAN VERSION
-
 import { Routes, Route, Navigate } from 'react-router-dom';
-// CHANGED:
 import { Login } from './Login';
 import Register from './Register';
-// CHANGED:
 import { ForgotPassword } from './ForgotPassword';
 import Home from './Index';
+import { useState } from 'react';
 
 
 // Checking authentication
@@ -22,51 +18,83 @@ const RedirectIfLoggedIn = ({ children }) => {
 };
 
 function App() {
+    // managing token in state, initialize with value from localStorage
+    const [token, setToken] = useState(localStorage.getItem('token'));
+
+    const handleSetToken = (newToken) => {
+        setToken(newToken);
+        if (newToken) {
+            localStorage.setItem('token', newToken);
+        } else {
+            localStorage.removeItem('token');
+        }
+    };
+
+    // central logout function
+    const handleLogout = () => {
+        handleSetToken(null);
+    };
+
     return (
         <Routes>
-            {/* <Route
-                path="/login"
-                element={
-                    <RedirectIfLoggedIn>
-                        <Login />
-                    </RedirectIfLoggedIn>
-                }
-            /> */}
             <Route
                 path="/login"
-                element={
-                    <RedirectIfLoggedIn>
-                        <Login setToken={(token) => localStorage.setItem('token', token)} />
-                    </RedirectIfLoggedIn>
-                }
+                element={token ? <Navigate to="/home" /> : <Login setToken={handleSetToken} />}
             />
+
             <Route
                 path="/register"
-                element={
-                    <RedirectIfLoggedIn>
-                        <Register />
-                    </RedirectIfLoggedIn>
-                }
+                element={token ? <Navigate to="/home" /> : <Register />}
             />
+
             <Route
                 path="/forgot-password"
-                element={
-                    <RedirectIfLoggedIn>
-                        <ForgotPassword />
-                    </RedirectIfLoggedIn>
-                }
+                element={token ? <Navigate to="/home" /> : <ForgotPassword />}
             />
+
+            {/* pass 'handleLogout' to Home and check state token */}
             <Route
                 path="/home"
-                element={
-                    <PrivateRoute>
-                        <Home />
-                    </PrivateRoute>
-                }
+                element={token ? <Home onLogout={handleLogout} /> : <Navigate to="/login" />}
             />
-            {/* Optional: redirect root URL to login or home */}
-            <Route path="/" element={<Navigate to="/home" replace />} />
-        </Routes>
+            <Route path="/" element={<Navigate to="/home" />} />
+        </Routes >
+        // <Routes>
+        //     <Route
+        //         path="/login"
+        //         element={
+        //             <RedirectIfLoggedIn>
+        //                 <Login setToken={(token) => localStorage.setItem('token', token)} />
+        //             </RedirectIfLoggedIn>
+        //         }
+        //     />
+        //     <Route
+        //         path="/register"
+        //         element={
+        //             <RedirectIfLoggedIn>
+        //                 <Register />
+        //             </RedirectIfLoggedIn>
+        //         }
+        //     />
+        //     <Route
+        //         path="/forgot-password"
+        //         element={
+        //             <RedirectIfLoggedIn>
+        //                 <ForgotPassword />
+        //             </RedirectIfLoggedIn>
+        //         }
+        //     />
+        //     <Route
+        //         path="/home"
+        //         element={
+        //             <PrivateRoute>
+        //                 <Home />
+        //             </PrivateRoute>
+        //         }
+        //     />
+        //     {/* Optional: redirect root URL to login or home */}
+        //     <Route path="/" element={<Navigate to="/home" replace />} />
+        // </Routes>
     );
 }
 
