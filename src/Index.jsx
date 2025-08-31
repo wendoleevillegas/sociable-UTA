@@ -24,15 +24,12 @@ function Home({ onLogout }) {
     }
   }, []);
 
-  // const logout = () => {
-  //   localStorage.removeItem('token');
-  //   setCurrentUser(null);
+
+  // const handleLogoutClick = () => {
+  //   if (onLogout) {
+  //     onLogout;
+  //   }
   // };
-  const handleLogoutClick = () => {
-    if (onLogout) {
-      onLogout;
-    }
-  };
 
   // Handle page navigation and reset API source to Instagram
   const handlePageChange = (newPage) => {
@@ -67,7 +64,7 @@ function Home({ onLogout }) {
       <Menu
         active={currentPage}
         onSelect={handlePageChange}
-        onLogout={handleLogoutClick}
+        onLogout={onLogout}
       />
 
       {/* API Source Submenu - Hide for CreatePost page */}
