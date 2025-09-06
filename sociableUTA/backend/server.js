@@ -208,6 +208,91 @@ app.get('/api/instagram/follower-demographics', async (req, res) => {
     }
 });
 
+// LinkedIn API routes
+
+// Redirecting user to LinkedIn's authentication page using redirectURL logic
+app.get('/api/linkedin/login', (req, res) => {
+    const scope = 'r_organization_admin r_organization_social w_organization_social rw_organization_admin';
+    const authUrl = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${process.env.LINKEDIN_CLIENT_ID}&redirect_uri=${process.env.LINKEDIN_REDIRECT_URI}&state=DCEeFWf45A53sdfKef424&scope=${encodeURIComponent(scope)}`;
+    res.redirect(authUrl);
+});
+
+// Callback URL that LinkedIn redirects to after authentication, exchanging code for long-live access token
+app.get('/api/linkedin/callback', async (req, res) => {
+    const { code, state, error, error_description } = req.query;
+
+    if (error) {
+        return res.status(400).json({ message: `Error: ${error_description}` });
+    }
+
+    try {
+        // exchanging authorization code for an access token
+        const tokenUrl = 'https://www.linkedin.com/oauth/v2/accessToken';
+        const tokenParams = new URLSearchParams();
+        tokenParams.append('grant_type', 'authorization_code');
+        tokenParams.append('code', code);
+        tokenParams.append('redirect_uri', process.env.LINKEDIN_REDIRECT_URI);
+        tokenParams.append('client_id', process.env.LINKEDIN_CLIENT_ID);
+        tokenParams.append('client_secret', process.env.LINKEDIN_CLIENT_SECRET);
+
+        const tokenResponse = await axios.post(tokenUrl, tokenParams, {
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+        });
+
+        const accessToken = tokenResponse.data.access_token;
+
+        res.redirect(`http://localhost:5173/home?linkedin_token=${accessToken}`);
+    } catch (err) {
+        console.error('Error exchanging LinkedIn code :', err.response ? err.response.data : err.message);
+        res.status(500).json({ message: 'Failed to authenticate with LinkedIn.' });
+    }
+});
+
+// Getting data for authenticated user's organization
+app.get('/api/linkedin/organization-data', async (req, res) => {
+    const accessToken = req.headers.authorization?.split(' ')[1];
+
+    if (!accessToken) {
+        return res.status(401).json({ message: 'Missing Access Token' });
+    }
+
+    try {
+        const headers = { 'Authorization': `Bearer ${accessToken}` };
+        const orgAclsUrl = "https://api.linkedin.com/v2/organizationalEntityAcls?q=roleAssignee&role=ADMINISTRATOR&projection=(elements*(*,organizationalTarget~(localizedName)))";
+
+        const orgRes = await axios.get(orgAclsUrl, { headers });
+        const elements = orgRes.data.elements;
+
+        if (!elements || elements.length === 0) {
+            return res.status(404).json({ message: "No organization found where the user is an admin." });
+        }
+
+        const orgUrn = elements[0].organizationalTarget;
+        const orgName = elements[0]['organizationalTarget~'].localizedName;
+
+        // Fetch organization posts
+        const postsUrl = `https://api.linkedin.com/v2/shares?q=owners&owners=${orgUrn}&sortBy=LAST_MODIFIED&sharesPerOwner=10`;
+        const postsRes = await axios.get(postsUrl, { headers });
+
+        // Fetch follower stats
+        const statsUrl = `https://api.linkedin.com/v2/organizationFollowerStatistics?q=organizationalEntity&organizationalEntity=${orgUrn}`;
+        const statsRes = await axios.get(statsUrl, { headers });
+
+        res.json({
+            organization: {
+                name: orgName,
+                urn: orgUrn,
+                posts: postsRes.data,
+                follower_stats: statsRes.data
+            }
+        });
+    } catch (error) {
+        console.error('Error fetching LinkedIn organization data:', error.response ? error.response.data : error.message);
+        res.status(500).json({ message: 'Failed to fetch LinkedIn organization data' });
+    }
+});
+
+
 // starting server
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
