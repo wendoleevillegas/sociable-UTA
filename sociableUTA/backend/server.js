@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const User = require('./models/User');
 const axios = require('axios');
+const { TwitterApi } = require('twitter-api-v2');
 
 const app = express();
 const PORT = 5000;
@@ -292,6 +293,36 @@ app.get('/api/linkedin/organization-data', async (req, res) => {
     }
 });
 
+// X API Routes
+// initializing X client
+const twitterClient = new TwitterApi({
+    appKey: process.env.X_API_KEY,
+    appSecret: process.env.X_API_SECRET,
+    accessToken: process.env.X_ACCESS_TOKEN,
+    accessSecret: process.env.X_ACCESS_TOKEN_SECRET,
+});
+
+// getting user info following info.py logic
+app.get('/api/x/user-data', async (req, res) => {
+    try {
+        // profile info
+        const user = await readOnlyClient.v2.me({ 'user.fields': ['public_metrics', 'profile_image_url', 'created_at', 'description'] });
+
+        // fetching recent tweets
+        const tweets = await readOnlyClient.v2.userTimeline(user.data.id, {
+            'tweet.fields': ['public_metrics', 'created_at'],
+            max_results: 10
+        });
+
+        res.json({
+            profile: user.data,
+            tweets: tweets.data.data || []
+        });
+    } catch (error) {
+        console.error('Error fetching X data:', error);
+        res.status(500).json({ message: 'Failed to fetch X data' });
+    }
+});
 
 // starting server
 app.listen(PORT, () => {

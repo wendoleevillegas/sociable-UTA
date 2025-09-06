@@ -48,7 +48,6 @@ export const PostView = ({ token, user, apiSource = 'instagram', onNavigate }) =
             const response = await axios.get('http://localhost:5000/api/linkedin/organization-data', {
               headers: { 'Authorization': `Bearer ${linkedInToken}` }
             });
-
             const linkedInPosts = response.data.organization.posts.elements.map(post => ({
               id: post.id,
               authorName: response.data.organization.name,
@@ -68,6 +67,24 @@ export const PostView = ({ token, user, apiSource = 'instagram', onNavigate }) =
           }
         } else {
           setIsLinkedInAuthenticated(false);
+        }
+      } else if (apiSource === 'x') {
+        try {
+          const response = await axios.get('http://localhost:5000/api/x/user-data');
+          const xPosts = response.data.tweets.map(tweet => ({
+            id: tweet.id,
+            authorName: response.data.profile.name,
+            authorRole: `@${response.data.profile.username}`,
+            authorAvatar: response.data.profile.profile_image_url || 'https://via.placeholder.com/48',
+            caption: tweet.text,
+            meta: new Date(tweet.created_at).toLocaleString(),
+            likes: tweet.public_metrics.like_count,
+            comments: tweet.public_metrics.reply_count,
+            shares: tweet.public_metrics.retweet_count,
+          }));
+          setPosts(xPosts);
+        } catch (err) {
+          setError('Failed to fetch X posts. Check your backend and API keys.');
         }
       }
       setLoading(false);
@@ -190,6 +207,192 @@ export const PostView = ({ token, user, apiSource = 'instagram', onNavigate }) =
     </div>
   );
 }
+
+// export const PostView = ({ token, user, apiSource = 'instagram', onNavigate }) => {
+//   const [posts, setPosts] = useState([]);
+//   const [loading, setLoading] = useState(false);
+//   const [error, setError] = useState('');
+//   const [isLinkedInAuthenticated, setIsLinkedInAuthenticated] = useState(!!localStorage.getItem('linkedin_access_token'));
+//   const [media, setMedia] = useState(null);
+//   const [caption, setCaption] = useState('');
+//   const [isPosting, setIsPosting] = useState(false);
+//   const fileInputRef = useRef();
+
+//   useEffect(() => {
+//     const fetchPosts = async () => {
+//       setLoading(true);
+//       setError('');
+//       setPosts([]);
+
+//       if (apiSource === 'instagram') {
+//         try {
+//           const response = await axios.get('http://localhost:5000/api/instagram/media');
+//           const formattedPosts = response.data.map(post => ({
+//             id: post.id,
+//             authorName: 'Sociable UTA (Your Account)',
+//             authorRole: 'Instagram Account',
+//             authorAvatar: 'https://via.placeholder.com/48',
+//             caption: post.caption || '',
+//             mediaType: post.media_type ? post.media_type.toLowerCase() : 'image',
+//             mediaUrl: post.media_url,
+//             meta: new Date(post.timestamp).toLocaleString(),
+//             likes: 0, comments: 0, shares: 0,
+//           }));
+//           setPosts(formattedPosts);
+//         } catch (err) {
+//           setError(`Failed to load Instagram posts. Make sure your backend is running.`);
+//           setPosts([]);
+//         }
+//       } else if (apiSource === 'linkedin') {
+//         const linkedInToken = localStorage.getItem('linkedin_access_token');
+//         if (linkedInToken) {
+//           setIsLinkedInAuthenticated(true);
+//           try {
+//             const response = await axios.get('http://localhost:5000/api/linkedin/organization-data', {
+//               headers: { 'Authorization': `Bearer ${linkedInToken}` }
+//             });
+
+//             const linkedInPosts = response.data.organization.posts.elements.map(post => ({
+//               id: post.id,
+//               authorName: response.data.organization.name,
+//               authorRole: 'LinkedIn Organization',
+//               authorAvatar: 'https://via.placeholder.com/48',
+//               caption: post.specificContent['com.linkedin.ugc.ShareContent']?.shareCommentary?.text || '',
+//               mediaType: null,
+//               mediaUrl: null,
+//               meta: new Date(post.lastModified.time).toLocaleString(),
+//               likes: 0, comments: 0, shares: 0,
+//             }));
+//             setPosts(linkedInPosts);
+//           } catch (err) {
+//             setError('Failed to fetch LinkedIn posts. Your token may have expired. Please reconnect.');
+//             setIsLinkedInAuthenticated(false);
+//             localStorage.removeItem('linkedin_access_token');
+//           }
+//         } else {
+//           setIsLinkedInAuthenticated(false);
+//         }
+//       }
+//       setLoading(false);
+//     };
+
+//     fetchPosts();
+//   }, [apiSource]);
+
+//   const handleLinkedInConnect = () => {
+//     window.location.href = 'http://localhost:5000/api/linkedin/login';
+//   };
+
+//   const handleMediaClick = (type) => {
+//     if (fileInputRef.current) {
+//       fileInputRef.current.accept = type === 'video' ? 'video/*' : 'image/*';
+//       fileInputRef.current.click();
+//     }
+//   };
+
+//   const handleMediaChange = (e) => {
+//     setMedia(e.target.files[0]);
+//   };
+
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+//   };
+
+//   const getPlatformConfig = (source) => {
+//     const configs = {
+//       instagram: { name: 'Instagram', color: '#E4405F', placeholder: 'Write a caption...', buttonText: 'Post' },
+//       facebook: { name: 'Facebook', color: '#1877F2', placeholder: 'What\'s on your mind?', buttonText: 'Post' },
+//       x: { name: 'X', color: '#000000', placeholder: 'What\'s happening?', buttonText: 'Post' },
+//       linkedin: { name: 'LinkedIn', color: '#0A66C2', placeholder: 'What do you want to talk about?', buttonText: 'Post' }
+//     };
+//     return configs[source] || configs.instagram;
+//   };
+
+//   const platformConfig = getPlatformConfig(apiSource);
+
+//   return (
+//     <div className="postview-root">
+//       <div className="postview-container">
+//         <div className="postview-main">
+//           {apiSource === 'linkedin' && !isLinkedInAuthenticated && !loading && (
+//             <div className="linkedin-auth-banner">
+//               <div className="linkedin-auth-content">
+//                 <h3>Connect to LinkedIn</h3>
+//                 <p>To see and manage your organization's posts, you need to connect your LinkedIn account.</p>
+//                 <button className="linkedin-auth-btn" onClick={handleLinkedInConnect}>
+//                   Connect Now
+//                 </button>
+//               </div>
+//             </div>
+//           )}
+
+//           <div className="postview-create-box">
+//             <div className="postview-create-header">
+//               <img src={user?.avatarUrl || 'https://via.placeholder.com/48'} alt="avatar" className="postview-avatar" />
+//               <div className="postview-actions postview-actions-center">
+//                 <div className="postview-action" onClick={() => handleMediaClick('video')}>
+//                   <FontAwesomeIcon icon={faVideo} style={{ color: '#4caf50', fontSize: 32, marginRight: 8 }} />
+//                   <span style={{ fontSize: 22, fontWeight: 500 }}>Video</span>
+//                 </div>
+//                 <div className="postview-action" onClick={() => handleMediaClick('image')}>
+//                   <FontAwesomeIcon icon={faImages} style={{ color: '#2196f3', fontSize: 32, marginRight: 8 }} />
+//                   <span style={{ fontSize: 22, fontWeight: 500 }}>Photo</span>
+//                 </div>
+//               </div>
+//             </div>
+//             <input ref={fileInputRef} type="file" style={{ display: 'none' }} onChange={handleMediaChange} />
+//             <form onSubmit={handleSubmit} className="postview-form">
+//               <textarea
+//                 placeholder={platformConfig.placeholder}
+//                 value={caption}
+//                 onChange={e => setCaption(e.target.value)}
+//                 className="postview-textarea"
+//                 required
+//               />
+//               {media && (
+//                 <div className="postview-media-preview">
+//                   {media.type?.startsWith('image') ? <img src={URL.createObjectURL(media)} alt="preview" /> : <video controls src={URL.createObjectURL(media)} />}
+//                 </div>
+//               )}
+//               {error && (<div className="postview-error">{error}</div>)}
+//               <div className="postview-form-buttons">
+//                 <button type="submit" className="postview-post-btn" style={{ backgroundColor: platformConfig.color }} disabled={isPosting}>
+//                   {isPosting ? 'Posting...' : platformConfig.buttonText}
+//                 </button>
+//               </div>
+//             </form>
+//           </div>
+
+//           <div className="postview-feed">
+//             {loading && <p style={{ textAlign: 'center' }}>Loading posts...</p>}
+//             {posts.map(post => (
+//               <div key={post.id} className="postview-feed-card">
+//                 <div className="postview-feed-header">
+//                   <img src={post.authorAvatar} alt="avatar" className="postview-feed-avatar" />
+//                   <div>
+//                     <div className="postview-feed-author">{post.authorName}</div>
+//                     <div className="postview-feed-role">{post.authorRole}</div>
+//                     <div className="postview-feed-meta">{post.meta}</div>
+//                   </div>
+//                   <button className="postview-feed-follow">+ Follow</button>
+//                 </div>
+//                 <div className="postview-feed-caption">{post.caption}</div>
+//                 <div className="postview-feed-actions">
+//                   <span><FontAwesomeIcon icon={faThumbsUp} /> Like</span>
+//                   <span><FontAwesomeIcon icon={faComments} /> Comment</span>
+//                   <span><FontAwesomeIcon icon={faShareFromSquare} /> Share</span>
+//                 </div>
+//                 <div className="postview-feed-meta2">
+//                   <span>{post.likes} likes</span> · <span>{post.comments} comments</span> · <span>{post.shares} shares</span>
+//                 </div>
+//               </div>
+//             ))}
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
 
 // export const PostView = ({ token, user, apiSource = 'instagram', onNavigate }) => {
 //   const [posts, setPosts] = useState([]);

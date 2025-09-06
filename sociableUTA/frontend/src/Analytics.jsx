@@ -68,6 +68,20 @@ export const Analytics = ({ token, apiSource = 'instagram', onNavigate }) => {
         } else {
           setIsLinkedInAuthenticated(false);
         }
+      } else if (apiSource === 'x') {
+        try {
+          const response = await axios.get('http://localhost:5000/api/x/user-data');
+          const metrics = response.data.profile.public_metrics;
+          setAnalyticsData({
+            totalFollowers: metrics.followers_count || 0,
+            totalEngagement: metrics.like_count || 0,
+            totalReach: metrics.tweet_count || 0,
+            followerLocations: [], weeklyFollowers: [], genderDistribution: [], ageDistribution: [],
+            lastUpdated: new Date().toISOString(),
+          });
+        } catch (err) {
+          setError('Failed to fetch X analytics. Check your backend and API keys.');
+        }
       } else {
         setAnalyticsData({
           followerLocations: [], weeklyFollowers: [], genderDistribution: [],
@@ -168,6 +182,157 @@ export const Analytics = ({ token, apiSource = 'instagram', onNavigate }) => {
     </div>
   );
 };
+
+// export const Analytics = ({ token, apiSource = 'instagram', onNavigate }) => {
+//   const [viewType, setViewType] = useState('graph');
+//   const [analyticsData, setAnalyticsData] = useState(null);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState(null);
+//   const [isLinkedInAuthenticated, setIsLinkedInAuthenticated] = useState(!!localStorage.getItem('linkedin_access_token'));
+
+//   useEffect(() => {
+//     const loadAnalyticsData = async () => {
+//       setLoading(true);
+//       setError(null);
+//       setAnalyticsData(null);
+
+//       if (apiSource === 'instagram') {
+//         try {
+//           const response = await axios.get('http://localhost:5000/api/instagram/follower-demographics');
+//           const locationData = response.data.data[0]?.values[0]?.value || {};
+//           const formattedLocations = Object.keys(locationData).map(countryCode => ({ name: countryCode, value: locationData[countryCode] }));
+//           setAnalyticsData({
+//             followerLocations: formattedLocations,
+//             totalFollowers: formattedLocations.reduce((sum, item) => sum + item.value, 0),
+//             weeklyFollowers: [], genderDistribution: [], ageDistribution: [], totalEngagement: 0, totalReach: 0,
+//             lastUpdated: new Date().toISOString(),
+//           });
+//         } catch (err) {
+//           setError(err.message);
+//         }
+//       } else if (apiSource === 'linkedin') {
+//         const linkedInToken = localStorage.getItem('linkedin_access_token');
+//         if (linkedInToken) {
+//           setIsLinkedInAuthenticated(true);
+//           try {
+//             const response = await axios.get('http://localhost:5000/api/linkedin/organization-data', {
+//               headers: { 'Authorization': `Bearer ${linkedInToken}` }
+//             });
+//             const stats = response.data.organization.follower_stats.elements[0]?.followerCountsByAssociationType[0]?.followerCounts || {};
+//             setAnalyticsData({
+//               totalFollowers: (stats.organicFollowerCount || 0) + (stats.paidFollowerCount || 0),
+//               followerLocations: [], weeklyFollowers: [], genderDistribution: [], ageDistribution: [],
+//               totalEngagement: 0, totalReach: 0,
+//               lastUpdated: new Date().toISOString(),
+//             });
+//           } catch (err) {
+//             setError('Failed to fetch LinkedIn analytics. Your token may have expired. Please reconnect.');
+//             setIsLinkedInAuthenticated(false);
+//             localStorage.removeItem('linkedin_access_token');
+//           }
+//         } else {
+//           setIsLinkedInAuthenticated(false);
+//         }
+//       } else {
+//         setAnalyticsData({
+//           followerLocations: [], weeklyFollowers: [], genderDistribution: [],
+//           ageDistribution: [], totalFollowers: 0, totalEngagement: 0, totalReach: 0,
+//         });
+//       }
+//       setLoading(false);
+//     };
+
+//     loadAnalyticsData();
+//   }, [apiSource]);
+
+//   const handleLinkedInConnect = () => {
+//     window.location.href = 'http://localhost:5000/api/linkedin/login';
+//   };
+
+//   const {
+//     followerLocations = [], weeklyFollowers = [], genderDistribution = [],
+//     ageDistribution = [], totalFollowers = 0, totalEngagement = 0, totalReach = 0, lastUpdated
+//   } = analyticsData || {};
+
+//   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d'];
+
+//   return (
+//     <div className="analytics-container">
+//       <div className="analytics-content">
+//         <div className="analytics-view-toggle">
+//           <button className={viewType === 'graph' ? 'active' : ''} onClick={() => setViewType('graph')}>Graph</button>
+//           <button className={viewType === 'table' ? 'active' : ''} onClick={() => setViewType('table')}>Table</button>
+//         </div>
+
+//         {loading && <p style={{ textAlign: 'center' }}>Loading Analytics...</p>}
+//         {error && <p style={{ textAlign: 'center', color: 'red' }}>{error}</p>}
+
+//         {apiSource === 'linkedin' && !isLinkedInAuthenticated && !loading && (
+//           <div className="analytics-card large" style={{ textAlign: 'center', padding: '50px' }}>
+//             <h3>LinkedIn Authentication Required</h3>
+//             <p>Please connect your LinkedIn account to view organization analytics.</p>
+//             <button onClick={handleLinkedInConnect} style={{ padding: '10px 20px', marginTop: '10px' }}>
+//               Connect to LinkedIn
+//             </button>
+//           </div>
+//         )}
+
+//         {!loading && !error && (viewType === 'graph' ? (
+//           <div className="analytics-dashboard">
+//             <div className="analytics-row">
+//               <div className="analytics-card large">
+//                 <h3>Follower Location Distribution</h3>
+//                 {followerLocations.length > 0 ? (
+//                   <ResponsiveContainer width="100%" height={300}>
+//                     <BarChart data={followerLocations}><CartesianGrid strokeDasharray="3 3" /><XAxis dataKey="name" /><YAxis /><Tooltip /><Bar dataKey="value" fill="#4285F4" /></BarChart>
+//                   </ResponsiveContainer>
+//                 ) : <p>No location data available for {apiSource}.</p>}
+//               </div>
+//               <div className="analytics-card large">
+//                 <h3>This Week's Follower Count</h3>
+//                 {weeklyFollowers.length > 0 ? (
+//                   <ResponsiveContainer width="100%" height={300}>
+//                     <LineChart data={weeklyFollowers}><CartesianGrid strokeDasharray="3 3" /><XAxis dataKey="day" /><YAxis /><Tooltip /><Line type="monotone" dataKey="followers" stroke="#4285F4" strokeWidth={3} /></LineChart>
+//                   </ResponsiveContainer>
+//                 ) : <p>No weekly follower data available for {apiSource}.</p>}
+//               </div>
+//             </div>
+//             <div className="analytics-row">
+//               <div className="analytics-card medium">
+//                 <h3>Follower Gender Distribution</h3>
+//                 {genderDistribution.length > 0 ? (
+//                   <ResponsiveContainer width="100%" height={300}>
+//                     <PieChart><Pie data={genderDistribution} cx="50%" cy="50%" outerRadius={100} fill="#8884d8" dataKey="value" label={({ name, value }) => `${name}\n${value}%`}>{genderDistribution.map((entry, index) => (<Cell key={`cell-${index}`} fill={entry.color || COLORS[index % COLORS.length]} />))}</Pie><Tooltip /></PieChart>
+//                   </ResponsiveContainer>
+//                 ) : <p>No gender data available for {apiSource}.</p>}
+//               </div>
+//               <div className="analytics-card large">
+//                 <h3>Follower Age Distribution</h3>
+//                 {ageDistribution.length > 0 ? (
+//                   <ResponsiveContainer width="100%" height={300}>
+//                     <BarChart data={ageDistribution}><CartesianGrid strokeDasharray="3 3" /><XAxis dataKey="age" /><YAxis /><Tooltip /><Bar dataKey="count" fill="#4285F4" name="Followers" /></BarChart>
+//                   </ResponsiveContainer>
+//                 ) : <p>No age distribution data available for {apiSource}.</p>}
+//               </div>
+//             </div>
+//           </div>
+//         ) : (
+//           <div className="analytics-table-view">
+//             <div className="analytics-card">
+//               <h3>Analytics Data Table</h3>
+//               {lastUpdated && (<p style={{ color: '#666', fontSize: '0.9rem' }}>Last Updated: {new Date(lastUpdated).toLocaleString()}</p>)}
+//               <div style={{ marginTop: '20px' }}>
+//                 <p><strong>Total Followers:</strong> {totalFollowers.toLocaleString()}</p>
+//                 <p><strong>Total Engagement:</strong> {totalEngagement.toLocaleString()}</p>
+//                 <p><strong>Total Reach:</strong> {totalReach.toLocaleString()}</p>
+//               </div>
+//             </div>
+//           </div>
+//         ))}
+//       </div>
+//     </div>
+//   );
+// };
 
 // export const Analytics = ({ token, apiSource = 'instagram', onNavigate }) => {
 //   const [viewType, setViewType] = useState('graph'); // graph or table
