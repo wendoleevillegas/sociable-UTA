@@ -3,8 +3,8 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs'); // <-- Import bcryptjs
-const User = require('./models/User'); // <-- Import the User model
+const bcrypt = require('bcryptjs');
+const User = require('./models/User');
 const axios = require('axios');
 
 const app = express();
@@ -51,7 +51,7 @@ app.post('/register', async (req, res) => {
 
         res.status(201).json({ message: 'User registered successfully' });
     } catch (error) {
-        console.error('Error during registration:', error); // <-- Add this log
+        console.error('Error during registration:', error);
         res.status(500).json({ message: 'Server error' });
     }
 });

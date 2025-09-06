@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import './PostView.css';
-import { fetchPlatformPosts, postToLinkedIn, initiateLinkedInAuth } from './ApiDataService';
+// import { fetchPlatformPosts, postToLinkedIn, initiateLinkedInAuth } from './ApiDataService';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faVideo, faImages, faThumbsUp, faComments, faShareFromSquare } from '@fortawesome/free-solid-svg-icons';
 
@@ -18,61 +18,93 @@ export const PostView = ({ token, user, apiSource = 'instagram', onNavigate }) =
 
   useEffect(() => {
     const fetchPosts = async () => {
-      try {
-        const mockPosts = await fetchPlatformPosts(apiSource);
-        setPosts(mockPosts);
-      } catch (err) {
-        console.error(`Failed to fetch ${apiSource} posts:`, err);
-        setPosts([]);
+      setLoading(true);
+      setPosts([]); // clearing previous posts
+
+      if (apiSource === 'instagram') {
+        try {
+          // calling new backend route for IG media
+          const response = await axios.get('http://localhost:5000/api/instagram/media');
+
+          // transform API data to match post structure
+          const formattedPosts = response.data.map(post => ({
+            id: post.id,
+            authorName: 'wendoughlee', // Placeholder name
+            authorRole: 'Instagram Account',
+            authorAvatar: 'https://via.placeholder.com/48', // Placeholder avatar
+            caption: post.caption || '',
+            mediaType: post.media_type.toLowerCase(), // 'IMAGE' -> 'image'
+            mediaUrl: post.media_url,
+            meta: new Date(post.timestamp).toLocaleString(),
+            // NOTE: Likes, comments, and shares require a separate insights call per post
+            likes: 0,
+            comments: 0,
+            shares: 0,
+          }));
+
+          setPosts(formattedPosts);
+        } catch (err) {
+          console.error('Failed to fetch ${apiSource} posts:', err);
+          setError('Failed to fetch Instagram posts. Please try again.');
+          setPosts([]);
+        }
       }
+      // try {
+      //   const mockPosts = await fetchPlatformPosts(apiSource);
+      //   setPosts(mockPosts);
+      // } catch (err) {
+      //   console.error(`Failed to fetch ${apiSource} posts:`, err);
+      //   setPosts([]);
+      // }
+      setLoading(false);
     };
 
     fetchPosts();
 
-    // Check for LinkedIn OAuth callback
-    const urlParams = new URLSearchParams(window.location.search);
-    const code = urlParams.get('code');
-    const state = urlParams.get('state');
+    // // Check for LinkedIn OAuth callback
+    // const urlParams = new URLSearchParams(window.location.search);
+    // const code = urlParams.get('code');
+    // const state = urlParams.get('state');
 
-    if (code && state === 'linkedin_auth') {
-      handleLinkedInCallback(code);
-    }
-  }, [token, apiSource]);
+    // if (code && state === 'linkedin_auth') {
+    //   handleLinkedInCallback(code);
+    // }
+  }, [apiSource]); // before: [token, apiSource])
 
-  const handleLinkedInCallback = async (code) => {
-    try {
-      // Exchange the code for an access token via your backend
-      const apiBaseUrl = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5500';
-      const response = await fetch(`${apiBaseUrl}/api/linkedin/exchange-token`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ code }),
-      });
+  // const handleLinkedInCallback = async (code) => {
+  //   try {
+  //     // Exchange the code for an access token via your backend
+  //     const apiBaseUrl = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5500';
+  //     const response = await fetch(`${apiBaseUrl}/api/linkedin/exchange-token`, {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({ code }),
+  //     });
 
-      if (response.ok) {
-        const { access_token } = await response.json();
-        setLinkedInToken(access_token);
-        setIsLinkedInAuthenticated(true);
-        localStorage.setItem('linkedin_token', access_token);
+  //     if (response.ok) {
+  //       const { access_token } = await response.json();
+  //       setLinkedInToken(access_token);
+  //       setIsLinkedInAuthenticated(true);
+  //       localStorage.setItem('linkedin_token', access_token);
 
-        // Clean up URL
-        window.history.replaceState({}, document.title, window.location.pathname);
+  //       // Clean up URL
+  //       window.history.replaceState({}, document.title, window.location.pathname);
 
-      } else {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Authentication failed');
-      }
-    } catch (error) {
-      console.error('Error exchanging LinkedIn code:', error);
-      setError('Failed to authenticate with LinkedIn. Please try again.');
-    }
-  };
+  //     } else {
+  //       const errorData = await response.json();
+  //       throw new Error(errorData.error || 'Authentication failed');
+  //     }
+  //   } catch (error) {
+  //     console.error('Error exchanging LinkedIn code:', error);
+  //     setError('Failed to authenticate with LinkedIn. Please try again.');
+  //   }
+  // };
 
-  const handleLinkedInAuth = () => {
-    initiateLinkedInAuth();
-  };
+  // const handleLinkedInAuth = () => {
+  //   initiateLinkedInAuth();
+  // };
 
   const handleMediaClick = (type) => {
     if (fileInputRef.current) {
@@ -88,54 +120,55 @@ export const PostView = ({ token, user, apiSource = 'instagram', onNavigate }) =
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!caption.trim() && !media) {
-      setError('Please add some content or media to your post');
-      return;
-    }
+    // posting to Ig via backend. TODO later
+    // if (!caption.trim() && !media) {
+    //   setError('Please add some content or media to your post');
+    //   return;
+    // }
 
-    setIsPosting(true);
-    setError('');
+    // setIsPosting(true);
+    // setError('');
 
-    try {
-      const formData = new FormData();
-      formData.append('caption', caption);
-      if (media) formData.append('media', media);
+    // try {
+    //   const formData = new FormData();
+    //   formData.append('caption', caption);
+    //   if (media) formData.append('media', media);
 
-      // Post to your local backend
-      await axios.post('http://localhost:5500/api/posts', formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'multipart/form-data'
-        }
-      });
+    //   // Post to your local backend
+    //   await axios.post('http://localhost:5500/api/posts', formData, {
+    //     headers: {
+    //       Authorization: `Bearer ${token}`,
+    //       'Content-Type': 'multipart/form-data'
+    //     }
+    //   });
 
-      // If LinkedIn is selected and authenticated, also post to LinkedIn
-      if (apiSource === 'linkedin' && isLinkedInAuthenticated && linkedInToken) {
-        try {
-          await postToLinkedIn(linkedInToken, {
-            text: caption,
-            media: media
-          });
-        } catch (linkedInError) {
-          console.error('Failed to post to LinkedIn:', linkedInError);
-          setError('Posted locally but failed to post to LinkedIn. Please try again.');
-        }
-      }
+    //   // If LinkedIn is selected and authenticated, also post to LinkedIn
+    //   if (apiSource === 'linkedin' && isLinkedInAuthenticated && linkedInToken) {
+    //     try {
+    //       await postToLinkedIn(linkedInToken, {
+    //         text: caption,
+    //         media: media
+    //       });
+    //     } catch (linkedInError) {
+    //       console.error('Failed to post to LinkedIn:', linkedInError);
+    //       setError('Posted locally but failed to post to LinkedIn. Please try again.');
+    //     }
+    //   }
 
-      setMedia(null);
-      setCaption('');
+    //   setMedia(null);
+    //   setCaption('');
 
-      const response = await axios.get('http://localhost:5500/api/posts', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      setPosts(response.data);
+    //   const response = await axios.get('http://localhost:5500/api/posts', {
+    //     headers: { Authorization: `Bearer ${token}` }
+    //   });
+    //   setPosts(response.data);
 
-    } catch (err) {
-      console.error('Failed to create post:', err);
-      setError('Failed to create post. Please try again.');
-    } finally {
-      setIsPosting(false);
-    }
+    // } catch (err) {
+    //   console.error('Failed to create post:', err);
+    //   setError('Failed to create post. Please try again.');
+    // } finally {
+    //   setIsPosting(false);
+    // }
   };
 
   const getPlatformConfig = (source) => {
