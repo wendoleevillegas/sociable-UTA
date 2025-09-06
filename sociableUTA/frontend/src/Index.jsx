@@ -22,6 +22,16 @@ function Home({ onLogout }) {
     if (token) {
       setCurrentUser({ token });
     }
+
+    // handling LinkedIn OAuth redirect
+    const urlParams = new URLSearchParams(window.location.search);
+    const linkedinToken = urlParams.get('linkedin_token');
+    if (linkedinToken) {
+      console.log("LinkedIn token received:", linkedinToken);
+      localStorage.setItem('linkedin_access_token', linkedinToken);
+      // Clean the token from the URL so it's not visible
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
   }, []);
 
 
@@ -51,8 +61,8 @@ function Home({ onLogout }) {
           setCurrentUser({ token });
           localStorage.setItem('token', token);
         }}
-        onShowSignup={() => { }}
-        onShowForgot={() => { }}
+      // onShowSignup={() => { }}
+      // onShowForgot={() => { }}
       />
     );
   }
@@ -60,22 +70,33 @@ function Home({ onLogout }) {
   // If logged in, show the app with working components
   return (
     <div>
+      <Menu active={currentPage} onSelect={handlePageChange} onLogout={onLogout} />
+      {(currentPage === 'analytics' || currentPage === 'calendar' || currentPage === 'inbox' || currentPage === 'postview') && (
+        <ApiSubmenu selectedSources={selectedSources} onSourceChange={setSelectedSources} />
+      )}
+      {currentPage === 'calendar' && <Calendar token={currentUser.token} apiSource={selectedSources[0]} onNavigate={setCurrentPage} />}
+      {currentPage === 'post' && <CreatePost token={currentUser.token} user={user} apiSource={selectedSources[0]} onNavigate={setCurrentPage} />}
+      {currentPage === 'postview' && <PostView token={currentUser.token} user={user} apiSource={selectedSources[0]} onNavigate={setCurrentPage} />}
+      {currentPage === 'inbox' && <Inbox token={currentUser.token} apiSource={selectedSources[0]} onNavigate={setCurrentPage} />}
+      {currentPage === 'analytics' && <Analytics token={currentUser.token} apiSource={selectedSources[0]} onNavigate={setCurrentPage} />}
+      {currentPage === 'studentinformation' && <PersonalInfo token={currentUser.token} onBack={() => setCurrentPage('calendar')} />}
+
       {/* Navigation Menu */}
-      <Menu
+      {/* <Menu
         active={currentPage}
         onSelect={handlePageChange}
         onLogout={onLogout}
-      />
+      /> */}
 
-      {/* API Source Submenu - Hide for CreatePost page */}
+      {/* API Source Submenu - Hide for CreatePost page
       {(currentPage === 'analytics' || currentPage === 'calendar' || currentPage === 'inbox' || currentPage === 'postview') && (
         <ApiSubmenu
           selectedSources={selectedSources}
           onSourceChange={setSelectedSources}
         />
-      )}
+      )} */}
 
-      {/* Page Content - Conditional rendering based on selected page */}
+      {/* Page Content - Conditional rendering based on selected page
       {currentPage === 'calendar' && (
         <Calendar
           token={currentUser.token}
@@ -83,48 +104,48 @@ function Home({ onLogout }) {
           selectedSources={selectedSources}
           onNavigate={setCurrentPage}
         />
-      )}
+      )} */}
 
-      {currentPage === 'post' && (
+      {/* {currentPage === 'post' && (
         <CreatePost
           token={currentUser.token}
           user={user}
           apiSource={selectedSources[0]}
           onNavigate={setCurrentPage}
         />
-      )}
+      )} */}
 
-      {currentPage === 'postview' && (
+      {/* {currentPage === 'postview' && (
         <PostView
           token={currentUser.token}
           user={user}
           apiSource={selectedSources[0]}
           onNavigate={setCurrentPage}
         />
-      )}
+      )} */}
 
-      {currentPage === 'inbox' && (
+      {/* {currentPage === 'inbox' && (
         <Inbox
           token={currentUser.token}
           apiSource={selectedSources[0]}
           onNavigate={setCurrentPage}
         />
-      )}
+      )} */}
 
-      {currentPage === 'analytics' && (
+      {/* {currentPage === 'analytics' && (
         <Analytics
           token={currentUser.token}
           apiSource={selectedSources[0]}
           onNavigate={setCurrentPage}
         />
-      )}
+      )} */}
 
-      {currentPage === 'studentinformation' && (
+      {/* {currentPage === 'studentinformation' && (
         <PersonalInfo
           token={currentUser.token}
           onBack={() => setCurrentPage('calendar')}
         />
-      )}
+      )} */}
     </div>
   );
 }
