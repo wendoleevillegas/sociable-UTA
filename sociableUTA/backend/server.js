@@ -124,11 +124,12 @@ app.get('/api/facebook/feed', async (req, res) => {
         const page_access_token = process.env.FACEBOOK_PAGE_ACCESS_TOKEN;
         const facebook_user_id = process.env.FACEBOOK_USER_ID;
 
-        // Using a minimal set of fields for stability
-        const fields = "id,message,created_time,permalink_url";
+        // FIX: Minimal, crash-safe fields. 
+        // NOTE: We are removing the 'type' field as well, as it might be part of the issue.
+        const fields = "id,message,created_time,permalink_url"; // <-- Even more minimal!
 
-        // ADD &limit=10 to request the 10 most recent posts
-        const url = `https://graph.facebook.com/v19.0/${facebook_user_id}/feed?fields=${fields}&access_token=${page_access_token}&limit=10`; // <-- FIXED LINE
+        // Use the /feed edge instead of /posts
+        const url = `https://graph.facebook.com/v19.0/${facebook_user_id}/feed?fields=${fields}&access_token=${page_access_token}`;
 
         const response = await axios.get(url);
         // The posts are inside the 'data' property of the response

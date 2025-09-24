@@ -42,6 +42,7 @@ export const PostView = ({ token, user, apiSource = 'instagram', onNavigate }) =
         }
       } else if (apiSource === 'facebook') {
         try {
+          // Call the backend route
           const response = await axios.get('http://localhost:5000/api/facebook/feed');
 
           const formattedPosts = response.data.map(post => ({
@@ -50,9 +51,10 @@ export const PostView = ({ token, user, apiSource = 'instagram', onNavigate }) =
             authorRole: 'Facebook Page',
             authorAvatar: 'https://via.placeholder.com/48',
             caption: post.message || '',
-            // Media fields are now explicitly NULL to match the minimal API response
-            mediaType: null, // <-- CHANGE: Set to null/undefined
-            mediaUrl: null,  // <-- CHANGE: Set to null/undefined
+            // Since 'full_picture' is removed from the backend request for stability, 
+            // these will be null, and media will be skipped in the render.
+            mediaType: post.type === 'photo' || post.type === 'video' ? post.type : null,
+            mediaUrl: post.full_picture || null,
             meta: new Date(post.created_time).toLocaleString(),
             likes: 0,
             comments: 0,
