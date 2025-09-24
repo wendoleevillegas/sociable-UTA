@@ -118,6 +118,28 @@ app.get('/api/facebook/page-info', async (req, res) => {
     }
 });
 
+//facebook page feed posts
+app.get('/api/facebook/feed', async (req, res) => {
+    try {
+        const page_access_token = process.env.FACEBOOK_PAGE_ACCESS_TOKEN;
+        const facebook_user_id = process.env.FACEBOOK_USER_ID;
+
+        // Using a minimal set of fields for stability
+        const fields = "id,message,created_time,permalink_url";
+
+        // ADD &limit=10 to request the 10 most recent posts
+        const url = `https://graph.facebook.com/v19.0/${facebook_user_id}/feed?fields=${fields}&access_token=${page_access_token}&limit=10`; // <-- FIXED LINE
+
+        const response = await axios.get(url);
+        // The posts are inside the 'data' property of the response
+        res.json(response.data.data);
+
+    } catch (error) {
+        console.error('Error fetching Facebook feed:', error.response ? error.response.data : error.message);
+        res.status(500).json({ message: 'Failed to fetch Facebook feed' });
+    }
+});
+
 // Fetching media from Instagram following Instagramapi2.py logic
 app.get('/api/instagram/media', async (req, res) => {
     try {

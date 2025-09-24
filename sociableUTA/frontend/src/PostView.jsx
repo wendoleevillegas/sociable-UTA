@@ -40,6 +40,29 @@ export const PostView = ({ token, user, apiSource = 'instagram', onNavigate }) =
           setError(`Failed to load Instagram posts. Make sure your backend is running.`);
           setPosts([]);
         }
+      } else if (apiSource === 'facebook') {
+        try {
+          const response = await axios.get('http://localhost:5000/api/facebook/feed');
+
+          const formattedPosts = response.data.map(post => ({
+            id: post.id,
+            authorName: 'Sociable UTA (Facebook Page)',
+            authorRole: 'Facebook Page',
+            authorAvatar: 'https://via.placeholder.com/48',
+            caption: post.message || '',
+            // Media fields are now explicitly NULL to match the minimal API response
+            mediaType: null, // <-- CHANGE: Set to null/undefined
+            mediaUrl: null,  // <-- CHANGE: Set to null/undefined
+            meta: new Date(post.created_time).toLocaleString(),
+            likes: 0,
+            comments: 0,
+            shares: 0,
+          }));
+          setPosts(formattedPosts);
+        } catch (err) {
+          setError(`Failed to load Facebook posts. Error: ${err.message}`);
+          setPosts([]);
+        }
       } else if (apiSource === 'linkedin') {
         const linkedInToken = localStorage.getItem('linkedin_access_token');
         if (linkedInToken) {
