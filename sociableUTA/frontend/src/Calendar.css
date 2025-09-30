@@ -39,8 +39,7 @@
 }
 
 /* FullCalendar customizations */
-.fc-theme-standard td,
-.fc-theme-standard th {
+.fc-theme-standard td, .fc-theme-standard th {
   border: 1px solid #e1e5e9 !important;
 }
 
@@ -49,7 +48,7 @@
   border: 1px solid #d1d5db !important;
 }
 
-.fc-theme-standard .fc-scrollgrid-section>* {
+.fc-theme-standard .fc-scrollgrid-section > * {
   border-color: #d1d5db !important;
 }
 
@@ -74,11 +73,16 @@
   text-decoration: underline !important;
 }
 
-/* Custom event class for LinkedIn events */
-.custom-event {
-  background: linear-gradient(135deg, #0A66C2 0%, #004182 100%) !important;
-  border: 1px solid #004182 !important;
-  color: #ffffff !important;
+/* Make day grid events transparent so our custom content renders as cards */
+.fc-daygrid-event {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+}
+
+.fc-daygrid-event .fc-event-main {
+  padding: 0 !important;
 }
 
 /* Weekend styling */
@@ -94,41 +98,29 @@
   border-radius: 8px;
   margin-bottom: 20px;
   border: 1px solid #e1e5e9;
-  justify-content: space-between !important;
-  /* Space between center (nav) and right (today) */
-  flex-wrap: nowrap !important;
-  /* Prevent wrapping to new line */
-  display: flex !important;
-  /* Force flex display */
+  justify-content: space-between !important; /* Space between center (nav) and right (today) */
+  flex-wrap: nowrap !important; /* Prevent wrapping to new line */
+  display: flex !important; /* Force flex display */
 }
 
 .fc-toolbar-chunk {
   display: flex !important;
   align-items: center !important;
-  gap: 12px;
-  /* Space between elements */
-  flex-wrap: nowrap !important;
-  /* Prevent wrapping */
-  flex-direction: row !important;
-  /* Force horizontal layout */
+  gap: 12px; /* Space between elements */
+  flex-wrap: nowrap !important; /* Prevent wrapping */
+  flex-direction: row !important; /* Force horizontal layout */
 }
 
 /* Center chunk containing prev, title, next */
 .fc-toolbar-chunk:nth-child(2) {
   display: inline-flex !important;
   align-items: center !important;
-  gap: 16px !important;
-  /* Space between prev button, title, and next button */
-  flex-wrap: nowrap !important;
-  /* Ensure all elements stay on same line */
-  white-space: nowrap !important;
-  /* Prevent text wrapping */
-  flex-direction: row !important;
-  /* Force horizontal direction */
-  justify-content: center !important;
-  /* Center the navigation group */
-  min-width: 280px !important;
-  /* Fixed width for consistent spacing */
+  gap: 16px !important; /* Space between prev button, title, and next button */
+  flex-wrap: nowrap !important; /* Ensure all elements stay on same line */
+  white-space: nowrap !important; /* Prevent text wrapping */
+  flex-direction: row !important; /* Force horizontal direction */
+  justify-content: center !important; /* Center the navigation group */
+  min-width: 280px !important; /* Fixed width for consistent spacing */
 }
 
 /* Right chunk containing today button */
@@ -140,62 +132,42 @@
 /* Navigation buttons - clean arrow style */
 .fc-prev-button,
 .fc-next-button {
-  margin: 0 !important;
-  /* Remove default margins */
-  background: none !important;
-  /* Remove background */
-  border: none !important;
-  /* Remove border */
-  box-shadow: none !important;
-  /* Remove shadow */
-  padding: 4px 8px !important;
-  /* Minimal padding */
-  font-size: 1.2rem !important;
-  /* Larger arrow size */
-  color: #1c1e21 !important;
-  /* Dark color for arrows */
-  font-weight: bold !important;
-  /* Bold arrows */
+  margin: 0 !important; /* Remove default margins */
+  background: none !important; /* Remove background */
+  border: none !important; /* Remove border */
+  box-shadow: none !important; /* Remove shadow */
+  padding: 4px 8px !important; /* Minimal padding */
+  font-size: 1.2rem !important; /* Larger arrow size */
+  color: #1c1e21 !important; /* Dark color for arrows */
+  font-weight: bold !important; /* Bold arrows */
   display: inline-block !important;
-  width: 32px !important;
-  /* Fixed width for consistent positioning */
-  height: 32px !important;
-  /* Fixed height for consistent positioning */
-  text-align: center !important;
-  /* Center the arrow within the button */
-  line-height: 24px !important;
-  /* Center vertically */
+  width: 32px !important; /* Fixed width for consistent positioning */
+  height: 32px !important; /* Fixed height for consistent positioning */
+  text-align: center !important; /* Center the arrow within the button */
+  line-height: 24px !important; /* Center vertically */
   vertical-align: middle !important;
   position: relative !important;
-  top: -4px !important;
-  /* Move buttons up more (was -2px) */
+  top: -4px !important; /* Move buttons up more (was -2px) */
 }
 
 .fc-prev-button:hover,
 .fc-next-button:hover {
-  background: none !important;
-  /* No background on hover */
-  color: #1976d2 !important;
-  /* Blue color on hover */
-  transform: scale(1.1);
-  /* Slight scale effect on hover */
+  background: none !important; /* No background on hover */
+  color: #1976d2 !important; /* Blue color on hover */
+  transform: scale(1.1); /* Slight scale effect on hover */
 }
 
 .fc-prev-button:focus,
 .fc-next-button:focus {
-  background: none !important;
-  /* No background on focus */
-  box-shadow: none !important;
-  /* Remove focus shadow */
-  outline: none !important;
-  /* Remove outline */
+  background: none !important; /* No background on focus */
+  box-shadow: none !important; /* Remove focus shadow */
+  outline: none !important; /* Remove outline */
 }
 
 /* Hide button text, show only arrows */
 .fc-prev-button .fc-icon,
 .fc-next-button .fc-icon {
-  font-size: 1.2rem;
-  /* Arrow size */
+  font-size: 1.2rem; /* Arrow size */
 }
 
 /* Custom arrow content */
@@ -224,18 +196,12 @@
   font-size: 1.5rem !important;
   font-weight: 600 !important;
   color: #1c1e21 !important;
-  margin: 0 !important;
-  /* Remove default margins */
-  white-space: nowrap !important;
-  /* Prevent title from wrapping */
-  flex-shrink: 0 !important;
-  /* Prevent title from shrinking */
-  display: inline-block !important;
-  /* Force inline display */
-  min-width: 200px !important;
-  /* Fixed minimum width to prevent button shifting */
-  text-align: center !important;
-  /* Center the text within the fixed width */
+  margin: 0 !important; /* Remove default margins */
+  white-space: nowrap !important; /* Prevent title from wrapping */
+  flex-shrink: 0 !important; /* Prevent title from shrinking */
+  display: inline-block !important; /* Force inline display */
+  min-width: 200px !important; /* Fixed minimum width to prevent button shifting */
+  text-align: center !important; /* Center the text within the fixed width */
 }
 
 /* Force all buttons to display inline */
@@ -520,7 +486,6 @@
     opacity: 0;
     transform: translateY(-20px);
   }
-
   to {
     opacity: 1;
     transform: translateY(0);
@@ -533,14 +498,14 @@
     flex-direction: column;
     gap: 16px;
   }
-
+  
   .calendar-notifications-panel {
     flex: none;
     width: 100%;
     max-height: 400px;
     order: 2;
   }
-
+  
   .calendar-container {
     order: 1;
   }
@@ -550,33 +515,33 @@
   .calendar-root {
     padding: 20px 12px;
   }
-
+  
   .calendar-container {
     padding: 16px;
   }
-
+  
   .fc-toolbar {
     padding: 12px 16px;
   }
-
+  
   .fc-daygrid-day {
     min-height: 80px;
     padding: 4px;
   }
-
+  
   .calendar-modal {
     width: 95%;
     margin: 20px;
   }
-
+  
   .calendar-notifications-panel {
     padding: 16px;
   }
-
+  
   .notification-item {
     padding: 12px;
   }
-
+  
   .notification-icon {
     width: 36px;
     height: 36px;
