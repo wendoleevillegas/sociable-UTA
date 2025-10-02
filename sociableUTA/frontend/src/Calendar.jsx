@@ -4,12 +4,10 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { fetchPlatformCalendarEvents, fetchPlatformNotifications } from './ApiDataService';
 import { getScheduledEvents } from './ScheduledPostsStore';
-import { NotificationPanel } from './NotificationPanel';
 import './Calendar.css';
 
 export const Calendar = ({ token, setToken, apiSource = 'instagram', selectedSources = ['instagram'], onNavigate }) => {
   const [events, setEvents] = useState([]);
-  const [notifications, setNotifications] = useState([]);
   const [selectedDate, setSelectedDate] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [dayEvents, setDayEvents] = useState([]);
@@ -45,32 +43,34 @@ export const Calendar = ({ token, setToken, apiSource = 'instagram', selectedSou
     setDayEvents([]);
   };
 
-  const handleNotificationClick = (notificationId) => {
-    const clickedNotification = notifications.find(n => n.id === notificationId);
-    
-    setNotifications(prev => 
-      prev.map(notification => 
-        notification.id === notificationId 
-          ? { ...notification, unread: false }
-          : notification
-      )
-    );
-    
-    if (clickedNotification?.targetPage && onNavigate) {
-      onNavigate(clickedNotification.targetPage);
+  // notifications removed
+  const getPlatformIconSrc = (p) => {
+    switch (p) {
+      case 'Facebook': return '/icons/facebook.svg';
+      case 'Instagram': return '/icons/instagram.svg';
+      case 'LinkedIn': return '/icons/linkedin.svg';
+      case 'X': return '/icons/x.svg';
+      default: return null;
     }
   };
-
-  const unreadCount = notifications.filter(n => n.unread).length;
+  const computeStatus = (ev) => {
+    const s = ev.extendedProps?.state;
+    if (s === 'archived') return 'Archived';
+    const startDate = typeof ev.start === 'string' ? new Date(ev.start) : ev.start;
+    if (startDate && startDate.getTime() > Date.now()) return 'Scheduled';
+    return 'Published';
+  };
 
   const renderEventContent = (arg) => {
     const { event, timeText } = arg;
-    const mediaUrl = event.extendedProps?.mediaUrl;
-    const mediaType = event.extendedProps?.mediaType;
-    const title = event.title || '';
-    const platform = event.extendedProps?.platform;
+  const mediaUrl = event.extendedProps?.mediaUrl;
+  const mediaType = event.extendedProps?.mediaType;
+  const title = event.title || '';
+  const description = event.extendedProps?.description || '';
+  const platform = event.extendedProps?.platform;
   const boostable = event.extendedProps?.boostable;
     const state = event.extendedProps?.state;
+  const collaborators = Array.isArray(event.extendedProps?.collaborators) ? event.extendedProps.collaborators : [];
     const PLATFORM_COLORS = {
       Facebook: '#1877F2',
       Instagram: '#E4405F',
@@ -80,34 +80,43 @@ export const Calendar = ({ token, setToken, apiSource = 'instagram', selectedSou
     const platformColor = PLATFORM_COLORS[platform] || '#666';
     const tintedBg = state === 'archived' ? '#FFEDE5' : (platform === 'X' ? '#f3f4f6' : `${platformColor}1A`); // peach for archived
 
-    const getPlatformIconSrc = (p) => {
-      switch (p) {
-        case 'Facebook': return '/icons/facebook.svg';
-        case 'Instagram': return '/icons/instagram.svg';
-        case 'LinkedIn': return '/icons/linkedin.svg';
-        case 'X': return '/icons/x.svg';
-        default: return null;
-      }
-    };
-
     const TitleRow = (
-      <div style={{
-        fontSize: 12,
-        fontWeight: 600,
-        lineHeight: 1.2,
-        overflow: 'hidden',
-        textOverflow: 'ellipsis',
-        whiteSpace: 'nowrap',
-        marginTop: mediaUrl ? 6 : 0
-      }} title={title}>
-        {title}
-      </div>
+      <div className="fc-event-card-title" style={{ marginTop: mediaUrl ? 6 : 0 }} title={title}>{title}</div>
     );
+    const DescRow = description ? (
+      <div className="fc-event-card-desc" title={description}>{description}</div>
+    ) : null;
 
     const FooterRow = (
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 4 }}>
-        <span style={{ fontSize: 11, opacity: 0.8 }}>{timeText}</span>
-        {platform && <span style={{ fontSize: 11, opacity: 0.8 }}>{platform}</span>}
+      <div className="fc-event-meta">
+        <span className="fc-event-time">{timeText}</span>
+        <div style={{ display: 'inline-flex', gap: 6, alignItems: 'center' }}>
+          {collaborators.length > 0 && (
+            <span className="platform-pill" title={collaborators.map(c=>c.name).join(', ')}>
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 2 }}>
+                {collaborators.slice(0,2).map((c, idx) => (
+                  <span key={idx} style={{
+                    width: 14, height: 14, borderRadius: '50%', background: '#e5e7eb', display: 'inline-block', overflow: 'hidden'
+                  }}>
+                    {c.avatar ? <img src={c.avatar} alt={c.name} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} /> : null}
+                  </span>
+                ))}
+              </span>
+              <span>{collaborators.length} collab{collaborators.length>1?'s':''}</span>
+            </span>
+          )}
+          {platform && (
+            <span className="platform-pill">
+              {getPlatformIconSrc(platform) && (
+                <img src={getPlatformIconSrc(platform)} alt={platform} style={{ width: 12, height: 12 }} />
+              )}
+              <span>{platform}</span>
+            </span>
+          )}
+          <span className={`status-pill status-${(state||'').toString().toLowerCase() || computeStatus(event).toLowerCase()}`}>
+            {computeStatus(event)}
+          </span>
+        </div>
       </div>
     );
 
@@ -201,6 +210,7 @@ export const Calendar = ({ token, setToken, apiSource = 'instagram', selectedSou
             {Badge}
           </div>
           {TitleRow}
+          {DescRow}
           {ArchivedTag}
           {FooterRow}
           {MetricsRow}
@@ -231,6 +241,7 @@ export const Calendar = ({ token, setToken, apiSource = 'instagram', selectedSou
             {Badge}
           </div>
           {TitleRow}
+          {DescRow}
           {ArchivedTag}
           {FooterRow}
           {MetricsRow}
@@ -242,6 +253,7 @@ export const Calendar = ({ token, setToken, apiSource = 'instagram', selectedSou
     return (
       <Card>
         {TitleRow}
+        {DescRow}
         {ArchivedTag}
         {FooterRow}
         {MetricsRow}
@@ -280,6 +292,7 @@ export const Calendar = ({ token, setToken, apiSource = 'instagram', selectedSou
           metrics: undefined,
           boostable: event.extendedProps?.boostable || event.boostable,
           state: event.extendedProps?.state || event.state,
+          collaborators: event.extendedProps?.collaborators || event.collaborators || [],
         },
         id: event.id,
       }));
@@ -295,26 +308,14 @@ export const Calendar = ({ token, setToken, apiSource = 'instagram', selectedSou
     fetchEvents();
     const handler = () => fetchEvents();
     window.addEventListener('scheduled-posts-updated', handler);
-    
-    // Fetch platform notifications
-    const fetchNotifications = async () => {
-      try {
-        const firstSource = (selectedSources && selectedSources[0]) || apiSource;
-        const platformNotifications = await fetchPlatformNotifications(firstSource);
-        setNotifications(platformNotifications);
-      } catch (err) {
-        console.error(`Error fetching notifications:`, err);
-      }
-    };
-
-    fetchNotifications();
+    // notifications removed
     return () => window.removeEventListener('scheduled-posts-updated', handler);
   }, [token, apiSource, JSON.stringify(selectedSources)]);
 
   return (
     <div className="calendar-root">
       <div className="calendar-container">
-        <div className="calendar-main">
+        <div className="calendar-main" style={{ flex: 1 }}>
           <FullCalendar
             plugins={[dayGridPlugin, interactionPlugin]}
             initialView="dayGridMonth"
@@ -324,7 +325,7 @@ export const Calendar = ({ token, setToken, apiSource = 'instagram', selectedSou
               right: 'today'
             }}
             events={events}
-            height={800}
+            height={920}
             dayMaxEventRows={3}
             moreLinkClick="popover"
             fixedWeekCount={false}
@@ -338,15 +339,6 @@ export const Calendar = ({ token, setToken, apiSource = 'instagram', selectedSou
               return info.dayNumberText;
             }}
             dayHeaderFormat={{ weekday: 'short' }}
-          />
-        </div>
-        
-        {/* Platform Notifications Panel */}
-        <div className="calendar-notifications">
-          <NotificationPanel 
-            notifications={notifications} 
-            onNotificationClick={handleNotificationClick}
-            unreadCount={unreadCount}
           />
         </div>
       </div>
@@ -365,38 +357,67 @@ export const Calendar = ({ token, setToken, apiSource = 'instagram', selectedSou
                 <p className="calendar-no-events">No events for this date.</p>
               ) : (
                 <div className="calendar-events-list">
-                  {dayEvents.map((event, index) => (
-                    <div key={event.id || index} className="calendar-event-item">
-                      <div className="event-title">{event.title}</div>
-                      <div className="event-details">
-                        {event.extendedProps?.description && (
-                          <div className="event-description">
-                            {event.extendedProps.description}
-                          </div>
-                        )}
-                        {event.extendedProps?.mediaUrl && (
-                          <div style={{ marginTop: '8px' }}>
-                            {event.extendedProps.mediaType === 'video' ? (
-                              <video src={event.extendedProps.mediaUrl} controls style={{ width: '100%', borderRadius: 8 }} />
+                  {dayEvents.map((event, index) => {
+                    const title = event.title || '';
+                    const desc = event.extendedProps?.description || '';
+                    const platform = event.extendedProps?.platform;
+                    const mediaUrl = event.extendedProps?.mediaUrl;
+                    const mediaType = event.extendedProps?.mediaType;
+                    const timeStr = (typeof event.start === 'string'
+                      ? new Date(event.start)
+                      : event.start)?.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) || '';
+                    const status = computeStatus(event);
+                    const collaborators = Array.isArray(event.extendedProps?.collaborators) ? event.extendedProps.collaborators : [];
+                    return (
+                      <div key={event.id || index} className="calendar-event-item">
+                        <div className="event-thumb">
+                          {mediaUrl ? (
+                            mediaType === 'video' ? (
+                              <div className="thumb-video">▶</div>
                             ) : (
-                              <img src={event.extendedProps.mediaUrl} alt="media" style={{ width: '100%', borderRadius: 8 }} />
+                              <img src={mediaUrl} alt="media" />
+                            )
+                          ) : (
+                            <div className="thumb-icon">
+                              {getPlatformIconSrc(platform) && (
+                                <img src={getPlatformIconSrc(platform)} alt={platform || 'platform'} />
+                              )}
+                            </div>
+                          )}
+                        </div>
+                        <div className="event-body">
+                          <div className="event-title-row">
+                            <div className="event-title" title={title}>{title}</div>
+                            <span className={`status-pill status-${status.toLowerCase()}`}>{status}</span>
+                          </div>
+                          {desc && <div className="event-desc" title={desc}>{desc}</div>}
+                          <div className="event-meta">
+                            <span className="meta-time">{timeStr}</span>
+                            <span className="platform-pill">
+                              {getPlatformIconSrc(platform) && (
+                                <img src={getPlatformIconSrc(platform)} alt={platform || 'platform'} />
+                              )}
+                              <span>{platform}</span>
+                            </span>
+                            {collaborators.length > 0 && (
+                              <span className="platform-pill" title={collaborators.map(c=>c.name).join(', ')}>
+                                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 2 }}>
+                                  {collaborators.slice(0,3).map((c, idx) => (
+                                    <span key={idx} style={{
+                                      width: 16, height: 16, borderRadius: '50%', background: '#e5e7eb', display: 'inline-block', overflow: 'hidden'
+                                    }}>
+                                      {c.avatar ? <img src={c.avatar} alt={c.name} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} /> : null}
+                                    </span>
+                                  ))}
+                                </span>
+                                <span>{collaborators.length}</span>
+                              </span>
                             )}
                           </div>
-                        )}
-                        {event.extendedProps?.platform && (
-                          <div className="event-type">
-                            {event.extendedProps.platform}
-                          </div>
-                        )}
-                        <div className="event-time">
-                          {typeof event.start === 'string' 
-                            ? new Date(event.start).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
-                            : event.start?.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
-                          }
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               )}
             </div>

@@ -889,6 +889,10 @@ const CreatePost = ({ token, user, apiSource, onNavigate }) => {
                       platform,
                       mediaType: mediaType || null,
                       mediaUrl: selectedMediaDataUrl || selectedMedia || null,
+                      collaborators: (selectedCollaborators || []).map(id => {
+                        const u = allUsers.find(x => x.id === id);
+                        return u ? { id: u.id, name: u.name, avatar: u.avatar } : { id };
+                      })
                     }));
                     addScheduledPosts(posts);
                   }

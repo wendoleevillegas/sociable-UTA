@@ -15,14 +15,14 @@
 .calendar-container {
   display: flex;
   width: 100%;
-  max-width: 1400px;
+  max-width: 1600px;
   gap: 24px;
   box-sizing: border-box;
 }
 
 /* Main calendar section */
 .calendar-main {
-  flex: 4;
+  flex: 1;
   background: #fff;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
@@ -32,11 +32,8 @@
 }
 
 /* Notifications panel section */
-.calendar-notifications {
-  flex: 1;
-  min-width: 300px;
-  max-width: 400px;
-}
+/* Notifications panel removed */
+.calendar-notifications { display: none; }
 
 /* FullCalendar customizations */
 .fc-theme-standard td, .fc-theme-standard th {
@@ -528,6 +525,41 @@
     min-height: 80px;
     padding: 4px;
   }
+
+/* In-grid event card typography for better readability */
+.fc-event-card-title {
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: #0f172a;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fc-event-card-desc {
+  margin-top: 2px;
+  font-size: 11px;
+  line-height: 1.4;
+  color: #374151;
+  display: -webkit-box;
+  line-clamp: 2;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.fc-event-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 4px;
+}
+
+.fc-event-time { font-size: 11px; color: #4b5563; }
+
+.platform-pill { display: inline-flex; align-items: center; gap: 6px; border: 1px solid #e5e7eb; border-radius: 9999px; padding: 2px 8px; font-size: 11px; color: #374151; background: #fff; }
+.platform-pill img { width: 12px; height: 12px; }
   
   .calendar-modal {
     width: 95%;
@@ -548,3 +580,162 @@
     font-size: 1rem;
   }
 }
+
+/* ================= Enhanced Event List (Modal) ================= */
+.calendar-events-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.calendar-event-item {
+  display: grid;
+  grid-template-columns: 64px 1fr;
+  gap: 12px;
+  padding: 10px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  background: #ffffff;
+}
+
+.calendar-event-item .event-thumb {
+  width: 64px;
+  height: 64px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #f3f4f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.calendar-event-item .event-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.calendar-event-item .thumb-video {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, rgba(0,0,0,0.2), rgba(0,0,0,0.2)), #000;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+.calendar-event-item .thumb-icon img {
+  width: 20px;
+  height: 20px;
+  opacity: 0.8;
+}
+
+.calendar-event-item .event-body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.calendar-event-item .event-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.calendar-event-item .event-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #111827;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.calendar-event-item .event-desc {
+  font-size: 12px;
+  color: #374151;
+  display: -webkit-box;
+  line-clamp: 2;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.calendar-event-item .event-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.calendar-event-item .platform-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid #e5e7eb;
+  border-radius: 9999px;
+  padding: 2px 8px;
+  font-size: 11px;
+  color: #374151;
+  background: #fff;
+}
+
+.calendar-event-item .platform-pill img {
+  width: 14px;
+  height: 14px;
+}
+
+.calendar-event-item .meta-time {
+  font-size: 12px;
+  color: #4b5563;
+}
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 9999px;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.status-scheduled { color: #065f46; background: #d1fae5; border: 1px solid #a7f3d0; }
+.status-published { color: #1e40af; background: #dbeafe; border: 1px solid #bfdbfe; }
+.status-archived { color: #b45309; background: #fef3c7; border: 1px solid #f59e0b; }
+
+/* ================= In-grid event cards (FullCalendar) ================= */
+.fc-event-card-title {
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: #0f172a;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fc-event-card-desc {
+  margin-top: 2px;
+  font-size: 11px;
+  line-height: 1.4;
+  color: #374151;
+  display: -webkit-box;
+  line-clamp: 2;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.fc-event-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 4px;
+}
+
+.fc-event-time { font-size: 11px; color: #4b5563; }
+
+.platform-pill { display: inline-flex; align-items: center; gap: 6px; border: 1px solid #e5e7eb; border-radius: 9999px; padding: 2px 8px; font-size: 11px; color: #374151; background: #fff; }
+.platform-pill img { width: 12px; height: 12px; }

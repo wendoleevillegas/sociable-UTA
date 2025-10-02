@@ -1,15 +1,4 @@
-// Simple localStorage-backed store for scheduled posts
-// Shape of a stored scheduled post:
-// {
-//   id: string,
-//   title: string,
-//   text: string,
-//   startISO: string, // ISO datetime string
-//   endISO?: string,
-//   platform: 'Facebook'|'Instagram'|'LinkedIn'|'X',
-//   mediaType?: 'image'|'video'|null,
-//   mediaUrl?: string|null
-// }
+
 
 const STORAGE_KEY = 'scheduled_posts_v1';
 
@@ -75,6 +64,7 @@ export function getScheduledEvents({ platform } = {}) {
       type: 'scheduled',
       mediaType: p.mediaType || null,
       mediaUrl: p.mediaUrl || null,
+      collaborators: Array.isArray(p.collaborators) ? p.collaborators : [],
       source: 'scheduled-local'
     }
   }));
