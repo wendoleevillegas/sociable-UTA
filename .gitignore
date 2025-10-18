@@ -1,9 +1,1 @@
-# Environment Variables
-.env
-/sociableUTA/frontend/.env
-/sociableUTA/backend/.env
-
-# Dependencies
-/node_modules
-/sociableUTA/frontend/node_modules
-/sociableUTA/backend/node_modules
+node_modules/
