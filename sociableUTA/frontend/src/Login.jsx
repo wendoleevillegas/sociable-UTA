@@ -3,6 +3,7 @@ import { useState } from 'react';
 import './Login.css';
 
 import axios from 'axios';
+import axiosInstance from './api/axios';
 
 export const Login = ({ setToken, onShowSignup, onShowForgot }) => {
   const [username, setUsername] = useState('');
@@ -18,7 +19,7 @@ export const Login = ({ setToken, onShowSignup, onShowForgot }) => {
     setError('');
 
     try {
-      const response = await axios.post('http://localhost:5000/login', // backend login URL
+      const response = await axiosInstance.post('/login', // backend login URL
         { user: username, pwd: password },
         {
           headers: { 'Content-Type': 'application/json' },
