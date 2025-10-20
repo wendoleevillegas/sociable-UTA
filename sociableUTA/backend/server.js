@@ -91,7 +91,7 @@ app.post('/api/facebook/exchange-token', async (req, res) => {
             return res.status(400).json({ message: 'Short-lived token is required' });
         }
 
-        const url = `https://graph.facebook.com/v17.0/oauth/access_token?grant_type=fb_exchange_token&client_id=${process.env.FACEBOOK_APP_ID}&client_secret=${process.env.FACEBOOK_APP_SECRET}&fb_exchange_token=${EAAjXGqWf478BPnD5noMd2mBZCfBR8MCI6FMctan8iT2yRVrOogYv9iZB7tZCPNEjtTWZBIJIq7hyJIXqMZCMLufZBIZCImNSZBQXMXHTZAFrHZB3kDte9bZAYQFEOFoD96ZC43d0VFiUBlupAokI4WwooTCf0UNRlLsSK33yLbNeHb9L28N8Yxwfl39iMFUqcvAY8QIaZB3OCjf1YhAFTa2ZA9zY2ZAHfEtjDdJ4czFhtDJiMWZADgZDZD}`;
+        const url = `https://graph.facebook.com/v17.0/oauth/access_token?grant_type=fb_exchange_token&client_id=${process.env.FACEBOOK_APP_ID}&client_secret=${process.env.FACEBOOK_APP_SECRET}&fb_exchange_token=${short_lived_token}`;
 
         console.log('Constructed URL for Facebook:', url); // Add this line
 
