@@ -154,6 +154,40 @@ app.get('/api/facebook/feed', async (req, res) => {
     }
 });
 
+// POST route to publish to Facebook Page Feed
+app.post('/api/facebook/feed', async (req, res) => {
+    const { message } = req.body; // Get the message text from the request body
+    const page_access_token = process.env.FACEBOOK_PAGE_ACCESS_TOKEN;
+    const facebook_page_id = process.env.FACEBOOK_USER_ID; // Using the Page ID stored here
+
+    if (!message) {
+        return res.status(400).json({ message: 'Post message content is required.' });
+    }
+    if (!page_access_token || !facebook_page_id) {
+        return res.status(500).json({ message: 'Server configuration error: Missing Facebook credentials.' });
+    }
+
+    const url = `https://graph.facebook.com/v19.0/${facebook_page_id}/feed`;
+
+    try {
+        console.log(`Attempting to post to Facebook Page ${facebook_page_id}: "${message}"`);
+        const response = await axios.post(url, {
+            message: message, // The text content of the post
+            access_token: page_access_token
+        });
+
+        console.log('Facebook post successful:', response.data);
+        res.status(201).json({ success: true, postId: response.data.id });
+
+    } catch (error) {
+        console.error('Error posting to Facebook feed:', error.response ? JSON.stringify(error.response.data, null, 2) : error.message);
+        res.status(error.response?.status || 500).json({
+            message: 'Failed to post to Facebook feed.',
+            error: error.response?.data?.error || { message: error.message }
+        });
+    }
+});
+
 // Fetching media from Instagram following Instagramapi2.py logic
 app.get('/api/instagram/media', async (req, res) => {
     try {
