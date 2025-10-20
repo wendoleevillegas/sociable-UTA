@@ -85,6 +85,8 @@ app.post('/login', async (req, res) => {
 app.post('/api/facebook/exchange-token', async (req, res) => {
     try {
         const { short_lived_token } = req.body;
+        console.log('Received short_lived_token:', short_lived_token);
+
         if (!short_lived_token) {
             return res.status(400).json({ message: 'Short-lived token is required' });
         }
