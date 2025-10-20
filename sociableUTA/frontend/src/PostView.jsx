@@ -24,7 +24,7 @@ export const PostView = ({ token, user, apiSource = 'instagram', onNavigate }) =
 
       if (apiSource === 'instagram') {
         try {
-          const response = await axios.get('http://localhost:5000/api/instagram/media');
+          const response = await axiosInstance.get('/api/instagram/media');
           const formattedPosts = response.data.map(post => ({
             id: post.id,
             authorName: 'Sociable UTA (Your Account)',
