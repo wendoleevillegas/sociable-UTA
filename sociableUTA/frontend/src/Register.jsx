@@ -4,8 +4,7 @@ import { faCheck, faTimes, faInfoCircle } from "@fortawesome/free-solid-svg-icon
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNavigate } from 'react-router-dom';
 
-import axios from 'axios';
-import axios from './api/axios';
+import axiosInstance from './api/axios';
 
 
 const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
