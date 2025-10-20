@@ -85,7 +85,6 @@ app.post('/login', async (req, res) => {
 app.post('/api/facebook/exchange-token', async (req, res) => {
     try {
         const { short_lived_token } = req.body;
-        console.log('Received short_lived_token:', short_lived_token);
 
         if (!short_lived_token) {
             return res.status(400).json({ message: 'Short-lived token is required' });
@@ -93,10 +92,9 @@ app.post('/api/facebook/exchange-token', async (req, res) => {
 
         const url = `https://graph.facebook.com/v17.0/oauth/access_token?grant_type=fb_exchange_token&client_id=${process.env.FACEBOOK_APP_ID}&client_secret=${process.env.FACEBOOK_APP_SECRET}&fb_exchange_token=${short_lived_token}`;
 
-        console.log('Constructed URL for Facebook:', url); // Add this line
-
         const response = await axios.get(url);
         res.json(response.data);
+
     } catch (error) {
         // Log the raw error first
         console.error('Raw error object received:', error);
