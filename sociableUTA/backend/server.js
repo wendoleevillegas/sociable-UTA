@@ -94,7 +94,17 @@ app.post('/api/facebook/exchange-token', async (req, res) => {
         const response = await axios.get(url);
         res.json(response.data);
     } catch (error) {
-        console.error('Error exchanging token:', error.response ? error.response.data : error.message);
+        // Log the raw error first
+        console.error('Raw error object received:', error);
+        // Try logging Axios-specific details if they exist
+        if (error.response) {
+            console.error('Axios error response data:', JSON.stringify(error.response.data, null, 2));
+            console.error('Axios error response status:', error.response.status);
+        } else {
+            // Log the general error message if not an Axios response error
+            console.error('General error message:', error.message);
+        }
+        // console.error('Error exchanging token:', error.response ? error.response.data : error.message);
         res.status(500).json({ message: 'Failed to exchange token' });
     }
 });
