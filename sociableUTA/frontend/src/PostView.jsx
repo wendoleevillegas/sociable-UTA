@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import axios from 'axios';
+import axiosInstance from './api/axios';
 import './PostView.css';
 // import { fetchPlatformPosts, postToLinkedIn, initiateLinkedInAuth } from './ApiDataService';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -43,7 +43,7 @@ export const PostView = ({ token, user, apiSource = 'instagram', onNavigate }) =
       } else if (apiSource === 'facebook') {
         try {
           // Call the backend route
-          const response = await axios.get('http://localhost:5000/api/facebook/feed');
+          const response = await axios.get('/api/facebook/feed');
 
           const formattedPosts = response.data.map(post => ({
             id: post.id,
