@@ -4,8 +4,7 @@ import { faCheck, faTimes, faInfoCircle } from "@fortawesome/free-solid-svg-icon
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNavigate } from 'react-router-dom';
 
-import axios from 'axios';
-const REGISTER_URL = 'http://localhost:5000/register';
+import axiosInstance from './api/axios';
 
 
 const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
@@ -73,7 +72,7 @@ const Register = () => {
             // --- ADD THIS LINE FOR DEBUGGING ---
             console.log('Sending this payload to the backend:', payload);
 
-            const response = await axios.post(REGISTER_URL,
+            const response = await axiosInstance.post('/register',
                 payload, // Use the payload variable here
                 {
                     headers: { 'Content-Type': 'application/json' },
