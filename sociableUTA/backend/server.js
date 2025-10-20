@@ -85,16 +85,28 @@ app.post('/login', async (req, res) => {
 app.post('/api/facebook/exchange-token', async (req, res) => {
     try {
         const { short_lived_token } = req.body;
+
         if (!short_lived_token) {
             return res.status(400).json({ message: 'Short-lived token is required' });
         }
 
-        const url = `https://graph.facebook.com/v17.0/oauth/access_token?grant_type=fb_exchange_token&client_id=${process.env.FACEBOOK_APP_ID}&client_secret=${process.env.FACEBOOK_APP_SECRET}&fb_exchange_token=${EAAjXGqWf478BPnD5noMd2mBZCfBR8MCI6FMctan8iT2yRVrOogYv9iZB7tZCPNEjtTWZBIJIq7hyJIXqMZCMLufZBIZCImNSZBQXMXHTZAFrHZB3kDte9bZAYQFEOFoD96ZC43d0VFiUBlupAokI4WwooTCf0UNRlLsSK33yLbNeHb9L28N8Yxwfl39iMFUqcvAY8QIaZB3OCjf1YhAFTa2ZA9zY2ZAHfEtjDdJ4czFhtDJiMWZADgZDZD}`;
+        const url = `https://graph.facebook.com/v17.0/oauth/access_token?grant_type=fb_exchange_token&client_id=${process.env.FACEBOOK_APP_ID}&client_secret=${process.env.FACEBOOK_APP_SECRET}&fb_exchange_token=${short_lived_token}`;
 
         const response = await axios.get(url);
         res.json(response.data);
+
     } catch (error) {
-        console.error('Error exchanging token:', error.response ? error.response.data : error.message);
+        // Log the raw error first
+        console.error('Raw error object received:', error);
+        // Try logging Axios-specific details if they exist
+        if (error.response) {
+            console.error('Axios error response data:', JSON.stringify(error.response.data, null, 2));
+            console.error('Axios error response status:', error.response.status);
+        } else {
+            // Log the general error message if not an Axios response error
+            console.error('General error message:', error.message);
+        }
+        // console.error('Error exchanging token:', error.response ? error.response.data : error.message);
         res.status(500).json({ message: 'Failed to exchange token' });
     }
 });
