@@ -152,7 +152,7 @@ app.get('/api/facebook/feed', async (req, res) => {
 
     } catch (error) {
         console.error('Error fetching Facebook feed:', error.response ? JSON.stringify(error.response.data, null, 2) : error.message);
-        res.status({ error.response?.status || 500).json({
+        res.status(error.response?.status || 500).json({
             message: 'Failed to fetch Facebook feed.',
             error: error.response?.data?.error || { message: error.message }
         });
