@@ -351,8 +351,40 @@ app.post('/api/instagram/post', upload.single('media'), async (req, res) => {
         console.log(`Instagram post: Container created: ${creationId}. Polling for 'FINISHED' status...`);
 
         // --- 4. Poll Instagram Container Status ---
-        const igStatusUrl = `https://graph.facebook.com/v19.0/${creationId}?fields=status_code&access_token=${igAccessToken}`;
-        await pollStatus(igStatusUrl, 'status_code', 'FINISHED', 'ERROR');
+        // const igStatusUrl = `https://graph.facebook.com/v19.0/${creationId}?fields=status_code&access_token=${igAccessToken}`;
+        // await pollStatus(igStatusUrl, 'status_code', 'FINISHED', 'ERROR');
+        const igStatusUrl = `https://graph.facebook.com/v19.0/${creationId}?fields=status_code,status,error_message&access_token=${igAccessToken}`;
+        let attempts = 0;
+        let igStatus = '';
+        const maxAttempts = 20; // 20 attempts * 5 seconds = 100 seconds max
+        const pollInterval = 5000; // 5 seconds
+
+        while (attempts < maxAttempts) {
+            await new Promise(resolve => setTimeout(resolve, pollInterval)); // Wait
+            
+            const statusResponse = await axios.get(igStatusUrl);
+            const data = statusResponse.data;
+            igStatus = data.status_code;
+
+            console.log(`Polling IG Container ${creationId} status: ${igStatus}`);
+
+            if (igStatus === 'FINISHED') {
+                break; // Success! Exit the loop.
+            }
+
+            if (igStatus === 'ERROR') {
+                // This is the new, important part!
+                console.error('Instagram media container processing FAILED:', JSON.stringify(data, null, 2));
+                throw new Error(`Instagram processing failed: ${data.error_message || 'Unknown processing error.'}`);
+            }
+            // If status is 'IN_PROGRESS', the loop will just continue
+            attempts++;
+        }
+
+        // After the loop, check if it finished or timed out
+        if (igStatus !== 'FINISHED') {
+            throw new Error('Instagram media processing timed out.');
+        }
 
         console.log(`Instagram post: Container is FINISHED. Publishing...`);
         // --- 5. Publish the Media Container ---
