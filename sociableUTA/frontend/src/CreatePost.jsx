@@ -1405,7 +1405,6 @@ const CreatePost = ({ token, user, apiSource, onNavigate }) => {
         }
     };
 
-    // --- *** NEW: handlePublish Function *** ---
     const handlePublish = async () => {
         if (selectedPlatforms.length === 0) {
             setPostError('Please select at least one platform to post to.');
@@ -1418,7 +1417,6 @@ const CreatePost = ({ token, user, apiSource, onNavigate }) => {
         let successMessages = [];
         let errorMessages = [];
 
-        // Determine which text to use
         const getTextForPlatform = (platform) => {
             if (customizeEnabled && platformTexts[platform]?.trim()) {
                 return platformTexts[platform];
@@ -1442,32 +1440,46 @@ const CreatePost = ({ token, user, apiSource, onNavigate }) => {
             }
 
             if (platform === 'Facebook') {
-                if (!selectedMedia) { // Handle text-only post
-                    try {
-                        console.log(`Attempting Facebook text post: "${platformText}"`);
-                        const response = await axiosInstance.post('/api/facebook/feed', {
-                            message: platformText // Send the determined text
+                try {
+                    if(selectedMedia) {
+                        console.log(`Attempting Facebook photo with caption: "${platformText}"`);
+                        const formData = new FormData();
+                        formData.append('caption', platformText);
+                        formData.append('media', selectedMedia);
+
+                        const response = await axiosInstance.post('/api/facebook/photos', formData, {
+                            headers: {
+                                'Content-Type': 'multipart/form-data',
+                            },
                         });
                         if (response.status === 201) {
                             successMessages.push(`Successfully posted to Facebook!`);
                         } else {
                             errorMessages.push(`Facebook: Unexpected response status ${response.status}`);
                         }
-                    } catch (err) {
-                        console.error("Facebook post error:", err.response?.data || err.message);
-                        errorMessages.push(`Facebook: ${err.response?.data?.error?.message || err.message}`);
-                    }
-                } else {
-                    console.log(`Media posting to Facebook for "${platformText}" not implemented yet.`);
-                    errorMessages.push('Facebook: Media posting not implemented yet.');
+
+                    } else {
+                        console.log(`Attempting Facebook TEXT post: "${platformText}"`);
+                        const response = await axiosInstance.post('/api/facebook/feed', {
+                            message: platformText
+                        });
+                        if (response.status === 201) {
+                            successMessages.push(`Successfully text to Facebook!`);
+                        } else {
+                            errorMessages.push(`Facebook: Unexpected response status ${response.status}`);
+                        }
+                    }   
+                } catch (err) {
+                    console.error("Facebook post error:", err.response?.data || err.message);
+                    errorMessages.push(`Facebook: ${err.response?.data?.error?.message || err.message}`);
                 }
+                
             } else if (platform === 'Instagram') {
                 if (!selectedMedia) {
                     errorMessages.push('Instagram: Posts require media.'); // Instagram needs media
                 } else {
                     console.log(`Posting to Instagram for "${platformText}" not implemented yet.`);
                     errorMessages.push('Instagram: Posting not implemented yet.');
-                    // TODO: Implement Instagram media posting via backend
                 }
             }
             // Add other platforms here...
@@ -1476,12 +1488,8 @@ const CreatePost = ({ token, user, apiSource, onNavigate }) => {
         }
 
         // Set feedback messages
-        if (successMessages.length > 0) {
-            setPostSuccess(successMessages.join(' | '));
-        }
-        if (errorMessages.length > 0) {
-            setPostError(errorMessages.join(' | '));
-        }
+        if (successMessages.length > 0) { setPostSuccess(successMessages.join(' | ')); }
+        if (errorMessages.length > 0) { setPostError(errorMessages.join(' | '));}
 
         // Clear fields only if everything was successful
         if (errorMessages.length === 0 && successMessages.length > 0) {
