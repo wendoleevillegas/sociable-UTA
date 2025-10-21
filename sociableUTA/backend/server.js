@@ -183,6 +183,9 @@ app.post('/api/facebook/feed', async (req, res) => {
 app.post('/api/facebook/photos', upload.single('media'), async (req, res) => {
     const { caption } = req.body;
     const mediaFile = req.file;
+    
+    //debugging
+    console.log('Received file info in /api/facebook/photos:', mediaFile);
 
     const page_access_token = process.env.FACEBOOK_PAGE_ACCESS_TOKEN;
     const facebook_page_id = process.env.FACEBOOK_USER_ID;
@@ -201,7 +204,7 @@ app.post('/api/facebook/photos', upload.single('media'), async (req, res) => {
         formData.append('caption', caption);
     }
     // IMPORTANT: Use the buffer from multer and provide a filename
-    formData.append('source', mediaFile.buffer, { filename: mediaFile.originalname });
+    formData.append('source', mediaFile.buffer, mediaFile.originalname);
 
     try {
         console.log(`Attempting to post photo to Facebook Page ${facebook_page_id} with caption: "${caption || ''}"`);
