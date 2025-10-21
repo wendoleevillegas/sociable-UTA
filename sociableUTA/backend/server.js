@@ -274,7 +274,7 @@ app.post('/api/instagram/post', upload.single('media'), async (req, res) => {
 
     const isVideo = mediaFile.mimetype.startsWith('video');
     let publicMediaUrl;
-    let mediaType = isVideo ? 'VIDEO' : 'IMAGE';
+    let mediaType = isVideo ? 'REELS' : 'IMAGE';
 
     try {
         console.log(`Instagram post: Staging media to Facebook as unpublished...`);
