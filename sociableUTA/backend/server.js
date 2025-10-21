@@ -6,12 +6,18 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const User = require('./models/User');
 const axios = require('axios');
-const { TwitterApi } = require('twitter-api-v2');
+// const { TwitterApi } = require('twitter-api-v2');
+const multer = require('multer');
 
 const app = express();
 const PORT = 5000;
 
-// middleware?
+// multer setup
+const storage = multer.memoryStorage(); // storing file in memory buffer
+const upload = multer({ storage: storage });
+
+
+// middleware
 const corsOptions = {
     origin: [
         'http://localhost:3000',
@@ -79,7 +85,7 @@ app.post('/login', async (req, res) => {
     }
 });
 
-// INSERT API ROUTES HERE
+// API ROUTES
 
 // Short-lived token to a long-lived token following longaccesstoken.py logic
 app.post('/api/facebook/exchange-token', async (req, res) => {
@@ -137,20 +143,19 @@ app.get('/api/facebook/feed', async (req, res) => {
         const page_access_token = process.env.FACEBOOK_PAGE_ACCESS_TOKEN;
         const facebook_user_id = process.env.FACEBOOK_USER_ID;
 
-        // FIX: Minimal, crash-safe fields. 
-        // NOTE: We are removing the 'type' field as well, as it might be part of the issue.
-        const fields = "id,message,created_time,permalink_url"; // <-- Even more minimal!
+        const fields = "id,message,created_time,permalink_url,attachments{media}";
 
-        // Use the /feed edge instead of /posts
         const url = `https://graph.facebook.com/v19.0/${facebook_user_id}/feed?fields=${fields}&access_token=${page_access_token}`;
 
         const response = await axios.get(url);
-        // The posts are inside the 'data' property of the response
-        res.json(response.data.data);
+        res.json(response.data.data || []); // making sure data exists
 
     } catch (error) {
-        console.error('Error fetching Facebook feed:', error.response ? error.response.data : error.message);
-        res.status(500).json({ message: 'Failed to fetch Facebook feed' });
+        console.error('Error fetching Facebook feed:', error.response ? JSON.stringify(error.response.data, null, 2) : error.message);
+        res.status({ error.response?.status || 500).json({
+            message: 'Failed to fetch Facebook feed.',
+            error: error.response?.data?.error || { message: error.message }
+        });
     }
 });
 
@@ -158,31 +163,59 @@ app.get('/api/facebook/feed', async (req, res) => {
 app.post('/api/facebook/feed', async (req, res) => {
     const { message } = req.body; // Get the message text from the request body
     const page_access_token = process.env.FACEBOOK_PAGE_ACCESS_TOKEN;
-    const facebook_page_id = process.env.FACEBOOK_USER_ID; // Using the Page ID stored here
+    const facebook_page_id = process.env.FACEBOOK_USER_ID;
 
-    if (!message) {
-        return res.status(400).json({ message: 'Post message content is required.' });
-    }
-    if (!page_access_token || !facebook_page_id) {
-        return res.status(500).json({ message: 'Server configuration error: Missing Facebook credentials.' });
-    }
+    if (!message) return res.status(400).json({ message: 'Post message content is required.' });
+    if (!page_access_token || !facebook_page_id) return res.status(500).json({ message: 'Server configuration error: Missing Facebook credentials.' });
 
     const url = `https://graph.facebook.com/v19.0/${facebook_page_id}/feed`;
 
     try {
-        console.log(`Attempting to post to Facebook Page ${facebook_page_id}: "${message}"`);
-        const response = await axios.post(url, {
-            message: message, // The text content of the post
-            access_token: page_access_token
-        });
-
-        console.log('Facebook post successful:', response.data);
+        const response = await axios.post(url, {message: message, access_token: page_access_token });
         res.status(201).json({ success: true, postId: response.data.id });
-
     } catch (error) {
         console.error('Error posting to Facebook feed:', error.response ? JSON.stringify(error.response.data, null, 2) : error.message);
-        res.status(error.response?.status || 500).json({
-            message: 'Failed to post to Facebook feed.',
+        res.status(error.response?.status || 500).json({ message: 'Failed to post to Facebook feed.', error: error.response?.data?.error || { message: error.message }});
+    }
+});
+
+// POST photo to feed
+app.post('/api/facebook/photos', upload.single('media'), async (req, res) => {
+    const { caption } = req.body;
+    const mediaFile = req.file;
+
+    const page_access_token = process.env.FACEBOOK_PAGE_ACCESS_TOKEN;
+    const facebook_page_id = process.env.FACEBOOK_USER_ID;
+
+    if (!mediaFile) {
+        return res.status(400).json({ message: 'Media file is required.' });
+    }
+    if (!page_access_token || !facebook_page_id) {
+        return res.status(500).json({ message: 'Server configuration error.' });
+    }
+
+    const url = `https://graph.facebook.com/v19.0/${facebook_page_id}/photos`;
+    const formData = new FormData();
+    formData.append('access_token', page_access_token);
+    if (caption) {
+        formData.append('caption', caption);
+    }
+    // IMPORTANT: Use the buffer from multer and provide a filename
+    formData.append('source', mediaFile.buffer, { filename: mediaFile.originalname });
+
+    try {
+        console.log(`Attempting to post photo to Facebook Page ${facebook_page_id} with caption: "${caption || ''}"`);
+        const response = await axios.post(url, formData, {
+            headers: formData.getHeaders ? formData.getHeaders() : { 'Content-Type': 'multipart/form-data' } // Set correct headers
+        });
+
+        console.log('Facebook photo post successful:', response.data);
+        res.status(201).json({ success: true, postId: response.data.id, post_id: response.data.post_id }); // Includes photo ID and post ID
+
+    } catch (error) {
+        console.error('Error posting photo to Facebook:', error.response ? JSON.stringify(error.response.data, null, 2) : error.message);
+         res.status(error.response?.status || 500).json({
+            message: 'Failed to post photo to Facebook.',
             error: error.response?.data?.error || { message: error.message }
         });
     }
@@ -193,21 +226,30 @@ app.get('/api/instagram/media', async (req, res) => {
     try {
         const access_token = process.env.INSTAGRAM_PAGE_ACCESS_TOKEN;
         const ig_user_id = process.env.INSTAGRAM_USER_ID;
+        if (!access_token || !ig_user_id) return res.status(500).json({ message: 'Server config error.' });
+        
         let all_media = [];
         let url = `https://graph.facebook.com/v19.0/${ig_user_id}/media?fields=id,media_type,media_url,caption,timestamp,permalink&access_token=${access_token}`;
 
-        while (url) {
+        // pagination handling
+        let counter = 0;
+        const maxPages = 5;
+
+
+        while (url && counter < maxPages) {
             const response = await axios.get(url);
             const data = response.data;
-            all_media = all_media.concat(data.data);
+            if (data.data) {
+                all_media = all_media.concat(data.data);
+            }
             url = data.paging && data.paging.next ? data.paging.next : null;
+            counter++;
         }
-
         res.json(all_media);
 
     } catch (error) {
-        console.error('Error fetching Instagram media:', error.response ? error.response.data : error.message);
-        res.status(500).json({ message: 'Failed to fetch Instagram media' });
+        console.error('Error fetching Instagram media:', error.response ? JSON.stringify(error.response.data, null, 2) : error.message);
+        res.status(error.response?.status || 500).json({ message: 'Failed to fetch Instagram media.', error: error.response?.data?.error || { message: error.message } });
     }
 });
 
