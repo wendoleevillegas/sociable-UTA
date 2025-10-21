@@ -1478,8 +1478,28 @@ const CreatePost = ({ token, user, apiSource, onNavigate }) => {
                 if (!selectedMedia) {
                     errorMessages.push('Instagram: Posts require media.'); // Instagram needs media
                 } else {
-                    console.log(`Posting to Instagram for "${platformText}" not implemented yet.`);
-                    errorMessages.push('Instagram: Posting not implemented yet.');
+                    try {
+                        console.log(`Attempting Instagram post with caption: "${platformText}"`);
+                        const formData = new FormData();
+                        formData.append('caption', platformText);
+                        formData.append('media', selectedMedia);
+                        
+                        // You'll need to create this new endpoint in your server.js
+                        const response = await axiosInstance.post('/api/instagram/post', formData, {
+                            headers: {
+                                'Content-Type': 'multipart/form-data',
+                            },
+                        });
+
+                        if (response.status === 201) {
+                            successMessages.push(`Successfully posted to Instagram!`);
+                        } else {
+                            errorMessages.push(`Instagram: Unexpected response status ${response.status}`);
+                        }
+                    } catch (err) {
+                        console.error("Instagram post error:", err.response?.data || err.message);
+                        errorMessages.push(`Instagram: ${err.response?.data?.error?.message || err.message}`);
+                    }
                 }
             }
             // Add other platforms here...
