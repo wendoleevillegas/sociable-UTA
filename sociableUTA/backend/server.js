@@ -8,7 +8,6 @@ const User = require('./models/User');
 const axios = require('axios');
 // const { TwitterApi } = require('twitter-api-v2');
 const multer = require('multer');
-
 const { Blob } = require('buffer');
 
 const app = express();
@@ -18,6 +17,32 @@ const PORT = 5000;
 const storage = multer.memoryStorage(); // storing file in memory buffer
 const upload = multer({ storage: storage });
 
+// function to keep checking media status
+const pollStatus = async (url, statusField, finishedStatus, errorStatus, pollInterval = 5000, maxAttempts = 20) => {
+    let attempts = 0;
+    while (attempts < maxAttempts) {
+        try {
+            await new Promise(resolve => setTimeout(resolve, pollInterval)); // Wait
+            const response = await axios.get(url);
+            const status = response.data[statusField];
+            
+            console.log(`Polling status for ${url}: ${status}`);
+
+            if (status === finishedStatus) {
+                return true; // Success
+            }
+            if (status === errorStatus) {
+                throw new Error('Media processing failed.');
+            }
+            // If status is 'IN_PROGRESS' or similar, loop will continue
+        } catch (error) {
+            console.error(`Error during polling: ${error.response ? JSON.stringify(error.response.data) : error.message}`);
+            throw new Error('Polling failed.');
+        }
+        attempts++;
+    }
+    throw new Error('Media processing timed out.');
+};
 
 // middleware
 const corsOptions = {
@@ -37,7 +62,6 @@ const DB_URL = process.env.DATABASE_URL;
 mongoose.connect(DB_URL)
     .then(() => console.log('MongoDB connected successfully.'))
     .catch(err => console.error(err));
-
 
 // ROUTES
 
@@ -225,6 +249,125 @@ app.post('/api/facebook/photos', upload.single('media'), async (req, res) => {
         console.error('Error posting photo to Facebook:', error.response ? JSON.stringify(error.response.data, null, 2) : error.message);
          res.status(error.response?.status || 500).json({
             message: 'Failed to post photo to Facebook.',
+            error: error.response?.data?.error || { message: error.message }
+        });
+    }
+});
+
+// POST media to instagram
+app.post('/api/instagram/post', upload.single('media'), async (req, res) => {
+    const { caption } = req.body;
+    const mediaFile = req.file;
+
+    // --- Get IDs and Tokens from .env ---
+    const igUserId = process.env.INSTAGRAM_USER_ID;
+    const igAccessToken = process.env.INSTAGRAM_PAGE_ACCESS_TOKEN; // IG token is a FB Page token
+    const fbPageId = process.env.FACEBOOK_USER_ID; // Your FB Page ID
+    const fbPageAccessToken = process.env.FACEBOOK_PAGE_ACCESS_TOKEN; // Your FB Page Token
+
+    if (!mediaFile) {
+        return res.status(400).json({ message: 'Media file is required for Instagram.' });
+    }
+    if (!igUserId || !igAccessToken || !fbPageId || !fbPageAccessToken) {
+        return res.status(500).json({ message: 'Server configuration error: Missing credentials.' });
+    }
+
+    const isVideo = mediaFile.mimetype.startsWith('video');
+    let publicMediaUrl;
+    let mediaType = isVideo ? 'VIDEO' : 'IMAGE';
+
+    try {
+        console.log(`Instagram post: Staging media to Facebook as unpublished...`);
+        // --- 1. Upload media to Facebook as UNPUBLISHED to get a public URL ---
+        const fbFormData = new FormData();
+        fbFormData.append('access_token', fbPageAccessToken);
+        fbFormData.append('published', 'false'); // This is the key
+        const mediaBlob = new Blob([mediaFile.buffer], { type: mediaFile.mimetype });
+        fbFormData.append('source', mediaBlob, mediaFile.originalname);
+
+        if (isVideo) {
+            // --- Staging for VIDEO ---
+            const fbUploadUrl = `https://graph.facebook.com/v19.0/${fbPageId}/videos`;
+            const fbUploadRes = await axios.post(fbUploadUrl, fbFormData, {
+                headers: fbFormData.getHeaders ? fbFormData.getHeaders() : { 'Content-Type': 'multipart/form-data' }
+            });
+            const videoId = fbUploadRes.data.id;
+            console.log(`Instagram post: Staged FB video ID: ${videoId}. Polling for 'ready' status...`);
+
+            // --- 2a. Poll FB video status ---
+            const fbStatusUrl = `https://graph.facebook.com/v19.0/${videoId}?fields=status&access_token=${fbPageAccessToken}`;
+            // Note: FB video status object is nested, e.g., status.video_status
+            // For simplicity, we'll poll for the 'source' field instead.
+            let videoDetails;
+            let attempts = 0;
+            do {
+                await new Promise(resolve => setTimeout(resolve, 5000)); // 5 sec wait
+                const detailsRes = await axios.get(`https://graph.facebook.com/v19.0/${videoId}?fields=source,status&access_token=${fbPageAccessToken}`);
+                videoDetails = detailsRes.data;
+                console.log(`FB Video status: ${videoDetails.status?.video_status}`);
+                attempts++;
+            } while (attempts < 20 && videoDetails.status?.video_status !== 'ready');
+
+            if (videoDetails.status?.video_status !== 'ready' || !videoDetails.source) {
+                throw new Error('Facebook video processing failed or timed out.');
+            }
+            publicMediaUrl = videoDetails.source;
+            console.log(`Instagram post: FB video ready. Public URL: ${publicMediaUrl}`);
+
+        } else {
+            // --- Staging for IMAGE ---
+            const fbUploadUrl = `https://graph.facebook.com/v19.0/${fbPageId}/photos`;
+            const fbUploadRes = await axios.post(fbUploadUrl, fbFormData, {
+                headers: fbFormData.getHeaders ? fbFormData.getHeaders() : { 'Content-Type': 'multipart/form-data' }
+            });
+            const photoId = fbUploadRes.data.id;
+            console.log(`Instagram post: Staged FB photo ID: ${photoId}. Fetching URL...`);
+            
+            // --- 2b. Get FB photo URL ---
+            const photoDetailsUrl = `https://graph.facebook.com/v19.0/${photoId}?fields=images&access_token=${fbPageAccessToken}`;
+            const photoDetailsRes = await axios.get(photoDetailsUrl);
+            publicMediaUrl = photoDetailsRes.data.images[0].source; // Get largest image URL
+            console.log(`Instagram post: FB photo ready. Public URL: ${publicMediaUrl}`);
+        }
+
+        // --- 3. Create Instagram Media Container ---
+        console.log(`Instagram post: Creating media container...`);
+        const igContainerUrl = `https://graph.facebook.com/v19.0/${igUserId}/media`;
+        const igContainerParams = {
+            access_token: igAccessToken,
+            caption: caption,
+            media_type: mediaType
+        };
+        // Add correct URL param based on media type
+        if (isVideo) {
+            igContainerParams.video_url = publicMediaUrl;
+        } else {
+            igContainerParams.image_url = publicMediaUrl;
+        }
+
+        const igContainerRes = await axios.post(igContainerUrl, igContainerParams);
+        const creationId = igContainerRes.data.id;
+        console.log(`Instagram post: Container created: ${creationId}. Polling for 'FINISHED' status...`);
+
+        // --- 4. Poll Instagram Container Status ---
+        const igStatusUrl = `https://graph.facebook.com/v19.0/${creationId}?fields=status_code&access_token=${igAccessToken}`;
+        await pollStatus(igStatusUrl, 'status_code', 'FINISHED', 'ERROR');
+
+        console.log(`Instagram post: Container is FINISHED. Publishing...`);
+        // --- 5. Publish the Media Container ---
+        const igPublishUrl = `https://graph.facebook.com/v19.0/${igUserId}/media_publish`;
+        const igPublishRes = await axios.post(igPublishUrl, {
+            access_token: igAccessToken,
+            creation_id: creationId
+        });
+
+        console.log('Instagram post successful:', igPublishRes.data);
+        res.status(201).json({ success: true, postId: igPublishRes.data.id });
+
+    } catch (error) {
+        console.error('Error posting to Instagram:', error.response ? JSON.stringify(error.response.data, null, 2) : error.message);
+        res.status(error.response?.status || 500).json({
+            message: 'Failed to post to Instagram.',
             error: error.response?.data?.error || { message: error.message }
         });
     }
