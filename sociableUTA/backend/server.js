@@ -337,7 +337,6 @@ app.post('/api/instagram/post', upload.single('media'), async (req, res) => {
             access_token: igAccessToken,
             caption: caption,
             media_type: mediaType,
-            //share_to_feed: true
         };
         // Add correct URL param based on media type
         if (isVideo) {
