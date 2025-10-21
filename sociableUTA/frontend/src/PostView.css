@@ -116,71 +116,50 @@
  * POST CREATION BOX - Container for the "create new post" form
  * This is the top section where users can write and submit new posts
  */
-.postview-create-box {
+/* .postview-create-box {
   background: #fcfbf8;
-  /* Same as root background for seamless appearance */
   border-radius: 24px;
-  /* Large rounded corners for modern look */
   box-shadow: 0 2px 8px #0001;
-  /* Very subtle shadow (0001 = rgba(0,0,0,0.0625)) */
   padding: 12px 16px 16px 16px;
-  /* Asymmetric padding - less on top */
   max-width: 600px;
-  /* Maximum width for better readability */
   margin: 0 auto 32px auto;
-  /* Center horizontally with bottom margin */
-}
+} */
 
 /* 
  * CREATE POST HEADER - Top section with avatar and media upload buttons
  * Contains user avatar and buttons for adding videos/photos
  */
-.postview-create-header {
+/* .postview-create-header {
   display: flex;
-  /* Use flexbox for horizontal layout */
   align-items: center;
-  /* Center items vertically */
   gap: 12px;
-  /* Space between avatar and action buttons */
   margin-bottom: 8px;
-  /* Space below the header */
-}
+} */
 
 /* 
  * USER AVATAR - Profile picture in post creation and feed
  * Circular image representing the current user
  */
-.postview-avatar {
+/* .postview-avatar {
   width: 48px;
-  /* Fixed width */
   height: 48px;
-  /* Fixed height (square ratio) */
   border-radius: 50%;
-  /* Make circular */
   object-fit: cover;
-  /* Crop image to fit circle without distortion */
   border: 2px solid #ccc;
-  /* Light gray border */
   background: #fff;
-  /* White background fallback */
   font-size: 16px;
-  /* Font size for any text fallback */
-}
+} */
 
 /* 
  * MEDIA UPLOAD ACTIONS - Container for video/photo upload buttons
  * Flexbox container for the action buttons in the create post section
  */
-.postview-actions {
+/* .postview-actions {
   display: flex;
-  /* Use flexbox for horizontal layout */
   gap: 40px;
-  /* Large space between action buttons */
   width: 100%;
-  /* Take full width of container */
   justify-content: flex-start;
-  /* Align items to the left */
-}
+} */
 
 /* 
  * CENTERED ACTIONS - Variant for center-aligned action buttons
@@ -197,24 +176,16 @@
  * INDIVIDUAL ACTION BUTTON - Single media upload button (video/photo)
  * Combines icon and text for each upload option
  */
-.postview-action {
+/* .postview-action {
   display: flex;
-  /* Use flexbox for icon + text layout */
   align-items: center;
-  /* Center icon and text vertically */
   cursor: pointer;
-  /* Show pointer cursor on hover */
   font-size: 15px;
-  /* Smaller text size */
   font-weight: 500;
-  /* Medium font weight */
   background: none;
-  /* No background color */
   border: none;
-  /* No border */
   padding: 0;
-  /* No internal padding */
-}
+} */
 
 /* 
  * ACTION BUTTON ICONS - FontAwesome icons within action buttons
@@ -247,24 +218,16 @@
  * POST TEXT AREA - Large text input for post content
  * Where users type their post text/caption
  */
-.postview-textarea {
+/* .postview-textarea {
   width: 100%;
-  /* Take full width of container */
   min-height: 40px;
-  /* Minimum height for comfortable typing */
   border-radius: 8px;
-  /* Rounded corners */
   border: 1px solid #ddd;
-  /* Light gray border */
   padding: 8px;
-  /* Internal spacing */
   font-size: 15px;
-  /* Medium font size */
   margin-bottom: 8px;
-  /* Space below textarea */
   resize: vertical;
-  /* Allow vertical resizing only */
-}
+} */
 
 /* 
  * MEDIA PREVIEW - Shows selected images/videos before posting
@@ -273,13 +236,9 @@
 .postview-media-preview img,
 .postview-media-preview video {
   max-width: 100%;
-  /* Don't exceed container width */
   max-height: 200px;
-  /* Limit height for reasonable preview size */
   border-radius: 8px;
-  /* Rounded corners */
   margin-bottom: 8px;
-  /* Space below preview */
 }
 
 /* 
@@ -322,26 +281,17 @@
  * POST SUBMIT BUTTON - Primary button for creating posts
  * Blue button that submits the post form
  */
-.postview-post-btn {
+/* .postview-post-btn {
   background: #1976d2;
-  /* Blue background matching app theme */
   color: #fff;
-  /* White text */
   border: none;
-  /* No border */
   border-radius: 8px;
-  /* Rounded corners */
   padding: 6px 16px;
-  /* Horizontal and vertical padding */
   cursor: pointer;
-  /* Show pointer cursor */
   font-size: 15px;
-  /* Medium font size */
   font-weight: 500;
-  /* Medium font weight */
   transition: all 0.2s ease;
-  /* Smooth transitions */
-}
+} */
 
 .postview-post-btn:disabled {
   background: #9ca3af;
