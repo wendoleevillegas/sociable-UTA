@@ -1449,7 +1449,7 @@ const CreatePost = ({ token, user, apiSource, onNavigate }) => {
                             message: platformText // Send the determined text
                         });
                         if (response.status === 201) {
-                            successMessages.push(`Successfully posted to Facebook (ID: ${response.data.postId})`);
+                            successMessages.push(`Successfully posted to Facebook!`);
                         } else {
                             errorMessages.push(`Facebook: Unexpected response status ${response.status}`);
                         }
@@ -1501,30 +1501,56 @@ const CreatePost = ({ token, user, apiSource, onNavigate }) => {
                 {/* --- Left Panel --- */}
                 <div className="left-panel">
                     <div className="form-content">
+
                         {/* Post To Section */}
                         <div className="form-section">
                             {/* ... (Platform selection UI - same as your code) ... */}
                             <label className="section-label">Post to</label>
-                            <div ref={platformDropdownRef} className="platform-dropdown-header" onClick={() => setShowPlatforms(!showPlatforms)}>
-                                <div className="platform-avatar">CS</div>
-                                <span className="platform-text">
-                                    {selectedPlatforms.length === 0 ? "Select platforms..." : selectedPlatforms.length <= 2 ? selectedPlatforms.join(' and ') : `${selectedPlatforms.length} platforms selected`}
-                                </span>
-                                <FontAwesomeIcon icon={faChevronDown} className={`dropdown-chevron ${showPlatforms ? 'rotated' : ''}`} />
-                            </div>
-                            {showPlatforms && (
-                                <div className="platform-dropdown-content">
-                                    <div className="platform-options-list">
-                                        {['Facebook', 'Instagram', 'LinkedIn', 'X'].map((platform) => (
-                                            <div key={platform} className={`platform-option-item ${selectedPlatforms.includes(platform) ? 'selected' : ''}`} onClick={() => handlePlatformToggle(platform)}>
-                                                <input type="checkbox" checked={selectedPlatforms.includes(platform)} readOnly className="platform-option-checkbox" tabIndex={-1} />
-                                                {getPlatformIcon(platform)}
-                                                <div className="platform-option-info"><div className="platform-option-name">{platform}</div></div>
-                                            </div>
-                                        ))}
-                                    </div>
+                            <div ref={platformDropdownRef}>
+                                <div
+                                    className="platform-dropdown-header" onClick={() => setShowPlatforms(!showPlatforms)}
+                                    role="button"
+                                    aria-expanded={showPlatforms}
+                                    tabIndex={0}
+                                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setShowPlatforms(!showPlatforms); } }}
+                                >
+                                    <div className="platform-avatar">CS</div>
+                                    <span className="platform-text">
+                                        {selectedPlatforms.length === 0
+                                            ? "Select platforms..."
+                                            : selectedPlatforms.length <= 2
+                                                ? selectedPlatforms.join(' and ')
+                                                : `${selectedPlatforms.length} platforms selected`}
+                                    </span>
+                                    <FontAwesomeIcon icon={faChevronDown} className={`dropdown-chevron ${showPlatforms ? 'rotated' : ''}`} />
                                 </div>
-                            )}
+                                {showPlatforms && (
+                                    <div className="platform-dropdown-content">
+                                        <div className="platform-options-list" role="group" aria-label="Platforms to post to">
+                                            {['Facebook', 'Instagram', 'LinkedIn', 'X'].map((platform) => (
+                                                <div key={platform}
+                                                    className={`platform-option-item ${selectedPlatforms.includes(platform) ? 'selected' : ''}`}
+                                                    onClick={() => handlePlatformToggle(platform)}
+                                                    role="checkbox"
+                                                    aria-checked={selectedPlatforms.includes(platform)}
+                                                    tabIndex={0}
+                                                    onLeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handlePlatformToggle(platform); } }}
+                                                >
+                                                    <input type="checkbox"
+                                                        checked={selectedPlatforms.includes(platform)}
+                                                        readOnly
+                                                        className="platform-option-checkbox"
+                                                        tabIndex={-1} />
+                                                    {getPlatformIcon(platform)}
+                                                    < div className="platform-option-info">
+                                                        <div className="platform-option-name">{platform}</div>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
                         </div>
 
                         {/* Media Section */}
@@ -1743,7 +1769,7 @@ const CreatePost = ({ token, user, apiSource, onNavigate }) => {
                     </div>
                 </div> {/* End right-panel */}
             </div> {/* End main-content */}
-        </div> // End create-post-container
+        </div > // End create-post-container
     );
 };
 
