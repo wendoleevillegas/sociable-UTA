@@ -337,11 +337,12 @@ app.post('/api/instagram/post', upload.single('media'), async (req, res) => {
             access_token: igAccessToken,
             caption: caption,
             media_type: mediaType,
-            share_to_feed: true
+            //share_to_feed: true
         };
         // Add correct URL param based on media type
         if (isVideo) {
             igContainerParams.video_url = publicMediaUrl;
+            igContainerParams.share_to_feed = true;
         } else {
             igContainerParams.image_url = publicMediaUrl;
         }
