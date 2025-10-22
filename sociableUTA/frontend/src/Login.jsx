@@ -45,9 +45,9 @@ export const Login = ({ setToken, onShowSignup, onShowForgot }) => {
     <div className="login-root">
       <div className="login-main">
         <div className="login-left">
-          <h1 className="login-title">Sociable</h1>
+          <h1 className="login-title">SociableUTA</h1>
           <p className="login-welcome">
-            Welcome come with our project<br />
+            Automate your posts. All in once place.<br />
           </p>
         </div>
         <form onSubmit={handleLogin} className="login-form">
@@ -71,6 +71,14 @@ export const Login = ({ setToken, onShowSignup, onShowForgot }) => {
           <button type="submit" className="login-btn" disabled={isLoading}>
             {isLoading ? 'Logging In...' : 'Log In'}
           </button>
+                  <button
+          type="button"
+          className="login-create-btn"
+          onClick={() => navigate('/register')}
+        >
+          Create new account
+        </button>
+        
           <a
             href="#"
             className="login-forgot"
@@ -90,13 +98,13 @@ export const Login = ({ setToken, onShowSignup, onShowForgot }) => {
 
         {/* Moved new account button because it is a redirect, not submission */}
 
-        <button
+        {/* <button
           type="button"
           className="login-create-btn"
           onClick={() => navigate('/register')}
         >
           Create new account
-        </button>
+        </button> */}
       </div>
       <footer className="login-footer">
         <div className="login-footer-content">
