@@ -1,3 +1,25 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+html, body, #root {
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden; /* Prevent scrolling on the whole page */
+  margin: 0;
+  background-color: #f0f2f5; /* Match analytics bg */
+}
+
+.app-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* Full viewport height */
+  width: 100%;
+}
+
+.app-content-area {
+  flex: 1; /* Take up all remaining vertical space */
+  overflow-y: auto; /* Allow THIS container to scroll if needed */
+  display: flex;
+  flex-direction: column; /* Ensure content inside flows top-to-bottom */
+}
