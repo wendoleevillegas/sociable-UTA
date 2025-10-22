@@ -14,7 +14,8 @@ import { PersonalInfo } from './Studentinformation';
 function Home({ onLogout }) {
   const [currentUser, setCurrentUser] = useState(null);
   const [currentPage, setCurrentPage] = useState('calendar');
-  const [selectedSources, setSelectedSources] = useState(['instagram']);
+  // const [selectedSources, setSelectedSources] = useState(['instagram']);
+  const [activeApiSource, setActiveApiSource] = useState('all');
 
   // Handle authentication state
   useEffect(() => {
@@ -44,7 +45,8 @@ function Home({ onLogout }) {
   // Handle page navigation and reset API source to Instagram
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
-    setSelectedSources(['instagram']); // Reset to Instagram when changing pages
+    // setSelectedSources(['instagram']); // Reset to Instagram when changing pages
+    setActiveApiSource('all');
   };
 
   // User object for components that need user info
@@ -72,13 +74,19 @@ function Home({ onLogout }) {
     <div>
       <Menu active={currentPage} onSelect={handlePageChange} onLogout={onLogout} />
       {(currentPage === 'analytics' || currentPage === 'calendar' || currentPage === 'inbox' || currentPage === 'postview') && (
-        <ApiSubmenu selectedSources={selectedSources} onSourceChange={setSelectedSources} />
+        // <ApiSubmenu selectedSources={selectedSources} onSourceChange={setSelectedSources} />
+        <ApiSubmenu activeSource={activeApiSource} onSourceChange={setActiveApiSource} />
       )}
-      {currentPage === 'calendar' && <Calendar token={currentUser.token} apiSource={selectedSources[0]} onNavigate={setCurrentPage} />}
+      {/* {currentPage === 'calendar' && <Calendar token={currentUser.token} apiSource={selectedSources[0]} onNavigate={setCurrentPage} />}
       {currentPage === 'post' && <CreatePost token={currentUser.token} user={user} apiSource={selectedSources[0]} onNavigate={setCurrentPage} />}
       {currentPage === 'postview' && <PostView token={currentUser.token} user={user} apiSource={selectedSources[0]} onNavigate={setCurrentPage} />}
       {currentPage === 'inbox' && <Inbox token={currentUser.token} apiSource={selectedSources[0]} onNavigate={setCurrentPage} />}
-      {currentPage === 'analytics' && <Analytics token={currentUser.token} apiSource={selectedSources[0]} onNavigate={setCurrentPage} />}
+      {currentPage === 'analytics' && <Analytics token={currentUser.token} apiSource={selectedSources[0]} onNavigate={setCurrentPage} />} */}
+      {currentPage === 'calendar' && <Calendar token={currentUser.token} apiSource={activeApiSource} onNavigate={setCurrentPage} />}
+      {currentPage === 'post' && <CreatePost token={currentUser.token} user={user} apiSource={activeApiSource} onNavigate={setCurrentPage} />}
+      {currentPage === 'postview' && <PostView token={currentUser.token} user={user} apiSource={activeApiSource} onNavigate={setCurrentPage} />}
+      {currentPage === 'inbox' && <Inbox token={currentUser.token} apiSource={activeApiSource} onNavigate={setCurrentPage} />}
+      {currentPage === 'analytics' && <Analytics token={currentUser.token} apiSource={activeApiSource} onNavigate={setCurrentPage} />}
       {currentPage === 'studentinformation' && <PersonalInfo token={currentUser.token} onBack={() => setCurrentPage('calendar')} />}
 
       {/* Navigation Menu */}
