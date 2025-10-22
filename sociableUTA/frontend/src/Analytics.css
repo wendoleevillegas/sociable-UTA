@@ -3,10 +3,17 @@
  */
 .analytics-container {
   background: #f0f2f5; /* Lighter gray background */
-  min-height: calc(100vh - 60px); /* Adjust based on navbar height */
+  /* min-height: calc(100vh - 60px); Adjust based on navbar height */
+  /* min-height: calc(100vh - 110px); */
+  flex: 1;
   padding: 24px;
   box-sizing: border-box;
   margin-top: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
 }
 
 /* Main analytics content section */
@@ -14,6 +21,7 @@
   width: 100%;
   max-width: 1400px;
   margin: 0 auto;
+  flex-shrink: 0;
 }
 
 /*

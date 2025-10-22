@@ -71,89 +71,93 @@ function Home({ onLogout }) {
 
   // If logged in, show the app with working components
   return (
-    <div>
+    <div className="app-layout">
       <Menu active={currentPage} onSelect={handlePageChange} onLogout={onLogout} />
-      {(currentPage === 'analytics' || currentPage === 'calendar' || currentPage === 'inbox' || currentPage === 'postview') && (
-        // <ApiSubmenu selectedSources={selectedSources} onSourceChange={setSelectedSources} />
-        <ApiSubmenu activeSource={activeApiSource} onSourceChange={setActiveApiSource} />
-      )}
-      {/* {currentPage === 'calendar' && <Calendar token={currentUser.token} apiSource={selectedSources[0]} onNavigate={setCurrentPage} />}
-      {currentPage === 'post' && <CreatePost token={currentUser.token} user={user} apiSource={selectedSources[0]} onNavigate={setCurrentPage} />}
-      {currentPage === 'postview' && <PostView token={currentUser.token} user={user} apiSource={selectedSources[0]} onNavigate={setCurrentPage} />}
-      {currentPage === 'inbox' && <Inbox token={currentUser.token} apiSource={selectedSources[0]} onNavigate={setCurrentPage} />}
-      {currentPage === 'analytics' && <Analytics token={currentUser.token} apiSource={selectedSources[0]} onNavigate={setCurrentPage} />} */}
-      {currentPage === 'calendar' && <Calendar token={currentUser.token} apiSource={activeApiSource} onNavigate={setCurrentPage} />}
-      {currentPage === 'post' && <CreatePost token={currentUser.token} user={user} apiSource={activeApiSource} onNavigate={setCurrentPage} />}
-      {currentPage === 'postview' && <PostView token={currentUser.token} user={user} apiSource={activeApiSource} onNavigate={setCurrentPage} />}
-      {currentPage === 'inbox' && <Inbox token={currentUser.token} apiSource={activeApiSource} onNavigate={setCurrentPage} />}
-      {currentPage === 'analytics' && <Analytics token={currentUser.token} apiSource={activeApiSource} onNavigate={setCurrentPage} />}
-      {currentPage === 'studentinformation' && <PersonalInfo token={currentUser.token} onBack={() => setCurrentPage('calendar')} />}
+      {/* {(currentPage === 'analytics' || currentPage === 'calendar' || currentPage === 'inbox' || currentPage === 'postview') && ( */}
+      <div className="app-content-area">
+        {(currentPage === 'analytics' || currentPage === 'calendar' || currentPage === 'inbox' || currentPage === 'postview') && (
+          <ApiSubmenu activeSource={activeApiSource} onSourceChange={setActiveApiSource} />
+        )}
+        
+        {currentPage === 'calendar' && <Calendar token={currentUser.token} apiSource={activeApiSource} onNavigate={setCurrentPage} />}
+        {currentPage === 'post' && <CreatePost token={currentUser.token} user={user} apiSource={activeApiSource} onNavigate={setCurrentPage} />}
+        {currentPage === 'postview' && <PostView token={currentUser.token} user={user} apiSource={activeApiSource} onNavigate={setCurrentPage} />}
+        {currentPage === 'inbox' && <Inbox token={currentUser.token} apiSource={activeApiSource} onNavigate={setCurrentPage} />}
+        {currentPage === 'analytics' && <Analytics token={currentUser.token} apiSource={activeApiSource} onNavigate={setCurrentPage} />}
+        {currentPage === 'studentinformation' && <PersonalInfo token={currentUser.token} onBack={() => setCurrentPage('calendar')} />}
+        {/* {currentPage === 'calendar' && <Calendar token={currentUser.token} apiSource={activeApiSource} onNavigate={setCurrentPage} />}
+        {currentPage === 'post' && <CreatePost token={currentUser.token} user={user} apiSource={activeApiSource} onNavigate={setCurrentPage} />}
+        {currentPage === 'postview' && <PostView token={currentUser.token} user={user} apiSource={activeApiSource} onNavigate={setCurrentPage} />}
+        {currentPage === 'inbox' && <Inbox token={currentUser.token} apiSource={activeApiSource} onNavigate={setCurrentPage} />}
+        {currentPage === 'analytics' && <Analytics token={currentUser.token} apiSource={activeApiSource} onNavigate={setCurrentPage} />}
+        {currentPage === 'studentinformation' && <PersonalInfo token={currentUser.token} onBack={() => setCurrentPage('calendar')} />} */}
 
-      {/* Navigation Menu */}
-      {/* <Menu
-        active={currentPage}
-        onSelect={handlePageChange}
-        onLogout={onLogout}
-      /> */}
+        {/* Navigation Menu */}
+        {/* <Menu
+          active={currentPage}
+          onSelect={handlePageChange}
+          onLogout={onLogout}
+        /> */}
 
-      {/* API Source Submenu - Hide for CreatePost page
-      {(currentPage === 'analytics' || currentPage === 'calendar' || currentPage === 'inbox' || currentPage === 'postview') && (
-        <ApiSubmenu
-          selectedSources={selectedSources}
-          onSourceChange={setSelectedSources}
-        />
-      )} */}
+        {/* API Source Submenu - Hide for CreatePost page
+        {(currentPage === 'analytics' || currentPage === 'calendar' || currentPage === 'inbox' || currentPage === 'postview') && (
+          <ApiSubmenu
+            selectedSources={selectedSources}
+            onSourceChange={setSelectedSources}
+          />
+        )} */}
 
-      {/* Page Content - Conditional rendering based on selected page
-      {currentPage === 'calendar' && (
-        <Calendar
-          token={currentUser.token}
-          setToken={(token) => setCurrentUser(prev => ({ ...prev, token }))}
-          selectedSources={selectedSources}
-          onNavigate={setCurrentPage}
-        />
-      )} */}
+        {/* Page Content - Conditional rendering based on selected page
+        {currentPage === 'calendar' && (
+          <Calendar
+            token={currentUser.token}
+            setToken={(token) => setCurrentUser(prev => ({ ...prev, token }))}
+            selectedSources={selectedSources}
+            onNavigate={setCurrentPage}
+          />
+        )} */}
 
-      {/* {currentPage === 'post' && (
-        <CreatePost
-          token={currentUser.token}
-          user={user}
-          apiSource={selectedSources[0]}
-          onNavigate={setCurrentPage}
-        />
-      )} */}
+        {/* {currentPage === 'post' && (
+          <CreatePost
+            token={currentUser.token}
+            user={user}
+            apiSource={selectedSources[0]}
+            onNavigate={setCurrentPage}
+          />
+        )} */}
 
-      {/* {currentPage === 'postview' && (
-        <PostView
-          token={currentUser.token}
-          user={user}
-          apiSource={selectedSources[0]}
-          onNavigate={setCurrentPage}
-        />
-      )} */}
+        {/* {currentPage === 'postview' && (
+          <PostView
+            token={currentUser.token}
+            user={user}
+            apiSource={selectedSources[0]}
+            onNavigate={setCurrentPage}
+          />
+        )} */}
 
-      {/* {currentPage === 'inbox' && (
-        <Inbox
-          token={currentUser.token}
-          apiSource={selectedSources[0]}
-          onNavigate={setCurrentPage}
-        />
-      )} */}
+        {/* {currentPage === 'inbox' && (
+          <Inbox
+            token={currentUser.token}
+            apiSource={selectedSources[0]}
+            onNavigate={setCurrentPage}
+          />
+        )} */}
 
-      {/* {currentPage === 'analytics' && (
-        <Analytics
-          token={currentUser.token}
-          apiSource={selectedSources[0]}
-          onNavigate={setCurrentPage}
-        />
-      )} */}
+        {/* {currentPage === 'analytics' && (
+          <Analytics
+            token={currentUser.token}
+            apiSource={selectedSources[0]}
+            onNavigate={setCurrentPage}
+          />
+        )} */}
 
-      {/* {currentPage === 'studentinformation' && (
-        <PersonalInfo
-          token={currentUser.token}
-          onBack={() => setCurrentPage('calendar')}
-        />
-      )} */}
+        {/* {currentPage === 'studentinformation' && (
+          <PersonalInfo
+            token={currentUser.token}
+            onBack={() => setCurrentPage('calendar')}
+          />
+        )} */}
+      </div>
     </div>
   );
 }
