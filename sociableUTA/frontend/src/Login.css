@@ -1,0 +1,329 @@
+/* 
+ * ROOT CONTAINER - Main wrapper for the entire login page
+ * Creates a full-height layout with a light gray background
+ */
+.login-root {
+  min-height: 100vh;
+  /* Take up at least the full viewport height */
+  background: #f0f2f5;
+  /* Light gray background similar to Facebook */
+  display: flex;
+  /* Use flexbox for layout */
+  flex-direction: column;
+  /* Stack elements vertically */
+  justify-content: space-between;
+  /* Space between header, main, and footer */
+}
+
+/* 
+ * MAIN CONTENT AREA - Center section containing the login form and branding
+ * Uses flexbox to center content both horizontally and vertically
+ */
+.login-main {
+  display: flex;
+  /* Use flexbox for layout */
+  justify-content: center;
+  /* Center content horizontally */
+  align-items: center;
+  /* Center content vertically */
+  flex: 1;
+  /* Take up remaining space between header and footer */
+}
+
+/* 
+ * LEFT SECTION - Contains the app branding and welcome message
+ * Hidden on mobile devices, visible on larger screens
+ */
+.login-left {
+  margin-right: 4rem;
+  /* Space between left section and login form */
+  max-width: 28rem;
+  /* Limit width for better readability */
+  display: none;
+  /* Hidden by default (mobile-first approach) */
+}
+
+/* 
+ * RESPONSIVE DESIGN - Show left section on tablet and desktop screens
+ * Only displays the branding section on screens 768px and wider
+ */
+@media (min-width: 768px) {
+  .login-left {
+    display: block;
+    /* Show the left branding section on larger screens */
+  }
+}
+
+/* 
+ * APP TITLE - Large, bold title for the application
+ * Uses Facebook's signature blue color and large font size
+ */
+.login-title {
+  color: #1877f2;
+  /* Facebook blue color */
+  font-size: 4rem;
+  /* Large font size for prominence */
+  font-weight: bold;
+  /* Bold text weight */
+  font-family: sans-serif;
+  /* Clean, modern font */
+  margin-bottom: 1rem;
+  /* Space below the title */
+  line-height: 1;
+  /* Tight line height for better appearance */
+}
+
+/* 
+ * WELCOME MESSAGE - Subtitle text below the main title
+ * Provides context about what the application does
+ */
+.login-welcome {
+  font-size: 1.5rem;
+  /* Medium font size */
+  color: #222;
+  /* Dark gray text color */
+}
+
+/* 
+ * LOGIN FORM CONTAINER - White card containing all form elements
+ * Creates a clean, elevated appearance with shadow and rounded corners
+ */
+.login-form {
+  background: #fff;
+  /* White background */
+  border-radius: 0.5rem;
+  /* Rounded corners */
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  /* Subtle shadow for elevation */
+  padding: 1.5rem;
+  /* Internal spacing */
+  width: 24rem;
+  /* Fixed width for consistency */
+  display: flex;
+  /* Use flexbox for layout */
+  flex-direction: column;
+  /* Stack form elements vertically */
+}
+
+/* 
+ * ERROR MESSAGES - Red text for displaying login errors
+ * Used to show feedback when login attempts fail
+ */
+.login-error {
+  color: #ef4444;
+  /* Red color for errors */
+  margin-bottom: 0.5rem;
+  /* Space below error message */
+  text-align: center;
+  /* Center the error text */
+}
+
+/* 
+ * INPUT FIELDS - Styling for email and password input boxes
+ * Creates clean, modern input fields with proper spacing and borders
+ */
+.login-input {
+  width: 100%;
+  /* Take full width of container */
+  padding: 0.75rem;
+  /* Internal spacing for comfort */
+  margin-bottom: 0.75rem;
+  /* Space between input fields */
+  border: 1px solid #dddfe2;
+  /* Light gray border */
+  border-radius: 0.375rem;
+  /* Rounded corners */
+  font-size: 1rem;
+  /* Standard font size */
+  outline: none;
+  /* Remove default browser outline */
+}
+
+/* 
+ * LOGIN BUTTON - Primary action button for submitting the login form
+ * Uses Facebook's signature blue color with hover effects
+ */
+.login-btn {
+  width: 100%;
+  /* Take full width of container */
+  background: #1877f2;
+  /* Facebook blue background */
+  color: #fff;
+  /* White text */
+  padding: 0.75rem;
+  /* Internal spacing */
+  border-radius: 0.375rem;
+  /* Rounded corners */
+  font-size: 1.125rem;
+  /* Slightly larger font */
+  font-weight: bold;
+  /* Bold text */
+  margin-bottom: 0.75rem;
+  /* Space below button */
+  border: none;
+  /* Remove default border */
+  cursor: pointer;
+  /* Show pointer cursor on hover */
+  transition: background 0.2s;
+  /* Smooth color transition */
+}
+
+/* 
+ * LOGIN BUTTON HOVER - Darker blue when user hovers over login button
+ * Provides visual feedback for better user experience
+ */
+.login-btn:hover {
+  background: #166fe5;
+  /* Darker blue on hover */
+}
+
+/* 
+ * FORGOT PASSWORD LINK - Clickable link for password recovery
+ * Styled as a link with Facebook blue color and underline on hover
+ */
+.login-forgot {
+  color: #1877f2;
+  /* Facebook blue color */
+  font-size: 0.95rem;
+  /* Slightly smaller font */
+  margin-bottom: 0.75rem;
+  /* Space below link */
+  text-align: center;
+  /* Center the link text */
+  text-decoration: none;
+  /* Remove default underline */
+  cursor: pointer;
+  /* Show pointer cursor */
+  display: block;
+  /* Make it a block element for full-width clicking */
+}
+
+/* 
+ * FORGOT PASSWORD HOVER - Underline appears when hovering over the link
+ * Provides visual feedback that the text is clickable
+ */
+.login-forgot:hover {
+  text-decoration: underline;
+  /* Show underline on hover */
+}
+
+/* 
+ * DIVIDER LINE - Visual separator between login and signup sections
+ * Creates a subtle horizontal line to separate different actions
+ */
+.login-divider {
+  border-bottom: 1px solid #dadde1;
+  /* Light gray bottom border */
+  width: 100%;
+  /* Full width */
+  margin: 0.75rem 0;
+  /* Vertical spacing above and below */
+}
+
+/* 
+ * CREATE ACCOUNT BUTTON - Secondary button for navigating to signup
+ * Uses green color to distinguish from the primary login button
+ */
+.login-create-btn {
+  background: #42b72a;
+  /* Green background */
+  color: #fff;
+  /* White text */
+  padding: 0.75rem 1.5rem;
+  /* Internal spacing with more horizontal padding */
+  border-radius: 0.375rem;
+  /* Rounded corners */
+  font-size: 1rem;
+  /* Standard font size */
+  font-weight: bold;
+  /* Bold text */
+  margin-top: 0.5rem;
+  /* Space above button */
+  border: none;
+  /* Remove default border */
+  cursor: pointer;
+  /* Show pointer cursor */
+  transition: background 0.2s;
+  /* Smooth color transition */
+}
+
+/* 
+ * CREATE ACCOUNT BUTTON HOVER - Darker green on hover
+ * Provides visual feedback for better user experience
+ */
+.login-create-btn:hover {
+  background: #36a420;
+  /* Darker green on hover */
+}
+
+/* 
+ * FOOTER SECTION - Bottom area of the page
+ * Contains links and copyright information
+ */
+.login-footer {
+  width: 100%;
+  /* Full width */
+  background: transparent;
+  /* No background color */
+  padding: 1.5rem 0;
+  /* Vertical padding only */
+}
+
+/* 
+ * FOOTER CONTENT - Wrapper for footer content with max width
+ * Centers the footer content and limits its width on large screens
+ */
+.login-footer-content {
+  max-width: 80rem;
+  /* Maximum width for footer content */
+  margin: 0 auto;
+  /* Center the content horizontally */
+  font-size: 0.8rem;
+  /* Small font size for footer text */
+  color: #737373;
+  /* Gray text color */
+}
+
+/* 
+ * FOOTER LINKS - Flexible layout for footer navigation links
+ * Creates responsive rows of links that wrap as needed
+ */
+.login-footer-lang,
+.login-footer-links {
+  display: flex;
+  /* Use flexbox for layout */
+  flex-wrap: wrap;
+  /* Allow items to wrap to new lines */
+  gap: 0.75rem 0.5rem;
+  /* Vertical and horizontal spacing between items */
+  margin-bottom: 0.5rem;
+  /* Space below each row of links */
+}
+
+/* 
+ * PLUS BUTTON - Small button for expanding language options
+ * Creates a small, bordered button for additional functionality
+ */
+.login-footer-plus {
+  border: 1px solid #ccd0d5;
+  /* Light gray border */
+  padding: 0 0.25rem;
+  /* Small horizontal padding */
+  border-radius: 0.125rem;
+  /* Slightly rounded corners */
+  margin-left: 0.25rem;
+  /* Small left margin */
+  background: none;
+  /* No background color */
+  cursor: pointer;
+  /* Show pointer cursor */
+}
+
+/* 
+ * COPYRIGHT TEXT - Small text at the bottom of the footer
+ * Contains copyright and legal information
+ */
+.login-footer-copy {
+  margin-top: 0.5rem;
+  /* Space above copyright text */
+}

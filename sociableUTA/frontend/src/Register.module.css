@@ -1,0 +1,130 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito&display=swap');
+
+/* Base styles */
+.registerPage {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    font-family: 'Nunito', sans-serif;
+    font-size: 20px;
+    color: #fff;
+}
+
+body {
+    min-height: 100vh;
+    background-color: #0064B1;
+}
+
+/* Container for success and form section */
+.section {
+    width: 100%;
+    max-width: 420px;
+    min-height: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 1rem;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+/* Form layout */
+.form {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    flex-grow: 1;
+    padding-bottom: 1rem;
+}
+
+/* Input fields */
+.input {
+    font-family: 'Nunito', sans-serif;
+    font-size: 22px;
+    padding: 0.25rem;
+    border-radius: 0.5rem;
+    border: 1px solid #ccc;
+    color: black;
+}
+
+/* Button */
+.button {
+    font-family: 'Nunito', sans-serif;
+    font-size: 22px;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    border: none;
+    background-color: #1e90ff;
+    color: white;
+    cursor: pointer;
+    margin-top: 1rem;
+}
+
+.button:disabled {
+    background-color: #a9c4e0;
+    cursor: not-allowed;
+}
+
+/* Labels */
+label {
+    margin-top: 1rem;
+}
+
+/* Instructions tooltip */
+.instructions {
+    font-size: 0.75rem;
+    border-radius: 0.5rem;
+    background: #000;
+    color: #fff;
+    padding: 0.25rem;
+    position: relative;
+    bottom: -10px;
+}
+
+.instructions>svg {
+    margin-right: 0.25rem;
+}
+
+/* Accessibility & utility classes */
+.offscreen {
+    position: absolute;
+    left: -9999px;
+}
+
+.hide {
+    display: none;
+}
+
+.valid {
+    color: limegreen;
+    margin-left: 0.25rem;
+}
+
+.invalid {
+    color: red;
+    margin-left: 0.25rem;
+}
+
+/* Error message */
+.errmsg {
+    background-color: lightpink;
+    color: firebrick;
+    font-weight: bold;
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+/* Inline link layout */
+.line {
+    display: inline-block;
+}
+
+a,
+a:visited {
+    color: #fff;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}

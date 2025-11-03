@@ -1,0 +1,526 @@
+.postview-platform-indicator {
+  background: #ffffff;
+  border-left: 4px solid #1976d2;
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin: 0 auto 24px auto;
+  max-width: 600px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.postview-platform-indicator h2 {
+  margin: 0 0 8px 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1976d2;
+}
+
+.postview-platform-indicator p {
+  margin: 0;
+  color: #65676b;
+  font-size: 0.95rem;
+  font-weight: 400;
+}
+
+.postview-root {
+  background: #fcfbf8;
+  /* Light cream background matching the navbar */
+  min-height: 100vh;
+  /* Take up at least the full viewport height */
+  padding: 32px 20px;
+  /* Vertical padding for content spacing */
+  margin-top: 0;
+  /* Reset any top margin */
+}
+
+/* Single column layout - no notifications panel */
+.postview-container {
+  display: block;
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+/* Main posts section */
+.postview-main {
+  width: 100%;
+}
+
+/* LinkedIn Authentication Styles */
+.linkedin-auth-banner {
+  background: linear-gradient(135deg, #0A66C2, #004182);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  color: white;
+  text-align: center;
+}
+
+.linkedin-auth-content h3 {
+  margin: 0 0 8px 0;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.linkedin-auth-content p {
+  margin: 0 0 16px 0;
+  opacity: 0.9;
+  font-size: 0.95rem;
+}
+
+.linkedin-auth-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.linkedin-auth-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-2px);
+}
+
+.linkedin-connected-banner {
+  background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+  border: 1px solid #0A66C2;
+  border-radius: 8px;
+  padding: 12px 20px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.linkedin-connected-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.linkedin-connected-content span {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.linkedin-connected-content small {
+  color: #666;
+  font-size: 0.85rem;
+}
+
+/* 
+ * POST CREATION BOX - Container for the "create new post" form
+ * This is the top section where users can write and submit new posts
+ */
+/* .postview-create-box {
+  background: #fcfbf8;
+  border-radius: 24px;
+  box-shadow: 0 2px 8px #0001;
+  padding: 12px 16px 16px 16px;
+  max-width: 600px;
+  margin: 0 auto 32px auto;
+} */
+
+/* 
+ * CREATE POST HEADER - Top section with avatar and media upload buttons
+ * Contains user avatar and buttons for adding videos/photos
+ */
+/* .postview-create-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+} */
+
+/* 
+ * USER AVATAR - Profile picture in post creation and feed
+ * Circular image representing the current user
+ */
+/* .postview-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #ccc;
+  background: #fff;
+  font-size: 16px;
+} */
+
+/* 
+ * MEDIA UPLOAD ACTIONS - Container for video/photo upload buttons
+ * Flexbox container for the action buttons in the create post section
+ */
+/* .postview-actions {
+  display: flex;
+  gap: 40px;
+  width: 100%;
+  justify-content: flex-start;
+} */
+
+/* 
+ * CENTERED ACTIONS - Variant for center-aligned action buttons
+ * Used when actions should be centered instead of left-aligned
+ */
+.postview-actions-center {
+  justify-content: center;
+  /* Center the action buttons */
+  gap: 40px;
+  /* Maintain same spacing between buttons */
+}
+
+/* 
+ * INDIVIDUAL ACTION BUTTON - Single media upload button (video/photo)
+ * Combines icon and text for each upload option
+ */
+/* .postview-action {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 500;
+  background: none;
+  border: none;
+  padding: 0;
+} */
+
+/* 
+ * ACTION BUTTON ICONS - FontAwesome icons within action buttons
+ * Custom sizing for video/photo icons in create post and feed action icons
+ */
+.postview-action svg {
+  font-size: 22px !important;
+  /* Force smaller icon size for create post actions */
+  margin-right: 6px !important;
+  /* Force smaller margin between icon and text */
+}
+
+.postview-feed-actions svg {
+  font-size: 16px !important;
+  /* Smaller icon size for feed actions */
+  margin-right: 6px !important;
+  /* Space between icon and text */
+}
+
+/* 
+ * POST CREATION FORM - Form container for text input and submit
+ * Contains the textarea and submit button for new posts
+ */
+.postview-form {
+  margin-top: 8px;
+  /* Space above the form */
+}
+
+/* 
+ * POST TEXT AREA - Large text input for post content
+ * Where users type their post text/caption
+ */
+/* .postview-textarea {
+  width: 100%;
+  min-height: 40px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  padding: 8px;
+  font-size: 15px;
+  margin-bottom: 8px;
+  resize: vertical;
+} */
+
+/* 
+ * MEDIA PREVIEW - Shows selected images/videos before posting
+ * Displays a preview of uploaded media files
+ */
+.postview-media-preview img,
+.postview-media-preview video {
+  max-width: 100%;
+  max-height: 200px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+/* 
+ * FORM BUTTONS CONTAINER - Wrapper for form action buttons
+ * Contains submit and other form-related buttons
+ */
+.postview-form-buttons {
+  display: flex;
+  /* Use flexbox for button layout */
+  gap: 8px;
+  /* Space between buttons */
+}
+
+/* 
+ * ERROR MESSAGE - Styling for error messages in post creation
+ * Red background with white text for failed operations
+ */
+.postview-error {
+  background: #dc2626;
+  /* Red background */
+  color: #ffffff;
+  /* White text */
+  padding: 12px 16px;
+  /* Comfortable padding */
+  border-radius: 8px;
+  /* Rounded corners */
+  margin-bottom: 16px;
+  /* Space below error */
+  font-size: 0.9rem;
+  /* Slightly smaller font */
+  font-weight: 500;
+  /* Medium font weight */
+  text-align: center;
+  /* Center the error text */
+  border: 1px solid #b91c1c;
+  /* Darker red border */
+}
+
+/* 
+ * POST SUBMIT BUTTON - Primary button for creating posts
+ * Blue button that submits the post form
+ */
+/* .postview-post-btn {
+  background: #1976d2;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 16px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+} */
+
+.postview-post-btn:disabled {
+  background: #9ca3af;
+  /* Gray background when disabled */
+  cursor: not-allowed;
+  /* Show not-allowed cursor */
+  opacity: 0.7;
+  /* Slightly transparent */
+}
+
+.postview-post-btn:hover:not(:disabled) {
+  opacity: 0.9;
+  /* Slightly transparent on hover */
+  transform: translateY(-1px);
+  /* Slight lift effect */
+}
+
+/* 
+ * POSTS FEED CONTAINER - Main container for displaying all posts
+ * Vertical layout for the list of posts from all users
+ */
+.postview-feed {
+  margin-top: 24px;
+  /* Space above the feed */
+  display: flex;
+  /* Use flexbox for layout */
+  flex-direction: column;
+  /* Stack posts vertically */
+  gap: 24px;
+  /* Space between individual posts */
+}
+
+/* 
+ * INDIVIDUAL POST CARD - Container for a single post
+ * White card containing all post content and interactions
+ */
+.postview-feed-card {
+  background: #fff;
+  /* White background */
+  border-radius: 12px;
+  /* Rounded corners */
+  border: 1px solid #ddd;
+  /* Light gray border */
+  padding: 12px;
+  /* Internal spacing */
+  max-width: 600px;
+  /* Maximum width for readability */
+  width: 100%;
+  /* Take full width up to max-width */
+  margin: 0 auto;
+  /* Center horizontally */
+  box-shadow: 0 2px 8px #0001;
+  /* Very subtle shadow */
+}
+
+/* 
+ * POST HEADER - Top section of each post with author info
+ * Contains author avatar, name, role, and follow button
+ */
+.postview-feed-header {
+  display: flex;
+  /* Use flexbox for horizontal layout */
+  align-items: center;
+  /* Center items vertically */
+  gap: 12px;
+  /* Space between avatar and author info */
+  margin-bottom: 8px;
+  /* Space below header */
+}
+
+/* 
+ * FEED AVATAR - Smaller avatar for posts in the feed
+ * Author's profile picture in each post
+ */
+.postview-feed-avatar {
+  width: 36px;
+  /* Smaller than create post avatar */
+  height: 36px;
+  /* Square ratio */
+  border-radius: 50%;
+  /* Make circular */
+  object-fit: cover;
+  /* Crop image to fit without distortion */
+  border: 1px solid #ccc;
+  /* Thin light gray border */
+}
+
+/* 
+ * AUTHOR NAME - Bold text showing post author's name
+ * Primary identification for who created the post
+ */
+.postview-feed-author {
+  font-weight: bold;
+  /* Bold text for prominence */
+}
+
+/* 
+ * AUTHOR ROLE - Subtitle showing author's job title or role
+ * Secondary information about the post author
+ */
+.postview-feed-role {
+  font-size: 13px;
+  /* Small font size */
+  color: #555;
+  /* Medium gray color */
+}
+
+/* 
+ * POST METADATA - Timestamp and other post information
+ * Shows when the post was created and other details
+ */
+.postview-feed-meta {
+  font-size: 12px;
+  /* Very small font size */
+  color: #888;
+  /* Light gray color */
+}
+
+/* 
+ * FOLLOW BUTTON - Button to follow post authors
+ * Positioned on the right side of post headers
+ */
+.postview-feed-follow {
+  margin-left: auto;
+  /* Push to the right side */
+  background: none;
+  /* No background color */
+  border: none;
+  /* No border */
+  color: #1976d2;
+  /* Blue color matching app theme */
+  font-weight: bold;
+  /* Bold text */
+  cursor: pointer;
+  /* Show pointer cursor */
+  font-size: 15px;
+  /* Medium font size */
+}
+
+/* 
+ * POST CAPTION - Main text content of the post
+ * The actual message/content that the author wrote
+ */
+.postview-feed-caption {
+  margin: 8px 0 4px 0;
+  /* Vertical spacing around caption */
+  font-size: 15px;
+  /* Medium font size for readability */
+}
+
+/* 
+ * POST TITLE - Optional title for posts with media content
+ * Bold heading that may appear above media content
+ */
+.postview-feed-title {
+  font-weight: bold;
+  /* Bold text */
+  margin-bottom: 8px;
+  /* Space below title */
+}
+
+/* 
+ * POST MEDIA - Images and videos within posts
+ * Styling for media content attached to posts
+ */
+.postview-feed-media {
+  width: 100%;
+  /* Take full width of post card */
+  border-radius: 8px;
+  /* Rounded corners */
+  margin-bottom: 8px;
+  /* Space below media */
+  margin-top: 4px;
+  /* Small space above media */
+}
+
+/* 
+ * POST INTERACTION ACTIONS - Like, comment, and share buttons
+ * Row of action buttons for user engagement
+ */
+.postview-feed-actions {
+  display: flex;
+  /* Use flexbox for horizontal layout */
+  justify-content: space-between;
+  /* Even spacing between action buttons */
+  margin-top: 8px;
+  /* Space above actions */
+  color: #444;
+  /* Medium dark gray text */
+  font-size: 14px;
+  /* Small font size */
+  border-top: 1px solid #eee;
+  /* Light gray top border for separation */
+  padding-top: 8px;
+  /* Space above border */
+}
+
+/* 
+ * POST STATISTICS - Shows engagement numbers (likes, comments, shares)
+ * Small text displaying post interaction counts
+ */
+.postview-feed-meta2 {
+  font-size: 12px;
+  /* Very small font size */
+  color: #888;
+  /* Light gray color */
+  margin-top: 4px;
+  /* Small space above statistics */
+}
+
+/* 
+ * LINKEDIN INTEGRATION STATUS - Indicator showing LinkedIn connection
+ * Displays when user is connected to LinkedIn API for cross-posting
+ */
+.linkedin-status {
+  background: #E7F3FF;
+  /* Light blue background */
+  border: 1px solid #0077B5;
+  /* LinkedIn blue border */
+  border-radius: 8px;
+  /* Rounded corners */
+  padding: 8px 12px;
+  /* Internal spacing */
+  margin-bottom: 12px;
+  /* Space below status indicator */
+  display: flex;
+  /* Use flexbox for layout */
+  align-items: center;
+  /* Center items vertically */
+  font-size: 14px;
+  /* Medium font size */
+}

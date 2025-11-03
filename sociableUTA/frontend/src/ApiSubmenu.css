@@ -1,0 +1,148 @@
+/*
+ * MAIN SUBMENU CONTAINER - Wrapper for the entire submenu
+ * Creates a clean, professional submenu bar below the main navigation
+ */
+.api-submenu {
+  background: #ffffff;
+  /* Clean white background */
+  border-bottom: 1px solid #e1e5e9;
+  /* Subtle gray border at bottom */
+  padding: 0 24px;
+  /* Horizontal padding to match main navbar */
+  /* Removed box-shadow for cleaner look */
+}
+
+/*
+ * SUBMENU BUTTON CONTAINER - Flexbox container for platform buttons
+ * Creates horizontal layout with proper spacing and alignment
+ */
+.api-submenu-container {
+  display: flex;
+  /* Horizontal flexbox layout */
+  align-items: center;
+  /* Center items vertically */
+  gap: 0;
+  /* No gap - buttons will have their own spacing */
+  max-width: 1200px;
+  /* Maximum width for large screens */
+  margin: 0 auto;
+  /* Center the container */
+}
+
+/*
+ * INDIVIDUAL PLATFORM BUTTONS - Styling for each social media platform option
+ * Creates clickable buttons with hover effects and active states
+ */
+.api-submenu-item {
+  background: none;
+  /* Transparent background */
+  border: none;
+  /* Remove default button border */
+  border-bottom: 3px solid transparent;
+  /* Invisible bottom border for active state */
+  padding: 16px 24px;
+  /* Comfortable padding for touch targets */
+  font-size: 0.95rem;
+  /* Slightly smaller than main nav */
+  font-weight: 600;
+  /* Semi-bold font weight */
+  color: #65676b;
+  /* Medium gray text color */
+  cursor: pointer;
+  /* Pointer cursor on hover */
+  transition: all 0.2s ease;
+  /* Smooth transitions for all properties */
+  position: relative;
+  /* For pseudo-element positioning */
+  text-decoration: none;
+  /* Remove any underlines */
+  outline: none;
+  /* Remove focus outline (accessibility handled by border) */
+}
+
+/*
+ * HOVER STATE - Visual feedback when user hovers over buttons
+ * Provides immediate feedback for interactive elements
+ */
+.api-submenu-item:hover {
+  color: #1c1e21;
+  /* Darker text on hover */
+  background: rgba(0, 0, 0, 0.02);
+  /* Very subtle light background */
+}
+
+/*
+ * ACTIVE STATE - Styling for the currently selected platform
+ * Makes it clear which platform is currently providing data
+ */
+.api-submenu-item.active {
+  color: inherit;
+  /* Color will be set via inline style for platform-specific colors */
+  font-weight: 700;
+  /* Bold font weight for active state */
+  border-bottom-width: 3px;
+  /* Thick bottom border */
+  border-bottom-style: solid;
+  /* Solid border style */
+  /* Border color will be set via inline style for platform-specific colors */
+}
+
+/*
+ * FOCUS STATE - Accessibility styling for keyboard navigation
+ * Ensures the submenu is usable with keyboard navigation
+ */
+.api-submenu-item:focus {
+  box-shadow: 0 0 0 2px rgba(24, 119, 242, 0.2);
+  /* Blue focus ring */
+  border-radius: 4px;
+  /* Rounded corners for focus ring */
+}
+
+/*
+ * RESPONSIVE DESIGN - Mobile and tablet adjustments
+ * Ensures the submenu works well on smaller screens
+ */
+@media (max-width: 768px) {
+  .api-submenu {
+    padding: 0 16px;
+    /* Reduced horizontal padding on mobile */
+    overflow-x: auto;
+    /* Allow horizontal scrolling if needed */
+  }
+
+  .api-submenu-container {
+    min-width: max-content;
+    /* Prevent wrapping on mobile */
+  }
+
+  .api-submenu-item {
+    padding: 12px 16px;
+    /* Smaller padding on mobile */
+    font-size: 0.9rem;
+    /* Slightly smaller font on mobile */
+    white-space: nowrap;
+    /* Prevent text wrapping */
+  }
+}
+
+/*
+ * DARK MODE SUPPORT - Disabled for consistent light theme
+ * Keeping light theme for consistency with the design
+ */
+/* Commented out dark mode styles to maintain light theme
+@media (prefers-color-scheme: dark) {
+  .api-submenu {
+    background: #242526;
+    border-bottom-color: #3e4042;
+  }
+  
+  .api-submenu-item {
+    color: #b0b3b8;
+  }
+  
+  .api-submenu-item:hover {
+    color: #e4e6ea;
+    background: rgba(255, 255, 255, 0.1);
+  }
+}
+*/
