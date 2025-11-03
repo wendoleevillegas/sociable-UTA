@@ -540,12 +540,12 @@ const CreatePost = ({ token, user, apiSource, onNavigate, onCalendarEventCreate 
         }
         if (errorMessages.length > 0) { setPostError(errorMessages.join(' | '));}
 
-        // Create calendar events for demo purposes - regardless of API success/failure
+        // Create calendar events - regardless of API success/failure
         // In production, this would only be done for successfully published posts
         if (selectedPlatforms.length > 0) {
-            // For demo: create events for all selected platforms
+            // Create events for all selected platforms
             const createdEvents = createCalendarEvents(selectedPlatforms);
-            console.log(`Created ${createdEvents.length} calendar events for selected platforms (demo mode)`);
+            console.log(`Created ${createdEvents.length} calendar events for selected platforms`);
             
             // Show calendar events created feedback
             setCalendarEventsCreated(true);

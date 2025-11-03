@@ -72,29 +72,6 @@ export const Login = ({ setToken, onShowSignup, onShowForgot }) => {
             {isLoading ? 'Logging In...' : 'Log In'}
           </button>
           
-          {/* Demo Mode Button */}
-          <button
-            type="button"
-            className="login-demo-btn"
-            onClick={() => {
-              setToken('demo-token'); // Set a demo token
-              navigate('/home'); // Navigate to home page
-            }}
-            style={{
-              background: '#28a745',
-              color: 'white',
-              border: 'none',
-              padding: '12px 24px',
-              borderRadius: '6px',
-              fontWeight: '600',
-              cursor: 'pointer',
-              marginTop: '10px',
-              width: '100%'
-            }}
-          >
-            🚀 Enter Demo Mode (No Login Required)
-          </button>
-          
           <button
           type="button"
           className="login-create-btn"
