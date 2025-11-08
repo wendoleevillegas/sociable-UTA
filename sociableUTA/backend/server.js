@@ -540,7 +540,7 @@ app.get('/api/linkedin/callback', async (req, res) => {
 
         // res.redirect(`http://localhost:5173/home?linkedin_token=${accessToken}`);
         const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
-        res.redirect(`${frontendUrl}/home?linkedin_token=${accessToken}`);
+        res.redirect(`${frontendUrl}/linkedin-callback?linkedin_token=${accessToken}`);
     } catch (err) {
         console.error('Error exchanging LinkedIn code :', err.response ? err.response.data : err.message);
         res.status(500).json({ message: 'Failed to authenticate with LinkedIn.' });
