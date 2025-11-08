@@ -231,7 +231,7 @@ export const Analytics = ({ token, apiSource = 'all', onNavigate, linkedInToken 
   }, [apiSource, linkedInToken]);
 
   const handleLinkedInConnect = () => {
-    window.location.href = 'http://localhost:5000/api/linkedin/login';
+    window.location.href = `${axiosInstance.defaults.baseURL}/api/linkedin/login`;
   };
 
   // Helper to format large numbers (e.g., 22450 -> 22.5K)
