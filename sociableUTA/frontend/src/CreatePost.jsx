@@ -705,7 +705,7 @@ const CreatePost = ({ token, user, apiSource, onNavigate, onCalendarEventCreate 
                                     <input
                                     type="text"
                                     className="alt-text-input"
-                                    placeholder="Alt text (accessibility)"
+                                    placeholder="Write Alt Text"
                                     value={altText}
                                     onChange={(e) => setAltText(e.target.value)}
                                     />
