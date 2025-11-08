@@ -705,7 +705,7 @@ const CreatePost = ({ token, user, apiSource, onNavigate, onCalendarEventCreate 
                                     <input
                                     type="text"
                                     className="alt-text-input"
-                                    placeholder="Describe the image or video (for accessibility)"
+                                    placeholder="Alt text (accessibility)"
                                     value={altText}
                                     onChange={(e) => setAltText(e.target.value)}
                                     />
