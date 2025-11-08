@@ -591,43 +591,96 @@ app.get('/api/linkedin/organization-data', async (req, res) => {
     }
 });
 
-app.get('/api/linkedin/demographics', async (req, res) => {
-    const accessToken = req.session.linkedin_token;
-    const orgURN = req.session.linkedin_org;
+// app.get('/api/linkedin/demographics', async (req, res) => {
+//     const accessToken = req.session.linkedin_token;
+//     const orgURN = req.session.linkedin_org;
 
-    if (!accessToken || !orgURN) {
+//     if (!accessToken || !orgURN) {
+//         return res.status(401).json({ error: 'User not authenticated with LinkedIn.' });
+//     }
+
+//     try {
+//         // Get detailed follower demographics
+//         const demographicsResponse = await axios.get(
+//         `https://api.linkedin.com/v2/organizationFollowerDemographics?q=organization&organization=urn:li:organization:${orgURN}`,
+//         {
+//             headers: {
+//             'Authorization': `Bearer ${accessToken}`,
+//             'X-Restli-Protocol-Version': '2.0.0',
+//             },
+//         }
+//         );
+
+//    // Extract the location data (followerCountsByGeoCountry)
+//    // You can also extract 'followerCountsBySeniority', 'followerCountsByIndustry', etc.
+//     const geoData = demographicsResponse.data.elements
+//         .find(e => e.followerCountsByGeoCountry)
+//         ?.followerCountsByGeoCountry;
+
+//     if (!geoData) {
+//         return res.status(404).json({ error: 'Geographical demographic data not found.' });
+//     }
+
+//     // Convert the LinkedIn key-value pairs into an array of objects
+//     const formattedGeoData = Object.entries(geoData).map(([countryCode, count]) => ({
+//         country: countryCode, // You might want a mapping from code (e.g., 'us') to name ('United States')
+//         followers: count
+//     }));
+
+//     res.json(formattedGeoData);
+
+//     } catch (err) {
+//         console.error('LinkedIn demographics fetch error:', err.response?.data || err.message);
+//         res.status(500).json({ error: 'Failed to fetch LinkedIn demographics.', details: err.response?.data });
+//     }
+// });
+app.get('/api/linkedin/demographics', async (req, res) => {
+    // 1. Get token from HEADER, not session
+    const accessToken = req.headers.authorization?.split(' ')[1];
+
+    if (!accessToken) {
         return res.status(401).json({ error: 'User not authenticated with LinkedIn.' });
     }
 
     try {
-        // Get detailed follower demographics
-        const demographicsResponse = await axios.get(
-        `https://api.linkedin.com/v2/organizationFollowerDemographics?q=organization&organization=urn:li:organization:${orgURN}`,
-        {
-            headers: {
+        const headers = { 
             'Authorization': `Bearer ${accessToken}`,
-            'X-Restli-Protocol-Version': '2.0.0',
-            },
+            'X-Restli-Protocol-Version': '2.0.0' // Add protocol version here
+        };
+
+        // 2. You MUST find the org URN first, just like in the other function
+        const orgAclsUrl = "https://api.linkedin.com/v2/organizationalEntityAcls?q=roleAssignee&role=ADMINISTRATOR";
+        const orgRes = await axios.get(orgAclsUrl, { headers });
+        const elements = orgRes.data.elements;
+
+        if (!elements || elements.length === 0) {
+            return res.status(404).json({ message: "No organization found where the user is an admin." });
         }
+
+        const orgURN = elements[0].organizationalTarget; // This is the URN you were missing
+
+        // 3. Now you can fetch demographics using the URN
+        const demographicsResponse = await axios.get(
+            `https://api.linkedin.com/v2/organizationFollowerDemographics?q=organization&organization=${orgURN}`, // Use the orgURN variable
+            { headers } // Pass the headers
         );
 
-   // Extract the location data (followerCountsByGeoCountry)
-   // You can also extract 'followerCountsBySeniority', 'followerCountsByIndustry', etc.
-    const geoData = demographicsResponse.data.elements
-        .find(e => e.followerCountsByGeoCountry)
-        ?.followerCountsByGeoCountry;
+        // Extract the location data
+        const geoData = demographicsResponse.data.elements
+            .find(e => e.followerCountsByGeoCountry)
+            ?.followerCountsByGeoCountry;
 
-    if (!geoData) {
-        return res.status(404).json({ error: 'Geographical demographic data not found.' });
-    }
+        if (!geoData) {
+            return res.status(404).json({ error: 'Geographical demographic data not found.' });
+        }
 
-    // Convert the LinkedIn key-value pairs into an array of objects
-    const formattedGeoData = Object.entries(geoData).map(([countryCode, count]) => ({
-        country: countryCode, // You might want a mapping from code (e.g., 'us') to name ('United States')
-        followers: count
-    }));
+        // Convert data format
+        const formattedGeoData = Object.entries(geoData).map(([countryCode, count]) => ({
+            country: countryCode, 
+            followers: count
+        }));
 
-    res.json(formattedGeoData);
+        res.json(formattedGeoData);
 
     } catch (err) {
         console.error('LinkedIn demographics fetch error:', err.response?.data || err.message);
