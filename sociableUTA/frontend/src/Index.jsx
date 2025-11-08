@@ -125,6 +125,11 @@ function Home({ onLogout }) {
     }
   }, []); // The empty array [] means this runs only once when the page loads
 
+  const handleLinkedInDisconnect = () => {
+    localStorage.removeItem('linkedin_access_token');
+    setLinkedInToken(null);
+  };
+
 
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
@@ -154,7 +159,7 @@ function Home({ onLogout }) {
         {currentPage === 'postview' && <PostView token={currentUser?.token} user={user} apiSource={activeApiSource} onNavigate={setCurrentPage} linkedInToken={linkedInToken} />}
         {currentPage === 'inbox' && <Inbox token={currentUser?.token} apiSource={activeApiSource} onNavigate={setCurrentPage} />}
         {currentPage === 'analytics' && <Analytics token={currentUser?.token} apiSource={activeApiSource} onNavigate={setCurrentPage} linkedInToken={linkedInToken} />}
-        {currentPage === 'studentinformation' && <PersonalInfo token={currentUser?.token} onBack={() => setCurrentPage('calendar')} />}
+        {currentPage === 'studentinformation' && <PersonalInfo token={currentUser?.token} onBack={() => setCurrentPage('calendar')} linkedInToken={linkedInToken} onLinkedInDisconnect={handleLinkedInDisconnect}/>}
       </div>
     </div>
   );

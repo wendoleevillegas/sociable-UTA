@@ -1,12 +1,10 @@
-
-// Import necessary React hooks and external libraries
 import React, { useState, useEffect } from 'react'; // React hooks for state and lifecycle management
 import axios from 'axios'; // HTTP client for making API requests
 import './StudentInformation.css'; // Import component-specific styles
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLinkedin } from '@fortawesome/free-brands-svg-icons';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
-import { getLinkedInAccount, disconnectLinkedInAccount, getLinkedInAccountSummary } from './LinkedInAccountService';
+// import { getLinkedInAccount, disconnectLinkedInAccount, getLinkedInAccountSummary } from './LinkedInAccountService';
 
 /*
  * PERSONALINFO COMPONENT - User account information management
@@ -29,7 +27,7 @@ export const PersonalInfo = ({ token, onBack }) => {
 
   const [editMode, setEditMode] = useState(false); // Toggle between view and edit modes
   const [message, setMessage] = useState('');      // Success/error messages for user feedback
-  const [linkedInAccount, setLinkedInAccount] = useState(null); // LinkedIn account information
+  // const [linkedInAccount, setLinkedInAccount] = useState(null); // LinkedIn account information
 
   /*
    * FETCH USER INFO EFFECT - Load user data when component mounts
@@ -53,8 +51,8 @@ export const PersonalInfo = ({ token, onBack }) => {
       });
 
     // LOAD LINKEDIN ACCOUNT INFORMATION
-    const linkedInData = getLinkedInAccount();
-    setLinkedInAccount(linkedInData);
+    // const linkedInData = getLinkedInAccount();
+    // setLinkedInAccount(linkedInData);
   }, [token]); // Re-run effect if token changes
 
   /*
