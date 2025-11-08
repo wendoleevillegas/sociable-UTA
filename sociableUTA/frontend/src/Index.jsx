@@ -28,8 +28,7 @@ function Home({ onLogout }) {
     const urlParams = new URLSearchParams(window.location.search);
     const linkedinToken = urlParams.get('linkedin_token');
     if (linkedinToken) {
-      console.log("LinkedIn token received:", linkedinToken);
-      localStorage.setItem('linkedin_access_token', linkedinToken);
+      setLinkedInToken(linkedinToken);
       // Clean the token from the URL so it's not visible
       window.history.replaceState({}, document.title, window.location.pathname);
     }

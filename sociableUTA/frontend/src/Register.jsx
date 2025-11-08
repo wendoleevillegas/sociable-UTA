@@ -69,9 +69,6 @@ const Register = () => {
             // );
             const payload = { user: user, pwd: pwd };
 
-            // --- ADD THIS LINE FOR DEBUGGING ---
-            console.log('Sending this payload to the backend:', payload);
-
             const response = await axiosInstance.post('/register',
                 payload, // Use the payload variable here
                 {
@@ -80,7 +77,6 @@ const Register = () => {
                 }
             );
 
-            console.log(response.data);
             setSuccess(true);
 
         } catch (err) {

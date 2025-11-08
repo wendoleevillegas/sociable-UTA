@@ -15,7 +15,7 @@ export const Inbox = ({ token, apiSource = 'instagram', onNavigate }) => {
     if (apiSource === 'instagram') {
       // The Instagram Direct Message API requires special permissions ("Advanced Access")
       // and cannot be safely called from the frontend. We will show an empty state.
-      console.log("Inbox for Instagram is not implemented in this version.");
+      return;
     }
 
     setLoading(false);

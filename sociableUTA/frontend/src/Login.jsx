@@ -71,7 +71,8 @@ export const Login = ({ setToken, onShowSignup, onShowForgot }) => {
           <button type="submit" className="login-btn" disabled={isLoading}>
             {isLoading ? 'Logging In...' : 'Log In'}
           </button>
-                  <button
+          
+          <button
           type="button"
           className="login-create-btn"
           onClick={() => navigate('/register')}
