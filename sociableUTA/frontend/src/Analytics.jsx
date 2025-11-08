@@ -76,14 +76,14 @@ const fetchFacebookAnalytics = async () => {
   }
 };
 
-const fetchLinkedInAnalytics = async () => {
-  const linkedInToken = localStorage.getItem('linkedin_access_token');
-  if (!linkedInToken) {
+const fetchLinkedInAnalytics = async (token) => {
+//   const linkedInToken = localStorage.getItem('linkedin_access_token');
+  if (!token) {
     throw new Error('LinkedIn not connected.');
   }
   try {
-    const response = await axios.get('http://localhost:5000/api/linkedin/organization-data', {
-      headers: { 'Authorization': `Bearer ${linkedInToken}` }
+    const response = await axiosInstance.get('/api/linkedin/organization-data', {
+      headers: { 'Authorization': `Bearer ${token}` }
     });
     const stats = response.data.organization.follower_stats?.elements[0]?.followerCountsByAssociationType[0]?.followerCounts || {};
     
@@ -94,10 +94,10 @@ const fetchLinkedInAnalytics = async () => {
       demographics: [], // Add default empty array
     };
 
-    // --- NEW: Fetch detailed demographics ---
+    // fetching detailed demographics
     try {
-      const demoResponse = await axios.get('http://localhost:5000/api/linkedin/demographics', {
-        headers: { 'Authorization': `Bearer ${linkedInToken}` }
+      const demoResponse = await axiosInstance.get('/api/linkedin/demographics', {
+        headers: { 'Authorization': `Bearer ${token}` }
       });
       result.demographics = demoResponse.data; // Add demo data to result
     } catch (demoErr) {
@@ -115,7 +115,7 @@ const fetchLinkedInAnalytics = async () => {
 // --- End Data Fetching Helpers ---
 
 
-export const Analytics = ({ token, apiSource = 'all', onNavigate }) => {
+export const Analytics = ({ token, apiSource = 'all', onNavigate, linkedInToken }) => {
   const [data, setData] = useState({
     keyMetrics: { impressions: 0, reach: 0, engagementRate: '0%', profileVisits: 0 },
     audience: { totalFollowers: 0, newFollowers: 0, graphData: [], demographics: [] },
@@ -123,7 +123,7 @@ export const Analytics = ({ token, apiSource = 'all', onNavigate }) => {
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [isLinkedInAuthenticated, setIsLinkedInAuthenticated] = useState(!!localStorage.getItem('linkedin_access_token'));
+  const [isLinkedInAuthenticated, setIsLinkedInAuthenticated] = useState(!!linkedInToken);
 
   useEffect(() => {
     const loadAnalyticsData = async () => {
@@ -164,13 +164,13 @@ export const Analytics = ({ token, apiSource = 'all', onNavigate }) => {
           } catch (e) { setError(e.message); }
         }
         if (apiSource === 'all' || apiSource === 'linkedin') {
-          if (!localStorage.getItem('linkedin_access_token')) {
+          if (!linkedInToken) {
             setIsLinkedInAuthenticated(false);
             if(apiSource === 'linkedin') setError('Connect LinkedIn to see analytics.');
           } else {
             setIsLinkedInAuthenticated(true);
             try {
-              const liData = await fetchLinkedInAnalytics();
+              const liData = await fetchLinkedInAnalytics(linkedInToken);
               metrics.impressions += liData.impressions;
               metrics.reach += liData.reach;
               metrics.profileVisits += liData.profileVisits;
@@ -228,10 +228,10 @@ export const Analytics = ({ token, apiSource = 'all', onNavigate }) => {
     };
 
     loadAnalyticsData();
-  }, [apiSource]);
+  }, [apiSource, linkedInToken]);
 
   const handleLinkedInConnect = () => {
-    window.location.href = 'http://localhost:5000/api/linkedin/login';
+    window.location.href = `${axiosInstance.defaults.baseURL}/api/linkedin/login`;
   };
 
   // Helper to format large numbers (e.g., 22450 -> 22.5K)
@@ -362,7 +362,6 @@ export const Analytics = ({ token, apiSource = 'all', onNavigate }) => {
   return (
     <div className="analytics-container">
       <div className="analytics-content">
-        {/* We remove the 'Graph/Table' toggle to match the new design */}
         {renderContent()}
       </div>
     </div>

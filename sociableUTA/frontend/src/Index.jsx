@@ -125,6 +125,11 @@ function Home({ onLogout }) {
     }
   }, []); // The empty array [] means this runs only once when the page loads
 
+  const handleLinkedInDisconnect = () => {
+    localStorage.removeItem('linkedin_access_token');
+    setLinkedInToken(null);
+  };
+
 
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
@@ -141,9 +146,6 @@ function Home({ onLogout }) {
 
   return (
     <div className="app-layout">
-      {/* --- 4. DELETE THIS LINE --- */}
-      {/* <LinkedInAccountService /> */}
-
       <Menu active={currentPage} onSelect={handlePageChange} onLogout={onLogout} />
       <div className="app-content-area">
         {(currentPage === 'analytics' || currentPage === 'calendar' || currentPage === 'inbox' || currentPage === 'postview') && (
@@ -151,10 +153,13 @@ function Home({ onLogout }) {
         )}
         {currentPage === 'calendar' && <Calendar token={currentUser?.token} apiSource={activeApiSource} onNavigate={setCurrentPage} />}
         {currentPage === 'post' && <CreatePost token={currentUser?.token} user={user} apiSource={activeApiSource} onNavigate={setCurrentPage} />}
-        {currentPage === 'postview' && <PostView token={currentUser?.token} user={user} apiSource={activeApiSource} onNavigate={setCurrentPage} />}
+        {/* {currentPage === 'postview' && <PostView token={currentUser?.token} user={user} apiSource={activeApiSource} onNavigate={setCurrentPage} />}
         {currentPage === 'inbox' && <Inbox token={currentUser?.token} apiSource={activeApiSource} onNavigate={setCurrentPage} />}
-        {currentPage === 'analytics' && <Analytics token={currentUser?.token} apiSource={activeApiSource} onNavigate={setCurrentPage} />}
-        {currentPage === 'studentinformation' && <PersonalInfo token={currentUser?.token} onBack={() => setCurrentPage('calendar')} />}
+        {currentPage === 'analytics' && <Analytics token={currentUser?.token} apiSource={activeApiSource} onNavigate={setCurrentPage} />} */}
+        {currentPage === 'postview' && <PostView token={currentUser?.token} user={user} apiSource={activeApiSource} onNavigate={setCurrentPage} linkedInToken={linkedInToken} />}
+        {currentPage === 'inbox' && <Inbox token={currentUser?.token} apiSource={activeApiSource} onNavigate={setCurrentPage} />}
+        {currentPage === 'analytics' && <Analytics token={currentUser?.token} apiSource={activeApiSource} onNavigate={setCurrentPage} linkedInToken={linkedInToken} />}
+        {currentPage === 'studentinformation' && <PersonalInfo token={currentUser?.token} onBack={() => setCurrentPage('calendar')} linkedInToken={linkedInToken} onLinkedInDisconnect={handleLinkedInDisconnect}/>}
       </div>
     </div>
   );
