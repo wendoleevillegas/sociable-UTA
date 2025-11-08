@@ -141,9 +141,6 @@ function Home({ onLogout }) {
 
   return (
     <div className="app-layout">
-      {/* --- 4. DELETE THIS LINE --- */}
-      {/* <LinkedInAccountService /> */}
-
       <Menu active={currentPage} onSelect={handlePageChange} onLogout={onLogout} />
       <div className="app-content-area">
         {(currentPage === 'analytics' || currentPage === 'calendar' || currentPage === 'inbox' || currentPage === 'postview') && (
@@ -151,9 +148,12 @@ function Home({ onLogout }) {
         )}
         {currentPage === 'calendar' && <Calendar token={currentUser?.token} apiSource={activeApiSource} onNavigate={setCurrentPage} />}
         {currentPage === 'post' && <CreatePost token={currentUser?.token} user={user} apiSource={activeApiSource} onNavigate={setCurrentPage} />}
-        {currentPage === 'postview' && <PostView token={currentUser?.token} user={user} apiSource={activeApiSource} onNavigate={setCurrentPage} />}
+        {/* {currentPage === 'postview' && <PostView token={currentUser?.token} user={user} apiSource={activeApiSource} onNavigate={setCurrentPage} />}
         {currentPage === 'inbox' && <Inbox token={currentUser?.token} apiSource={activeApiSource} onNavigate={setCurrentPage} />}
-        {currentPage === 'analytics' && <Analytics token={currentUser?.token} apiSource={activeApiSource} onNavigate={setCurrentPage} />}
+        {currentPage === 'analytics' && <Analytics token={currentUser?.token} apiSource={activeApiSource} onNavigate={setCurrentPage} />} */}
+        {currentPage === 'postview' && <PostView token={currentUser?.token} user={user} apiSource={activeApiSource} onNavigate={setCurrentPage} linkedInToken={linkedInToken} />}
+        {currentPage === 'inbox' && <Inbox token={currentUser?.token} apiSource={activeApiSource} onNavigate={setCurrentPage} />}
+        {currentPage === 'analytics' && <Analytics token={currentUser?.token} apiSource={activeApiSource} onNavigate={setCurrentPage} linkedInToken={linkedInToken} />}
         {currentPage === 'studentinformation' && <PersonalInfo token={currentUser?.token} onBack={() => setCurrentPage('calendar')} />}
       </div>
     </div>

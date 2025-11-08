@@ -6,11 +6,11 @@ import './PostView.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faVideo, faImages, faThumbsUp, faComments, faShareFromSquare } from '@fortawesome/free-solid-svg-icons';
 
-export const PostView = ({ token, user, apiSource = 'instagram', onNavigate }) => {
+export const PostView = ({ token, user, apiSource, onNavigate, linkedInToken}) => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [isLinkedInAuthenticated, setIsLinkedInAuthenticated] = useState(!!localStorage.getItem('linkedin_access_token'));
+  const [isLinkedInAuthenticated, setIsLinkedInAuthenticated] = useState(!!linkedInToken);
   const [media, setMedia] = useState(null);
   const [caption, setCaption] = useState('');
   const [isPosting, setIsPosting] = useState(false);
@@ -64,16 +64,16 @@ export const PostView = ({ token, user, apiSource = 'instagram', onNavigate }) =
   };
 
   // --- Helper function to fetch LinkedIn posts ---
-  const fetchLinkedInPosts = async () => {
-    const linkedInToken = localStorage.getItem('linkedin_access_token');
-    if (!linkedInToken) {
+  const fetchLinkedInPosts = async (token) => {
+    // const linkedInToken = localStorage.getItem('linkedin_access_token');
+    if (!token) {
       setIsLinkedInAuthenticated(false);
       return []; // Not connected
     }
     setIsLinkedInAuthenticated(true);
     try {
-      const response = await axios.get('http://localhost:5000/api/linkedin/organization-data', {
-        headers: { 'Authorization': `Bearer ${linkedInToken}` }
+      const response = await axiosInstance.get('/api/linkedin/organization-data', {
+        headers: { 'Authorization': `Bearer ${token}` }
       });
       // Check if organization data and posts exist
       if (!response.data || !response.data.organization || !response.data.organization.posts || !response.data.organization.posts.elements) {
@@ -103,36 +103,36 @@ export const PostView = ({ token, user, apiSource = 'instagram', onNavigate }) =
   };
 
   // --- Helper function to fetch X posts ---
-  const fetchXPosts = async () => {
-    try {
-      // Ensure the backend endpoint exists and is correct
-      const response = await axios.get('http://localhost:5000/api/x/user-data');
-      // Check if tweets data exists
-      if (!response.data || !response.data.tweets) {
-        console.warn('X tweets data not found in response:', response.data);
-        return [];
-      }
-      return response.data.tweets.map(tweet => ({
-        platform: 'x',
-        id: tweet.id,
-        authorName: response.data.profile?.name || 'Unknown User', // Handle missing profile name
-        authorRole: response.data.profile?.username ? `@${response.data.profile.username}` : '', // Handle missing username
-        authorAvatar: response.data.profile?.profile_image_url || 'https://via.placeholder.com/48/000000/FFFFFF?text=X', // Placeholder with color
-        caption: tweet.text || '', // Handle missing text
-        timestamp: new Date(tweet.created_at || Date.now()), // Handle missing timestamp
-        meta: tweet.created_at ? new Date(tweet.created_at).toLocaleString() : new Date().toLocaleString(),
-        likes: tweet.public_metrics?.like_count || 0, // Handle missing metrics
-        comments: tweet.public_metrics?.reply_count || 0,
-        shares: tweet.public_metrics?.retweet_count || 0,
-      }));
-    } catch (err) {
-      console.error('Failed to fetch X posts:', err.response ? err.response.data : err.message);
-      // Provide a more specific error message if possible
-      const errorMessage = err.response?.data?.message || 'Check backend/API keys.';
-      setError(`Failed to fetch X posts. ${errorMessage}`);
-      return [];
-    }
-  };
+  // const fetchXPosts = async () => {
+  //   try {
+  //     // Ensure the backend endpoint exists and is correct
+  //     const response = await axios.get('http://localhost:5000/api/x/user-data');
+  //     // Check if tweets data exists
+  //     if (!response.data || !response.data.tweets) {
+  //       console.warn('X tweets data not found in response:', response.data);
+  //       return [];
+  //     }
+  //     return response.data.tweets.map(tweet => ({
+  //       platform: 'x',
+  //       id: tweet.id,
+  //       authorName: response.data.profile?.name || 'Unknown User', // Handle missing profile name
+  //       authorRole: response.data.profile?.username ? `@${response.data.profile.username}` : '', // Handle missing username
+  //       authorAvatar: response.data.profile?.profile_image_url || 'https://via.placeholder.com/48/000000/FFFFFF?text=X', // Placeholder with color
+  //       caption: tweet.text || '', // Handle missing text
+  //       timestamp: new Date(tweet.created_at || Date.now()), // Handle missing timestamp
+  //       meta: tweet.created_at ? new Date(tweet.created_at).toLocaleString() : new Date().toLocaleString(),
+  //       likes: tweet.public_metrics?.like_count || 0, // Handle missing metrics
+  //       comments: tweet.public_metrics?.reply_count || 0,
+  //       shares: tweet.public_metrics?.retweet_count || 0,
+  //     }));
+  //   } catch (err) {
+  //     console.error('Failed to fetch X posts:', err.response ? err.response.data : err.message);
+  //     // Provide a more specific error message if possible
+  //     const errorMessage = err.response?.data?.message || 'Check backend/API keys.';
+  //     setError(`Failed to fetch X posts. ${errorMessage}`);
+  //     return [];
+  //   }
+  // };
 
   useEffect(() => {
     // const fetchInstagramPosts = async () => {
@@ -211,13 +211,13 @@ export const PostView = ({ token, user, apiSource = 'instagram', onNavigate }) =
       //   try {
       //     // Call the backend route
       //     const response = await axiosInstance.get('/api/facebook/feed');
-if (apiSource === 'all') {
+      if (apiSource === 'all') {
         // Fetch from all platforms concurrently
         const results = await Promise.all([
           fetchInstagramPosts(),
           fetchFacebookPosts(),
-          fetchLinkedInPosts(),
-          fetchXPosts()
+          fetchLinkedInPosts(linkedInToken),
+          // fetchXPosts()
         ]);
         combinedPosts = results.flat(); // Combine results from all promises
       } else if (apiSource === 'instagram') {
@@ -225,7 +225,7 @@ if (apiSource === 'all') {
       } else if (apiSource === 'facebook') {
         combinedPosts = await fetchFacebookPosts();
       } else if (apiSource === 'linkedin') {
-        combinedPosts = await fetchLinkedInPosts();
+        combinedPosts = await fetchLinkedInPosts(linkedInToken);
       } else if (apiSource === 'x') {
         combinedPosts = await fetchXPosts();
       }
@@ -304,7 +304,7 @@ if (apiSource === 'all') {
     };
 
     fetchPosts();
-  }, [apiSource]);
+  }, [apiSource, linkedInToken]);
 
   const handleLinkedInConnect = () => {
     window.location.href = 'http://localhost:5000/api/linkedin/login';
