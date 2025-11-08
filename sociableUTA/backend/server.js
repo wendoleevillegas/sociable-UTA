@@ -6,7 +6,6 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const User = require('./models/User');
 const axios = require('axios');
-// const { TwitterApi } = require('twitter-api-v2');
 const multer = require('multer');
 const { Blob } = require('buffer');
 
@@ -539,7 +538,9 @@ app.get('/api/linkedin/callback', async (req, res) => {
 
         const accessToken = tokenResponse.data.access_token;
 
-        res.redirect(`http://localhost:5173/home?linkedin_token=${accessToken}`);
+        // res.redirect(`http://localhost:5173/home?linkedin_token=${accessToken}`);
+        const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+        res.redirect(`${frontendUrl}/home?linkedin_token=${accessToken}`);
     } catch (err) {
         console.error('Error exchanging LinkedIn code :', err.response ? err.response.data : err.message);
         res.status(500).json({ message: 'Failed to authenticate with LinkedIn.' });
