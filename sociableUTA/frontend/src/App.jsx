@@ -4,7 +4,6 @@ import Register from './Register';
 import { ForgotPassword } from './ForgotPassword';
 import Home from './Index';
 import { useState } from 'react';
-import LinkedInCallback from './LinkedInCallback';
 
 // Checking authentication
 const PrivateRoute = ({ children }) => {
@@ -53,10 +52,10 @@ function App() {
                 path="/home"
                 element={token ? <Home onLogout={handleLogout} /> : <Navigate to="/login" />}
             />
-            <Route
+            {/* <Route
                 path="/linkedin/callback"
                 element={<LinkedInCallback />}
-            />
+            /> */}
             <Route path="/" element={<Navigate to="/home" />} />
         </Routes >
     );
