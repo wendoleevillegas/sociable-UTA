@@ -504,120 +504,135 @@ app.get('/api/instagram/follower-demographics', async (req, res) => {
     }
 });
 
+//
 // LinkedIn API routes
+//
 
-// // Redirecting user to LinkedIn's authentication page using redirectURL logic
-// app.get('/api/linkedin/login', (req, res) => {
-//     const scope = 'r_organization_admin r_organization_social w_organization_social rw_organization_admin';
-//     const authUrl = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${process.env.LINKEDIN_CLIENT_ID}&redirect_uri=${process.env.LINKEDIN_REDIRECT_URI}&state=DCEeFWf45A53sdfKef424&scope=${encodeURIComponent(scope)}`;
-//     res.redirect(authUrl);
-// });
+// Redirecting user to LinkedIn's authentication page using redirectURL logic
+app.get('/api/linkedin/login', (req, res) => {
+    const scope = 'r_organization_admin r_organization_social w_organization_social rw_organization_admin';
+    const authUrl = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${process.env.LINKEDIN_CLIENT_ID}&redirect_uri=${process.env.LINKEDIN_REDIRECT_URI}&state=DCEeFWf45A53sdfKef424&scope=${encodeURIComponent(scope)}`;
+    res.redirect(authUrl);
+});
 
-// // Callback URL that LinkedIn redirects to after authentication, exchanging code for long-live access token
-// app.get('/api/linkedin/callback', async (req, res) => {
-//     const { code, state, error, error_description } = req.query;
+// Callback URL that LinkedIn redirects to after authentication, exchanging code for long-live access token
+app.get('/api/linkedin/callback', async (req, res) => {
+    const { code, state, error, error_description } = req.query;
 
-//     if (error) {
-//         return res.status(400).json({ message: `Error: ${error_description}` });
-//     }
+    if (error) {
+        return res.status(400).json({ message: `Error: ${error_description}` });
+    }
 
-//     try {
-//         // exchanging authorization code for an access token
-//         const tokenUrl = 'https://www.linkedin.com/oauth/v2/accessToken';
-//         const tokenParams = new URLSearchParams();
-//         tokenParams.append('grant_type', 'authorization_code');
-//         tokenParams.append('code', code);
-//         tokenParams.append('redirect_uri', process.env.LINKEDIN_REDIRECT_URI);
-//         tokenParams.append('client_id', process.env.LINKEDIN_CLIENT_ID);
-//         tokenParams.append('client_secret', process.env.LINKEDIN_CLIENT_SECRET);
+    try {
+        // exchanging authorization code for an access token
+        const tokenUrl = 'https://www.linkedin.com/oauth/v2/accessToken';
+        const tokenParams = new URLSearchParams();
+        tokenParams.append('grant_type', 'authorization_code');
+        tokenParams.append('code', code);
+        tokenParams.append('redirect_uri', process.env.LINKEDIN_REDIRECT_URI);
+        tokenParams.append('client_id', process.env.LINKEDIN_CLIENT_ID);
+        tokenParams.append('client_secret', process.env.LINKEDIN_CLIENT_SECRET);
 
-//         const tokenResponse = await axios.post(tokenUrl, tokenParams, {
-//             headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-//         });
+        const tokenResponse = await axios.post(tokenUrl, tokenParams, {
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+        });
 
-//         const accessToken = tokenResponse.data.access_token;
+        const accessToken = tokenResponse.data.access_token;
 
-//         res.redirect(`http://localhost:5173/home?linkedin_token=${accessToken}`);
-//     } catch (err) {
-//         console.error('Error exchanging LinkedIn code :', err.response ? err.response.data : err.message);
-//         res.status(500).json({ message: 'Failed to authenticate with LinkedIn.' });
-//     }
-// });
+        res.redirect(`http://localhost:5173/home?linkedin_token=${accessToken}`);
+    } catch (err) {
+        console.error('Error exchanging LinkedIn code :', err.response ? err.response.data : err.message);
+        res.status(500).json({ message: 'Failed to authenticate with LinkedIn.' });
+    }
+});
 
 // // Getting data for authenticated user's organization
-// app.get('/api/linkedin/organization-data', async (req, res) => {
-//     const accessToken = req.headers.authorization?.split(' ')[1];
+app.get('/api/linkedin/organization-data', async (req, res) => {
+    const accessToken = req.headers.authorization?.split(' ')[1];
 
-//     if (!accessToken) {
-//         return res.status(401).json({ message: 'Missing Access Token' });
-//     }
+    if (!accessToken) {
+        return res.status(401).json({ message: 'Missing Access Token' });
+    }
 
-//     try {
-//         const headers = { 'Authorization': `Bearer ${accessToken}` };
-//         const orgAclsUrl = "https://api.linkedin.com/v2/organizationalEntityAcls?q=roleAssignee&role=ADMINISTRATOR&projection=(elements*(*,organizationalTarget~(localizedName)))";
+    try {
+        const headers = { 'Authorization': `Bearer ${accessToken}` };
+        const orgAclsUrl = "https://api.linkedin.com/v2/organizationalEntityAcls?q=roleAssignee&role=ADMINISTRATOR&projection=(elements*(*,organizationalTarget~(localizedName)))";
 
-//         const orgRes = await axios.get(orgAclsUrl, { headers });
-//         const elements = orgRes.data.elements;
+        const orgRes = await axios.get(orgAclsUrl, { headers });
+        const elements = orgRes.data.elements;
 
-//         if (!elements || elements.length === 0) {
-//             return res.status(404).json({ message: "No organization found where the user is an admin." });
-//         }
+        if (!elements || elements.length === 0) {
+            return res.status(404).json({ message: "No organization found where the user is an admin." });
+        }
 
-//         const orgUrn = elements[0].organizationalTarget;
-//         const orgName = elements[0]['organizationalTarget~'].localizedName;
+        const orgUrn = elements[0].organizationalTarget;
+        const orgName = elements[0]['organizationalTarget~'].localizedName;
 
-//         // Fetch organization posts
-//         const postsUrl = `https://api.linkedin.com/v2/shares?q=owners&owners=${orgUrn}&sortBy=LAST_MODIFIED&sharesPerOwner=10`;
-//         const postsRes = await axios.get(postsUrl, { headers });
+        // Fetch organization posts
+        const postsUrl = `https://api.linkedin.com/v2/shares?q=owners&owners=${orgUrn}&sortBy=LAST_MODIFIED&sharesPerOwner=10`;
+        const postsRes = await axios.get(postsUrl, { headers });
 
-//         // Fetch follower stats
-//         const statsUrl = `https://api.linkedin.com/v2/organizationFollowerStatistics?q=organizationalEntity&organizationalEntity=${orgUrn}`;
-//         const statsRes = await axios.get(statsUrl, { headers });
+        // Fetch follower stats
+        const statsUrl = `https://api.linkedin.com/v2/organizationFollowerStatistics?q=organizationalEntity&organizationalEntity=${orgUrn}`;
+        const statsRes = await axios.get(statsUrl, { headers });
 
-//         res.json({
-//             organization: {
-//                 name: orgName,
-//                 urn: orgUrn,
-//                 posts: postsRes.data,
-//                 follower_stats: statsRes.data
-//             }
-//         });
-//     } catch (error) {
-//         console.error('Error fetching LinkedIn organization data:', error.response ? error.response.data : error.message);
-//         res.status(500).json({ message: 'Failed to fetch LinkedIn organization data' });
-//     }
-// });
+        res.json({
+            organization: {
+                name: orgName,
+                urn: orgUrn,
+                posts: postsRes.data,
+                follower_stats: statsRes.data
+            }
+        });
+    } catch (error) {
+        console.error('Error fetching LinkedIn organization data:', error.response ? error.response.data : error.message);
+        res.status(500).json({ message: 'Failed to fetch LinkedIn organization data' });
+    }
+});
 
-// X API Routes
-// initializing X client
-// const twitterClient = new TwitterApi({
-//     appKey: process.env.X_API_KEY,
-//     appSecret: process.env.X_API_SECRET,
-//     accessToken: process.env.X_ACCESS_TOKEN,
-//     accessSecret: process.env.X_ACCESS_TOKEN_SECRET,
-// });
+app.get('/api/linkedin/demographics', async (req, res) => {
+    const accessToken = req.session.linkedin_token;
+    const orgURN = req.session.linkedin_org;
 
-// // getting user info following info.py logic
-// app.get('/api/x/user-data', async (req, res) => {
-//     try {
-//         // profile info
-//         const user = await readOnlyClient.v2.me({ 'user.fields': ['public_metrics', 'profile_image_url', 'created_at', 'description'] });
+    if (!accessToken || !orgURN) {
+        return res.status(401).json({ error: 'User not authenticated with LinkedIn.' });
+    }
 
-//         // fetching recent tweets
-//         const tweets = await readOnlyClient.v2.userTimeline(user.data.id, {
-//             'tweet.fields': ['public_metrics', 'created_at'],
-//             max_results: 10
-//         });
+    try {
+        // Get detailed follower demographics
+        const demographicsResponse = await axios.get(
+        `https://api.linkedin.com/v2/organizationFollowerDemographics?q=organization&organization=urn:li:organization:${orgURN}`,
+        {
+            headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'X-Restli-Protocol-Version': '2.0.0',
+            },
+        }
+        );
 
-//         res.json({
-//             profile: user.data,
-//             tweets: tweets.data.data || []
-//         });
-//     } catch (error) {
-//         console.error('Error fetching X data:', error);
-//         res.status(500).json({ message: 'Failed to fetch X data' });
-//     }
-// });
+   // Extract the location data (followerCountsByGeoCountry)
+   // You can also extract 'followerCountsBySeniority', 'followerCountsByIndustry', etc.
+    const geoData = demographicsResponse.data.elements
+        .find(e => e.followerCountsByGeoCountry)
+        ?.followerCountsByGeoCountry;
+
+    if (!geoData) {
+        return res.status(404).json({ error: 'Geographical demographic data not found.' });
+    }
+
+    // Convert the LinkedIn key-value pairs into an array of objects
+    const formattedGeoData = Object.entries(geoData).map(([countryCode, count]) => ({
+        country: countryCode, // You might want a mapping from code (e.g., 'us') to name ('United States')
+        followers: count
+    }));
+
+    res.json(formattedGeoData);
+
+    } catch (err) {
+        console.error('LinkedIn demographics fetch error:', err.response?.data || err.message);
+        res.status(500).json({ error: 'Failed to fetch LinkedIn demographics.', details: err.response?.data });
+    }
+});
 
 // starting server
 app.listen(PORT, () => {

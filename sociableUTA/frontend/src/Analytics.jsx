@@ -16,7 +16,7 @@ import {
 } from 'recharts';
 import './Analytics.css';
 import axios from 'axios';
-import aiosInstance from './api/axios';
+import axiosInstance from './api/axios';
 
 // MOCK DATA FOR DEMO & FUNCTIONALITY PURPOSES
 const MOCK_GRAPH_DATA = [
@@ -77,44 +77,48 @@ const fetchFacebookAnalytics = async () => {
 };
 
 const fetchLinkedInAnalytics = async () => {
-  const linkedInToken = localStorage.getItem('linkedin_access_token');
-  if (!linkedInToken) {
-    throw new Error('LinkedIn not connected.');
-  }
-  try {
-    const response = await axios.get('http://localhost:5000/api/linkedin/organization-data', {
-      headers: { 'Authorization': `Bearer ${linkedInToken}` }
-    });
-    const stats = response.data.organization.follower_stats?.elements[0]?.followerCountsByAssociationType[0]?.followerCounts || {};
-    return {
-      totalFollowers: (stats.organicFollowerCount || 0) + (stats.paidFollowerCount || 0),
-      ...MOCK_KEY_METRICS, // Use mock data
-    };
-  } catch (err) {
-    console.error('Failed to load LinkedIn analytics:', err);
-    throw new Error('Failed to load LinkedIn analytics. Token may be expired.');
-  }
+  const linkedInToken = localStorage.getItem('linkedin_access_token');
+  if (!linkedInToken) {
+    throw new Error('LinkedIn not connected.');
+  }
+  try {
+    const response = await axios.get('http://localhost:5000/api/linkedin/organization-data', {
+      headers: { 'Authorization': `Bearer ${linkedInToken}` }
+    });
+    const stats = response.data.organization.follower_stats?.elements[0]?.followerCountsByAssociationType[0]?.followerCounts || {};
+    
+    // Create the base result object
+    const result = {
+      totalFollowers: (stats.organicFollowerCount || 0) + (stats.paidFollowerCount || 0),
+      ...MOCK_KEY_METRICS, // Use mock data
+      demographics: [], // Add default empty array
+    };
+
+    // --- NEW: Fetch detailed demographics ---
+    try {
+      const demoResponse = await axios.get('http://localhost:5000/api/linkedin/demographics', {
+        headers: { 'Authorization': `Bearer ${linkedInToken}` }
+      });
+      result.demographics = demoResponse.data; // Add demo data to result
+    } catch (demoErr) {
+      console.warn('Could not fetch LinkedIn demographics:', demoErr.message);
+      result.demographics = []; // Default to empty on error
+    }
+    return result; // Return the combined object
+
+  } catch (err) {
+    console.error('Failed to load LinkedIn analytics:', err);
+    throw new Error('Failed to load LinkedIn analytics. Token may be expired.');
+  }
 };
 
-const fetchXAnalytics = async () => {
-  try {
-    const response = await axios.get('http://localhost:5000/api/x/user-data');
-    return {
-      totalFollowers: response.data.profile?.public_metrics?.followers_count || 0,
-      ...MOCK_KEY_METRICS, // Use mock data
-    };
-  } catch (err) {
-    console.error('Failed to load X analytics:', err);
-    throw new Error('Failed to load X analytics.');
-  }
-};
 // --- End Data Fetching Helpers ---
 
 
 export const Analytics = ({ token, apiSource = 'all', onNavigate }) => {
   const [data, setData] = useState({
     keyMetrics: { impressions: 0, reach: 0, engagementRate: '0%', profileVisits: 0 },
-    audience: { totalFollowers: 0, newFollowers: 0, graphData: [] },
+    audience: { totalFollowers: 0, newFollowers: 0, graphData: [], demographics: [] },
     topPosts: []
   });
   const [loading, setLoading] = useState(true);
@@ -134,6 +138,8 @@ export const Analytics = ({ token, apiSource = 'all', onNavigate }) => {
       try {
         let metrics = { impressions: 0, reach: 0, profileVisits: 0, newFollowers: 0, totalFollowers: 0 };
         let engagementRates = [];
+        let allDemographics = [];
+        let allGraphData = [];
 
         if (apiSource === 'all' || apiSource === 'instagram') {
           try {
@@ -171,6 +177,10 @@ export const Analytics = ({ token, apiSource = 'all', onNavigate }) => {
               metrics.newFollowers += liData.newFollowers;
               metrics.totalFollowers += liData.totalFollowers;
               engagementRates.push(parseFloat(liData.engagementRate));
+
+              if (liData.demographics) {
+                allDemographics.push(...liData.demographics.map(d => ({ ...d, platform: 'linkedin' })));
+              }
             } catch (e) { 
               setError(e.message); 
               if (apiSource === 'linkedin') setIsLinkedInAuthenticated(false);
@@ -205,6 +215,7 @@ export const Analytics = ({ token, apiSource = 'all', onNavigate }) => {
             totalFollowers: metrics.totalFollowers,
             newFollowers: metrics.newFollowers,
             graphData: MOCK_GRAPH_DATA, // Use mock graph
+            demographics: allDemographics,
           },
           topPosts: MOCK_TOP_POSTS, // Use mock posts
         });
@@ -233,6 +244,8 @@ export const Analytics = ({ token, apiSource = 'all', onNavigate }) => {
     }
     return num.toLocaleString();
   };
+
+  const DEMO_COLORS = ['#0A66C2', '#0073b1', '#0084bf', '#0095ce', '#00a6dd'];
 
   const renderContent = () => {
     if (loading) {
@@ -310,6 +323,26 @@ export const Analytics = ({ token, apiSource = 'all', onNavigate }) => {
           </div>
         </div>
 
+        {(apiSource === 'all' || apiSource === 'linkedin') && data.audience.demographics.length > 0 && (
+            <div className="audience-demographics" style={{ marginTop: '20px' }}>
+              <h4 style={{ fontSize: '0.9rem', fontWeight: 600, color: '#1c1e21', marginBottom: '10px' }}>Followers by Country (LinkedIn)</h4>
+              <ResponsiveContainer width="100%" height={250}>
+                <BarChart data={data.audience.demographics.slice(0, 5)} layout="vertical" margin={{ top: 5, right: 20, left: 40, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" horizontal={false} />
+                  <XAxis type="number" fontSize={12} />
+                  <YAxis type="category" dataKey="country" fontSize={12} width={80} />
+                  <Tooltip />
+                  <Bar dataKey="followers">
+                    {data.audience.demographics.slice(0, 5).map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={DEMO_COLORS[index % DEMO_COLORS.length]} />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          )}
+
+
         {/* --- Top Posts Card --- */}
         <div className="analytics-card top-posts">
           <h3>Top posts</h3>
@@ -335,168 +368,3 @@ export const Analytics = ({ token, apiSource = 'all', onNavigate }) => {
     </div>
   );
 };
-
-// export const Analytics = ({ token, apiSource = 'instagram', onNavigate }) => {
-//   const [viewType, setViewType] = useState('graph');
-//   const [analyticsData, setAnalyticsData] = useState(null);
-//   const [loading, setLoading] = useState(true);
-//   const [error, setError] = useState(null);
-//   const [isLinkedInAuthenticated, setIsLinkedInAuthenticated] = useState(!!localStorage.getItem('linkedin_access_token'));
-
-//   useEffect(() => {
-//     const loadAnalyticsData = async () => {
-//       setLoading(true);
-//       setError(null);
-//       setAnalyticsData(null);
-
-//       if (apiSource === 'instagram') {
-//         try {
-//           const response = await axios.get('http://localhost:5000/api/instagram/follower-demographics');
-//           const locationData = response.data.data[0]?.values[0]?.value || {};
-//           const formattedLocations = Object.keys(locationData).map(countryCode => ({ name: countryCode, value: locationData[countryCode] }));
-//           setAnalyticsData({
-//             followerLocations: formattedLocations,
-//             totalFollowers: formattedLocations.reduce((sum, item) => sum + item.value, 0),
-//             weeklyFollowers: [], genderDistribution: [], ageDistribution: [], totalEngagement: 0, totalReach: 0,
-//             lastUpdated: new Date().toISOString(),
-//           });
-//         } catch (err) {
-//           setError(err.message);
-//         }
-//       } else if (apiSource === 'linkedin') {
-//         const linkedInToken = localStorage.getItem('linkedin_access_token');
-//         if (linkedInToken) {
-//           setIsLinkedInAuthenticated(true);
-//           try {
-//             const response = await axios.get('http://localhost:5000/api/linkedin/organization-data', {
-//               headers: { 'Authorization': `Bearer ${linkedInToken}` }
-//             });
-//             const stats = response.data.organization.follower_stats.elements[0]?.followerCountsByAssociationType[0]?.followerCounts || {};
-//             setAnalyticsData({
-//               totalFollowers: (stats.organicFollowerCount || 0) + (stats.paidFollowerCount || 0),
-//               followerLocations: [], weeklyFollowers: [], genderDistribution: [], ageDistribution: [],
-//               totalEngagement: 0, totalReach: 0,
-//               lastUpdated: new Date().toISOString(),
-//             });
-//           } catch (err) {
-//             setError('Failed to fetch LinkedIn analytics. Your token may have expired. Please reconnect.');
-//             setIsLinkedInAuthenticated(false);
-//             localStorage.removeItem('linkedin_access_token');
-//           }
-//         } else {
-//           setIsLinkedInAuthenticated(false);
-//         }
-//       } else if (apiSource === 'x') {
-//         try {
-//           const response = await axios.get('http://localhost:5000/api/x/user-data');
-//           const metrics = response.data.profile.public_metrics;
-//           setAnalyticsData({
-//             totalFollowers: metrics.followers_count || 0,
-//             totalEngagement: metrics.like_count || 0,
-//             totalReach: metrics.tweet_count || 0,
-//             followerLocations: [], weeklyFollowers: [], genderDistribution: [], ageDistribution: [],
-//             lastUpdated: new Date().toISOString(),
-//           });
-//         } catch (err) {
-//           setError('Failed to fetch X analytics. Check your backend and API keys.');
-//         }
-//       } else {
-//         setAnalyticsData({
-//           followerLocations: [], weeklyFollowers: [], genderDistribution: [],
-//           ageDistribution: [], totalFollowers: 0, totalEngagement: 0, totalReach: 0,
-//         });
-//       }
-//       setLoading(false);
-//     };
-
-//     loadAnalyticsData();
-//   }, [apiSource]);
-
-//   const handleLinkedInConnect = () => {
-//     window.location.href = 'http://localhost:5000/api/linkedin/login';
-//   };
-
-//   const {
-//     followerLocations = [], weeklyFollowers = [], genderDistribution = [],
-//     ageDistribution = [], totalFollowers = 0, totalEngagement = 0, totalReach = 0, lastUpdated
-//   } = analyticsData || {};
-
-//   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d'];
-
-//   return (
-//     <div className="analytics-container">
-//       <div className="analytics-content">
-//         <div className="analytics-view-toggle">
-//           <button className={viewType === 'graph' ? 'active' : ''} onClick={() => setViewType('graph')}>Graph</button>
-//           <button className={viewType === 'table' ? 'active' : ''} onClick={() => setViewType('table')}>Table</button>
-//         </div>
-
-//         {loading && <p style={{ textAlign: 'center' }}>Loading Analytics...</p>}
-//         {error && <p style={{ textAlign: 'center', color: 'red' }}>{error}</p>}
-
-//         {apiSource === 'linkedin' && !isLinkedInAuthenticated && !loading && (
-//           <div className="analytics-card large" style={{ textAlign: 'center', padding: '50px' }}>
-//             <h3>LinkedIn Authentication Required</h3>
-//             <p>Please connect your LinkedIn account to view organization analytics.</p>
-//             <button onClick={handleLinkedInConnect} style={{ padding: '10px 20px', marginTop: '10px' }}>
-//               Connect to LinkedIn
-//             </button>
-//           </div>
-//         )}
-
-//         {!loading && !error && (viewType === 'graph' ? (
-//           <div className="analytics-dashboard">
-//             <div className="analytics-row">
-//               <div className="analytics-card large">
-//                 <h3>Follower Location Distribution</h3>
-//                 {followerLocations.length > 0 ? (
-//                   <ResponsiveContainer width="100%" height={300}>
-//                     <BarChart data={followerLocations}><CartesianGrid strokeDasharray="3 3" /><XAxis dataKey="name" /><YAxis /><Tooltip /><Bar dataKey="value" fill="#4285F4" /></BarChart>
-//                   </ResponsiveContainer>
-//                 ) : <p>No location data available for {apiSource}.</p>}
-//               </div>
-//               <div className="analytics-card large">
-//                 <h3>This Week's Follower Count</h3>
-//                 {weeklyFollowers.length > 0 ? (
-//                   <ResponsiveContainer width="100%" height={300}>
-//                     <LineChart data={weeklyFollowers}><CartesianGrid strokeDasharray="3 3" /><XAxis dataKey="day" /><YAxis /><Tooltip /><Line type="monotone" dataKey="followers" stroke="#4285F4" strokeWidth={3} /></LineChart>
-//                   </ResponsiveContainer>
-//                 ) : <p>No weekly follower data available for {apiSource}.</p>}
-//               </div>
-//             </div>
-//             <div className="analytics-row">
-//               <div className="analytics-card medium">
-//                 <h3>Follower Gender Distribution</h3>
-//                 {genderDistribution.length > 0 ? (
-//                   <ResponsiveContainer width="100%" height={300}>
-//                     <PieChart><Pie data={genderDistribution} cx="50%" cy="50%" outerRadius={100} fill="#8884d8" dataKey="value" label={({ name, value }) => `${name}\n${value}%`}>{genderDistribution.map((entry, index) => (<Cell key={`cell-${index}`} fill={entry.color || COLORS[index % COLORS.length]} />))}</Pie><Tooltip /></PieChart>
-//                   </ResponsiveContainer>
-//                 ) : <p>No gender data available for {apiSource}.</p>}
-//               </div>
-//               <div className="analytics-card large">
-//                 <h3>Follower Age Distribution</h3>
-//                 {ageDistribution.length > 0 ? (
-//                   <ResponsiveContainer width="100%" height={300}>
-//                     <BarChart data={ageDistribution}><CartesianGrid strokeDasharray="3 3" /><XAxis dataKey="age" /><YAxis /><Tooltip /><Bar dataKey="count" fill="#4285F4" name="Followers" /></BarChart>
-//                   </ResponsiveContainer>
-//                 ) : <p>No age distribution data available for {apiSource}.</p>}
-//               </div>
-//             </div>
-//           </div>
-//         ) : (
-//           <div className="analytics-table-view">
-//             <div className="analytics-card">
-//               <h3>Analytics Data Table</h3>
-//               {lastUpdated && (<p style={{ color: '#666', fontSize: '0.9rem' }}>Last Updated: {new Date(lastUpdated).toLocaleString()}</p>)}
-//               <div style={{ marginTop: '20px' }}>
-//                 <p><strong>Total Followers:</strong> {totalFollowers.toLocaleString()}</p>
-//                 <p><strong>Total Engagement:</strong> {totalEngagement.toLocaleString()}</p>
-//                 <p><strong>Total Reach:</strong> {totalReach.toLocaleString()}</p>
-//               </div>
-//             </div>
-//           </div>
-//         ))}
-//       </div>
-//     </div>
-//   );
-// };
