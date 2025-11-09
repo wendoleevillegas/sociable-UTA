@@ -515,7 +515,7 @@ app.get('/api/linkedin/login', (req, res) => {
 });
 
 // Callback URL that LinkedIn redirects to after authentication, exchanging code for long-live access token
-app.get('/api/linkedin/callback', async (req, res) => {
+app.get('/api/linkedin-callback', async (req, res) => {
     const { code, state, error, error_description } = req.query;
 
     if (error) {
