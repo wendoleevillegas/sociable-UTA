@@ -54,7 +54,7 @@ function App() {
                 element={token ? <Home onLogout={handleLogout} /> : <Navigate to="/login" />}
             />
             <Route
-                path="/linkedin-callback"
+                path="/linkedin/callback"
                 element={<LinkedInCallback />}
             />
             <Route path="/" element={<Navigate to="/home" />} />
