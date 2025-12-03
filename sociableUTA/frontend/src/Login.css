@@ -59,7 +59,7 @@
  * Uses Facebook's signature blue color and large font size
  */
 .login-title {
-  color: #1877f2;
+  color: #0064B1;
   /* Facebook blue color */
   font-size: 4rem;
   /* Large font size for prominence */
@@ -146,7 +146,7 @@
 .login-btn {
   width: 100%;
   /* Take full width of container */
-  background: #1877f2;
+  background: #0064B1;
   /* Facebook blue background */
   color: #fff;
   /* White text */
@@ -158,7 +158,7 @@
   /* Slightly larger font */
   font-weight: bold;
   /* Bold text */
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.3 rem;
   /* Space below button */
   border: none;
   /* Remove default border */
@@ -173,7 +173,7 @@
  * Provides visual feedback for better user experience
  */
 .login-btn:hover {
-  background: #166fe5;
+  background: #003865;
   /* Darker blue on hover */
 }
 
@@ -182,11 +182,11 @@
  * Styled as a link with Facebook blue color and underline on hover
  */
 .login-forgot {
-  color: #1877f2;
+  color: #007398;
   /* Facebook blue color */
   font-size: 0.95rem;
   /* Slightly smaller font */
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.5rem;
   /* Space below link */
   text-align: center;
   /* Center the link text */
@@ -225,7 +225,7 @@
  * Uses green color to distinguish from the primary login button
  */
 .login-create-btn {
-  background: #42b72a;
+  background: #F58025;
   /* Green background */
   color: #fff;
   /* White text */
@@ -245,6 +245,7 @@
   /* Show pointer cursor */
   transition: background 0.2s;
   /* Smooth color transition */
+  margin-bottom: 1rem;
 }
 
 /* 
@@ -252,7 +253,7 @@
  * Provides visual feedback for better user experience
  */
 .login-create-btn:hover {
-  background: #36a420;
+  background: #dd7526;
   /* Darker green on hover */
 }
 

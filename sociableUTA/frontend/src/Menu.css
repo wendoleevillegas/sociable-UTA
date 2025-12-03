@@ -22,7 +22,7 @@
   /* Large font size for prominence */
   font-weight: bold;
   /* Bold text weight */
-  color: #1976d2;
+  color: #0064B1;
   /* Blue color matching university theme */
   font-family: inherit;
   /* Use the default font family */
@@ -73,7 +73,7 @@
   /* Medium-large font size */
   font-weight: 700;
   /* Bold font weight for prominence */
-  color: #1976d2 !important;
+  color: #0064B1 !important;
   /* Blue color (important to override other styles) */
   cursor: pointer;
   /* Show pointer cursor on hover */
@@ -93,13 +93,13 @@
  */
 .navbar-link-active,
 .navbar-left .navbar-link.navbar-link-active {
-  color: #f57c1a !important;
+  color: #F58025 !important;
   /* Orange color for active state */
   font-weight: 700;
   /* Bold font weight */
   opacity: 1;
   /* Full opacity for active state */
-  border-bottom: 3px solid #f57c1a;
+  border-bottom: 3px solid #F58025;
   /* Orange bottom border for active state */
 }
 
@@ -141,7 +141,7 @@
   /* Slightly smaller than main nav links */
   font-weight: 700;
   /* Bold font weight */
-  color: #1976d2;
+  color: #0064B1;
   /* Blue color matching other nav links */
   cursor: pointer;
   /* Show pointer cursor on hover */
@@ -157,8 +157,12 @@
   /* Slightly smaller than main nav links */
   font-weight: 700;
   /* Bold font weight */
-  color: #1976d2;
+  color: #0064B1;
   /* Blue color matching other nav links */
   cursor: pointer;
   /* Show pointer cursor on hover */
+}
+
+.navbar-hover {
+  background: #003865;
 }
