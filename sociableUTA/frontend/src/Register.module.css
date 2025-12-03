@@ -54,14 +54,18 @@ body {
     padding: 0.5rem;
     border-radius: 0.5rem;
     border: none;
-    background-color: #1e90ff;
+    background-color: #0064B1;
     color: white;
     cursor: pointer;
     margin-top: 1rem;
 }
 
+.button-hover {
+    background: #003865;
+}
+
 .button:disabled {
-    background-color: #a9c4e0;
+    background-color: #0064B1;
     cursor: not-allowed;
 }
 
