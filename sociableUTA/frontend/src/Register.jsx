@@ -60,13 +60,6 @@ const Register = () => {
         }
 
         try {
-            // const response = await axios.post(REGISTER_URL,
-            //     { user: user, password: pwd },
-            //     {
-            //         headers: { 'Content-Type': 'application/json' },
-            //         withCredentials: true
-            //     }
-            // );
             const payload = { user: user, pwd: pwd };
 
             const response = await axiosInstance.post('/register',
@@ -99,9 +92,6 @@ const Register = () => {
                     success ? (
                         <section className={styles.section} >
                             <h1>Success!</h1>
-                            {/* <p>
-                                <a href="#">Sign In</a>
-                            </p> */}
                             <p>
                                 <button
                                     onClick={() => navigate('/login')}

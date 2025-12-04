@@ -11,82 +11,6 @@ import { Inbox } from './Inbox';
 import { Analytics } from './Analytics';
 import { PersonalInfo } from './Studentinformation';
 
-// function Home({ onLogout }) {
-//   const [currentUser, setCurrentUser] = useState(null);
-//   const [currentPage, setCurrentPage] = useState('calendar');
-//   const [activeApiSource, setActiveApiSource] = useState('all');
-
-//   const [linkedInToken, setLinkedInToken] = useState(localStorage.getItem('linkedin_access_token'));
-
-//   // Handle authentication state
-//   useEffect(() => {
-//     const user = localStorage.getItem('user');
-//     if (user) {
-//       setCurrentUser(JSON.parse(user));
-//     }
-//   }, []);
-
-
-
-//     // handling LinkedIn OAuth redirect
-//     const urlParams = new URLSearchParams(window.location.search);
-//     const linkedinToken = urlParams.get('linkedin_token');
-//     if (linkedinToken) {
-//       setLinkedInToken(linkedinToken);
-//       // Clean the token from the URL so it's not visible
-//       window.history.replaceState({}, document.title, window.location.pathname);
-//     }
-//   }, []);
-
-
-
-//   // Handle page navigation and reset API source to Instagram
-//   const handlePageChange = (newPage) => {
-//     setCurrentPage(newPage);
-//     // setSelectedSources(['instagram']); // Reset to Instagram when changing pages
-//     setActiveApiSource('all');
-//   };
-
-//   // User object for components that need user info
-//   const user = {
-//     avatarUrl: 'https://via.placeholder.com/48',
-//     name: 'User'
-//   };
-
-//   // Test with just Login component
-//   if (!currentUser) {
-//     return (
-//       <Login
-//         setToken={(token) => {
-//           setCurrentUser({ token });
-//           localStorage.setItem('token', token);
-//         }}
-//       />
-//     );
-//   }
-
-//   // If logged in, show the app with working components
-//   return (
-//     <div className="app-layout">
-//       <Menu active={currentPage} onSelect={handlePageChange} onLogout={onLogout} />
-//       {/* {(currentPage === 'analytics' || currentPage === 'calendar' || currentPage === 'inbox' || currentPage === 'postview') && ( */}
-//       <div className="app-content-area">
-//         {(currentPage === 'analytics' || currentPage === 'calendar' || currentPage === 'inbox' || currentPage === 'postview') && (
-//           <ApiSubmenu activeSource={activeApiSource} onSourceChange={setActiveApiSource} />
-//         )}
-//         {currentPage === 'calendar' && <Calendar token={currentUser.token} apiSource={activeApiSource} onNavigate={setCurrentPage} />}
-//         {currentPage === 'post' && <CreatePost token={currentUser.token} user={user} apiSource={activeApiSource} onNavigate={setCurrentPage} />}
-//         {currentPage === 'postview' && <PostView token={currentUser.token} user={user} apiSource={activeApiSource} onNavigate={setCurrentPage} />}
-//         {currentPage === 'inbox' && <Inbox token={currentUser.token} apiSource={activeApiSource} onNavigate={setCurrentPage} />}
-//         {currentPage === 'analytics' && <Analytics token={currentUser.token} apiSource={activeApiSource} onNavigate={setCurrentPage} />}
-//         {currentPage === 'studentinformation' && <PersonalInfo token={currentUser.token} onBack={() => setCurrentPage('calendar')} />}
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default Home;
-
 function Home({ onLogout }) {
   const [currentUser, setCurrentUser] = useState(null);
   const [currentPage, setCurrentPage] = useState('calendar');
@@ -153,9 +77,6 @@ function Home({ onLogout }) {
         )}
         {currentPage === 'calendar' && <Calendar token={currentUser?.token} apiSource={activeApiSource} onNavigate={setCurrentPage} />}
         {currentPage === 'post' && <CreatePost token={currentUser?.token} user={user} apiSource={activeApiSource} onNavigate={setCurrentPage} />}
-        {/* {currentPage === 'postview' && <PostView token={currentUser?.token} user={user} apiSource={activeApiSource} onNavigate={setCurrentPage} />}
-        {currentPage === 'inbox' && <Inbox token={currentUser?.token} apiSource={activeApiSource} onNavigate={setCurrentPage} />}
-        {currentPage === 'analytics' && <Analytics token={currentUser?.token} apiSource={activeApiSource} onNavigate={setCurrentPage} />} */}
         {currentPage === 'postview' && <PostView token={currentUser?.token} user={user} apiSource={activeApiSource} onNavigate={setCurrentPage} linkedInToken={linkedInToken} />}
         {currentPage === 'inbox' && <Inbox token={currentUser?.token} apiSource={activeApiSource} onNavigate={setCurrentPage} />}
         {currentPage === 'analytics' && <Analytics token={currentUser?.token} apiSource={activeApiSource} onNavigate={setCurrentPage} linkedInToken={linkedInToken} />}
